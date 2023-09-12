@@ -24,8 +24,8 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <NeutralLanguage></NeutralLanguage>
     <Configurations>Debug;Release;Multisolutions</Configurations>
-    <AssemblyName>Empiria.Trade.Sujetsa.WebApi</AssemblyName>
-    <RootNamespace>Empiria.Trade.Sujetsa.WebApi</RootNamespace>
+    <AssemblyName>Empiria.Sujetsa.WebApi</AssemblyName>
+    <RootNamespace>Empiria.Sujetsa.WebApi</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' Or '$(Configuration)|$(Platform)' == 'Multisolutions|AnyCPU' ">
     <OutputPath>bin\</OutputPath>
@@ -57,11 +57,6 @@
     <NoWarn />
     <WarningsAsErrors />
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="Sales\**" />
-    <EmbeddedResource Remove="Sales\**" />
-    <None Remove="Sales\**" />
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\trade\WebApi\Empiria.Trade.WebApi.csproj" />
     <ProjectReference Include="..\SujetsaTemp\TradeDataSchemaManager\TradeDataSchemaManager.csproj" />

@@ -16,11 +16,11 @@ using Empiria.WebApi;
 
 using TradeDataSchemaManager.Adapters;
 
-namespace Empiria.Trade.WebApi.SujetsaTemp {
+namespace Empiria.Sujetsa.WebApi {
 
   /// <summary>Query web API used to retrieve temporary data products.</summary>
   [AllowAnonymous]
-  public class ProductsTempController : WebApiController {
+  public class ManageDataController : WebApiController {
 
 
     [HttpPost]
@@ -88,6 +88,6 @@ namespace Empiria.Trade.WebApi.SujetsaTemp {
     }
 
 
-  } // class ProductsTempController
+  } // class ManageDataController
 
 } // namespace Empiria.Trade.WebApi.SujetsaTemp
