@@ -84,6 +84,10 @@
     <ProjectReference Include="..\..\trade.sujetsa\SujetsaTemp\TradeDataSchemaManager\TradeDataSchemaManager.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\extensions\Tests\Empiria.Tests.csproj" />
+    <ProjectReference Include="..\SujetsaTemp\TradeDataSchemaManager\TradeDataSchemaManager.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <None Update="empiria.config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace TradeDataSchemaManager.Services {
@@ -113,19 +114,77 @@ namespace TradeDataSchemaManager.Services {
 
 
     public string articulosMicrosipConn =
-      "SELECT " +
-      "claves_articulos.clave_articulo PRODUCTO, articulos.nombre DESCRIPCION, " +
-      "articulos.unidad_compra, articulos.unidad_venta, " +
-      "articulos.contenido_unidad_compra, " +
-      "articulos.es_almacenable, articulos.es_importado, articulos.es_siempre_importado, articulos.peso_unitario, articulos.estatus, " +
-      "lineas_articulos.linea_articulo_id, lineas_articulos.nombre NLinea " +
-      "FROM articulos articulos, claves_articulos claves_articulos, comis_ven_linea comis_ven_linea, grupos_lineas grupos_lineas, " +
-      "lineas_articulos lineas_articulos " +
-      "WHERE articulos.articulo_id = claves_articulos.articulo_id and " +
-      "articulos.linea_articulo_id = lineas_articulos.linea_articulo_id and " +
-      "comis_ven_linea.linea_articulo_id = articulos.linea_articulo_id and " +
-      "lineas_articulos.grupo_linea_id = grupos_lineas.grupo_linea_id " +
-      "ORDER BY claves_articulos.clave_articulo";
+      "SELECT  " +
+      "claves_articulos.clave_articulo PRODUCTO, articulos.articulo_id, articulos.nombre DESCRIPCION, articulos.unidad_compra, " +
+      "articulos.unidad_venta, articulos.contenido_unidad_compra, articulos.es_almacenable, articulos.es_importado, " +
+      "articulos.es_siempre_importado, articulos.peso_unitario, articulos.estatus,lineas_articulos.linea_articulo_id, " +
+      "lineas_articulos.nombre NOMBRE_LINEA, SALDOS_IN.SUMA EXISTENCIA, PRECIOS.precio as Precio_lista, " +
+      "PRECIOS_MIN.precio as Precio_Minimo, PRECIO3.PRECIO AS PRECIO_ESP_SUJETSA, PRECIO4.PRECIO AS PRECIO_ESP_HERRAMIENTAS, " +
+      "PRECIO5.PRECIO AS PRECIO_ESP_TTC " +
+
+      "FROM articulos " +
+
+      "INNER JOIN claves_articulos ON claves_articulos.articulo_id = articulos.articulo_id " +
+
+      "LEFT JOIN lineas_articulos ON lineas_articulos.linea_articulo_id = articulos.linea_articulo_id    " +
+
+      "LEFT JOIN (" +
+      " SELECT ARTICULO_ID, Sum(SALDOS_IN.ENTRADAS_UNIDADES-SALDOS_IN.SALIDAS_UNIDADES) AS SUMA " +
+      " FROM SALDOS_IN " +
+      " GROUP BY ARTICULO_ID " +
+      ") SALDOS_IN ON  SALDOS_IN.ARTICULO_ID = ARTICULOS.ARTICULO_ID " +
+
+      "LEFT JOIN (" +
+      " SELECT precios_articulos.precio_articulo_id,  precios_articulos.articulo_id, precios_articulos.precio_empresa_id, " +
+      " precios_articulos.precio, precios_articulos.moneda_id,  monedas.nombre, precios_articulos.margen, precios_articulos.markup, " +
+      " precios_articulos.fecha_hora_ult_modif, precios_empresa.nombre lista " +
+      " FROM precios_articulos " +
+      " LEFT JOIN MONEDAS ON monedas.moneda_id = precios_articulos.moneda_id " +
+      " LEFT JOIN precios_empresa   ON precios_empresa.precio_empresa_id = precios_articulos.precio_empresa_id " +
+      " where  precios_articulos.precio_empresa_id = 42 " +
+      ") AS PRECIOS ON articulos.articulo_id = PRECIOS.articulo_id "+
+
+      "LEFT JOIN (" +
+      " SELECT precios_articulos.precio_articulo_id,  precios_articulos.articulo_id, precios_articulos.precio_empresa_id, " +
+      " precios_articulos.precio, precios_articulos.moneda_id,  monedas.nombre, precios_articulos.margen, precios_articulos.markup, " +
+      " precios_articulos.fecha_hora_ult_modif, precios_empresa.nombre lista " +
+      " FROM precios_articulos " +
+      " LEFT JOIN MONEDAS ON monedas.moneda_id = precios_articulos.moneda_id " +
+      " LEFT JOIN precios_empresa   ON precios_empresa.precio_empresa_id = precios_articulos.precio_empresa_id " +
+      " WHERE  precios_articulos.precio_empresa_id = 43 " +
+      ") AS PRECIOS_MIN ON articulos.articulo_id = PRECIOS_MIN.articulo_id " +
+
+      "LEFT JOIN (" +
+      " SELECT precios_articulos.precio_articulo_id,  precios_articulos.articulo_id, precios_articulos.precio_empresa_id, " +
+      " precios_articulos.precio, precios_articulos.moneda_id,  monedas.nombre, precios_articulos.margen, precios_articulos.markup, " +
+      " precios_articulos.fecha_hora_ult_modif, precios_empresa.nombre lista " +
+      " FROM precios_articulos " +
+      " LEFT JOIN MONEDAS ON monedas.moneda_id = precios_articulos.moneda_id " +
+      " LEFT JOIN precios_empresa   ON precios_empresa.precio_empresa_id = precios_articulos.precio_empresa_id " +
+      " WHERE  precios_articulos.precio_empresa_id = 751978 " +
+      ") AS PRECIO3 ON articulos.articulo_id = PRECIO3.articulo_id " +
+
+      "LEFT JOIN (" +
+      " SELECT precios_articulos.precio_articulo_id,  precios_articulos.articulo_id, precios_articulos.precio_empresa_id, " +
+      " precios_articulos.precio, precios_articulos.moneda_id,  monedas.nombre, precios_articulos.margen, precios_articulos.markup, " +
+      " precios_articulos.fecha_hora_ult_modif, precios_empresa.nombre lista " +
+      " FROM precios_articulos " +
+      " LEFT JOIN MONEDAS ON monedas.moneda_id = precios_articulos.moneda_id " +
+      " LEFT JOIN precios_empresa   ON precios_empresa.precio_empresa_id = precios_articulos.precio_empresa_id " +
+      " WHERE  precios_articulos.precio_empresa_id = 751992 " +
+      ") AS PRECIO4 ON articulos.articulo_id = PRECIO4.articulo_id " + 
+
+      "LEFT JOIN (" +
+      " SELECT precios_articulos.precio_articulo_id,  precios_articulos.articulo_id, precios_articulos.precio_empresa_id, " +
+      " precios_articulos.precio, precios_articulos.moneda_id,  monedas.nombre, precios_articulos.margen, precios_articulos.markup, " +
+      " precios_articulos.fecha_hora_ult_modif, precios_empresa.nombre lista " +
+      " FROM precios_articulos " +
+      " LEFT JOIN MONEDAS ON monedas.moneda_id = precios_articulos.moneda_id " +
+      " LEFT JOIN precios_empresa   ON precios_empresa.precio_empresa_id = precios_articulos.precio_empresa_id " +
+      " WHERE  precios_articulos.precio_empresa_id = 765683 " +
+      ") AS PRECIO5 ON articulos.articulo_id = PRECIO5.articulo_id " +
+
+      "ORDER BY claves_articulos.clave_articulo ";
 
   }
 

@@ -58,6 +58,8 @@
     <WarningsAsErrors />
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\extensions\WebApi\Empiria.WebApi.csproj" />
+    <ProjectReference Include="..\..\onepoint\Security.WebApi\Empiria.OnePoint.Security.WebApi.csproj" />
     <ProjectReference Include="..\..\trade\WebApi\Empiria.Trade.WebApi.csproj" />
     <ProjectReference Include="..\SujetsaTemp\TradeDataSchemaManager\TradeDataSchemaManager.csproj" />
   </ItemGroup>

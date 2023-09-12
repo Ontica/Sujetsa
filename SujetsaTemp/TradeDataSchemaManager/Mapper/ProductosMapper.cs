@@ -106,7 +106,12 @@ namespace TradeDataSchemaManager.Mapper {
           prod.PESO_UNITARIO = row["peso_unitario"].ToString() == "" ? 0 : (decimal) row["peso_unitario"];
           prod.ESTATUS = row["estatus"].ToString() ?? "";
           prod.LINEA_ARTICULO_ID = row["linea_articulo_id"].ToString() ?? "";
-          prod.NLINEA = row["NLinea"].ToString() ?? "";
+          prod.NOMBRE_LINEA = row["NOMBRE_LINEA"].ToString() ?? "";
+          prod.EXISTENCIA = row["EXISTENCIA"].ToString() ?? "";
+          prod.PRECIOLISTA1 = row["Precio_lista"].ToString() == "" ? 0 : (decimal) row["Precio_lista"];
+          prod.PRECIOLISTA2 = row["PRECIO_ESP_SUJETSA"].ToString() == "" ? 0 : (decimal) row["PRECIO_ESP_SUJETSA"];
+          prod.PRECIOLISTA3 = row["PRECIO_ESP_HERRAMIENTAS"].ToString() == "" ? 0 : (decimal) row["PRECIO_ESP_HERRAMIENTAS"];
+          prod.PRECIOLISTA4 = row["PRECIO_ESP_TTC"].ToString() == "" ? 0 : (decimal) row["PRECIO_ESP_TTC"];
 
           listaProductos.Add(prod);
           index++;
