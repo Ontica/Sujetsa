@@ -56,6 +56,16 @@ namespace Empiria.Trade.Tests.Products {
 
     }
 
+    [Fact]
+    public void GetListFromSqlTest() {
+
+      var service = new TradeDataSchemaManager.Services.Services(true);
+      var list = service.GetListFromSql();
+
+      Assert.NotNull(list);
+
+    }
+
     #endregion Facts
 
   }
