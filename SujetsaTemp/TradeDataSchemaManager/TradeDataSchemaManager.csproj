@@ -66,6 +66,6 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Empiria.Core\Core\Empiria.Core.csproj" />
+    <ProjectReference Include="..\..\..\core\Core\Empiria.Core.csproj" />
   </ItemGroup>
 </Project>
