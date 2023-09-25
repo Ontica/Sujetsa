@@ -81,7 +81,6 @@
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
     <ProjectReference Include="..\..\extensions\Tests\Empiria.Tests.csproj" />
-    <ProjectReference Include="..\..\trade.sujetsa\SujetsaTemp\TradeDataSchemaManager\TradeDataSchemaManager.csproj" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\extensions\Tests\Empiria.Tests.csproj" />
