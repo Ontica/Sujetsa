@@ -150,7 +150,7 @@ namespace TradeDataSchemaManager.Data {
               cmd.Parameters.Add("@ExtData", SqlDbType.VarChar).Value = producto.EXTDATA;
 
               cmd.Parameters.Add("@Keywords", SqlDbType.VarChar).Value = producto.KEYWORDS;
-              cmd.Parameters.Add("@AlmacenId", SqlDbType.Int).Value = producto.ALMACEN_ID;
+              cmd.Parameters.Add("@CompaniaId", SqlDbType.Int).Value = producto.COMPANIA_ID;
 
 
               cmd.ExecuteNonQuery();
@@ -195,7 +195,7 @@ namespace TradeDataSchemaManager.Data {
       List<ProductosAdapter> list = new List<ProductosAdapter>();
       using (var sqlCon = GetSQLConnect(sqlConnectionString)) {
 
-        SqlCommand command = new SqlCommand("SELECT TOP (10) * FROM ProductosTemp", sqlCon);
+        SqlCommand command = new SqlCommand("SELECT * FROM ProductosTemp", sqlCon);
 
         try {
 

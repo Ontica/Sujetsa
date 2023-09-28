@@ -246,7 +246,7 @@ namespace TradeDataSchemaManager.Adapters {
       get; set;
     } = string.Empty;
 
-    public int ALMACEN_ID {
+    public int COMPANIA_ID {
       get; set;
     }
 

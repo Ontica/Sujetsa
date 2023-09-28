@@ -20,10 +20,10 @@ namespace TradeDataSchemaManager.Mapper {
         list = GetNkProductsList(dt, connectionId);
       }
       if (connectionId == 2) {
-        list = GetHpNkProductsList(dt, connectionId);
+        list = GetMicrosipProductsList(dt, connectionId);
       }
       if (connectionId == 3) {
-        list = GetMicrosipProductsList(dt, connectionId);
+        list = GetHpNkProductsList(dt, connectionId);
       }
 
       return list;
@@ -33,7 +33,6 @@ namespace TradeDataSchemaManager.Mapper {
     private List<ProductosAdapter> GetHpNkProductsList(DataTable dt, int connectionId) {
       List<ProductosAdapter> listaProductos = new List<ProductosAdapter>();
 
-      List<object> objs = new List<object>();
       foreach (DataRow row in dt.Rows) {
         string fechaUltimaCompra = row["FECHA_ULTIMA_COMPRA"].ToString();
         DateTime fechaUltimaCompraDate = new DateTime(2077, 01, 01);
@@ -42,9 +41,8 @@ namespace TradeDataSchemaManager.Mapper {
           fechaUltimaCompraDate = Convert.ToDateTime(fechaUltimaCompra);
         }
 
-        objs.Add(row);
         ProductosAdapter prod = new ProductosAdapter();
-        prod.ALMACEN_ID = connectionId;
+        prod.COMPANIA_ID = connectionId;
         prod.DET = "1";
         prod.PRODUCTO = row["PRODUCTO"].ToString() ?? "";
         prod.CLAVEPRODSERV = row["CLAVEPRODSERV"].ToString() ?? "";
@@ -94,7 +92,7 @@ namespace TradeDataSchemaManager.Mapper {
         foreach (DataRow row in dt.Rows) {
 
           ProductosAdapter prod = new ProductosAdapter();
-          prod.ALMACEN_ID = connectionId;
+          prod.COMPANIA_ID = connectionId;
           prod.PRODUCTO = row["PRODUCTO"].ToString() ?? "";
           prod.DESCRIPCION = row["DESCRIPCION"].ToString() ?? "";
           prod.UNIDAD_COMPRA = row["unidad_compra"].ToString() ?? "";
@@ -133,7 +131,7 @@ namespace TradeDataSchemaManager.Mapper {
         foreach (DataRow row in dt.Rows) {
 
           ProductosAdapter prod = new ProductosAdapter();
-          prod.ALMACEN_ID = connectionId;
+          prod.COMPANIA_ID = connectionId;
           prod.DET = "1";
           prod.PRODUCTO = row["PRODUCTO"].ToString() ?? "";
           prod.CLAVEPRODSERV = row["CLAVEPRODSERV"].ToString() ?? "";

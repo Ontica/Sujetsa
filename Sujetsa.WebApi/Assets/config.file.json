@@ -5,18 +5,19 @@
       "ConnectionId": "1",
       "ConnectionName": "productosNkConn",
       "ConnectionString": "Server=localhost;User=SYSDBA;Password=masterkey;Database=C:\\SUJETSA\\BD\\sujetsa16Ago23.FDB"
-    },
-    {
-      "ConnectionId": "2",
-      "ConnectionName": "productosNKHidroplomexConn",
-      "ConnectionString": "Server=localhost;User=SYSDBA;Password=masterkey;Database=C:\\SUJETSA\\BD\\hp16Ago23.FDB"
     }
     //,
     //{
-    //  "ConnectionId": "3",
+    //  "ConnectionId": "2",
     //  "ConnectionName": "articulosMicrosipConn",
     //  "ConnectionString": "Server=localhost;User=SYSDBA;Password=masterkey;Database=C:\\SUJETSA\\BD\\Microsip17Ago2023.FDB"
     //}
+    ,
+    {
+      "ConnectionId": "3",
+      "ConnectionName": "productosNKHidroplomexConn",
+      "ConnectionString": "Server=localhost;User=SYSDBA;Password=masterkey;Database=C:\\SUJETSA\\BD\\hp16Ago23.FDB"
+    }
 
   ],
 

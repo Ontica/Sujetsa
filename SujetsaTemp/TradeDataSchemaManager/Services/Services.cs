@@ -41,9 +41,9 @@ namespace TradeDataSchemaManager.Services {
 
         var productList = GetDataFromDb();
 
-        int nkbd = productList.FindAll(x => x.ALMACEN_ID == 1).Count();
-        int nkhpbd = productList.FindAll(x => x.ALMACEN_ID == 2).Count();
-        int microbd = productList.FindAll(x => x.ALMACEN_ID == 3).Count();
+        int nkbd = productList.FindAll(x => x.COMPANIA_ID == 1).Count();
+        int nkhpbd = productList.FindAll(x => x.COMPANIA_ID == 2).Count();
+        int microbd = productList.FindAll(x => x.COMPANIA_ID == 3).Count();
 
         return $"PRODUCTOS BD NK = {nkbd}. " +
                $"PRODUCTOS BD NKHidroplomex = {nkhpbd}. " +
