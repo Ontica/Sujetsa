@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TradeDataSchemaManager.Adapters;
 using TradeDataSchemaManager.Services;
 using Xunit;
@@ -55,6 +56,21 @@ namespace Empiria.Trade.Tests.Products {
       Assert.NotNull(message);
 
     }
+
+
+    [Fact]
+    public async Task InsertProductToSqlAsyncTest() {
+
+      var service = new Services(true);
+
+      List<ProductosAdapter> productsToUpdate = service.GetDataFromDb();
+
+      string message = await service.InsertProductToSqlAsync(productsToUpdate).ConfigureAwait(false);
+
+      Assert.NotNull(message);
+
+    }
+
 
     [Fact]
     public void GetListFromSqlTest() {

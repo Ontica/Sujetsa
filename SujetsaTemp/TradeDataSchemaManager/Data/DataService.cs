@@ -78,8 +78,9 @@ namespace TradeDataSchemaManager.Data {
 
               SqlCommand cmd = new SqlCommand("spInsertProductosTemp", sqlCon);
               cmd.CommandType = CommandType.StoredProcedure;
-
+              
               cmd.Parameters.Add("@Det", SqlDbType.VarChar).Value = producto.DET;
+              cmd.Parameters.Add("@UID", SqlDbType.VarChar).Value = Guid.NewGuid().ToString();
               cmd.Parameters.Add("@Producto", SqlDbType.VarChar).Value = producto.PRODUCTO;
               cmd.Parameters.Add("@ClaveDeServ", SqlDbType.VarChar).Value = producto.CLAVEPRODSERV;
               cmd.Parameters.Add("@Clave", SqlDbType.VarChar).Value = producto.CLAVE;
