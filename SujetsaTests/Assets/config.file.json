@@ -5,22 +5,26 @@
       "ConnectionId": "1",
       "ConnectionName": "productosNkConn",
       "ConnectionString": "Server=localhost;User=SYSDBA;Password=masterkey;Database=C:\\SUJETSA\\BD\\sujetsa16Ago23.FDB"
+      //"ConnectionString": "User = SYSDBA; Password = masterkey; Database =192.168.1.195:C:\\ont\\sujetsaontica.FDB; DataSource =192.168.1.195; Port = 3050; Dialect = 3; Charset = NONE; Role =;  Connection lifetime = 15; Pooling = true; MinPoolSize = 0; MaxPoolSize = 50; Packet Size = 8192; ServerType = 0; "
     }
-    //,
-    //{
-    //  "ConnectionId": "2",
-    //  "ConnectionName": "articulosMicrosipConn",
-    //  "ConnectionString": "Server=localhost;User=SYSDBA;Password=masterkey;Database=C:\\SUJETSA\\BD\\Microsip17Ago2023.FDB"
-    //}
+    ,
+    {
+      "ConnectionId": "2",
+      "ConnectionName": "articulosMicrosipConn",
+      //"ConnectionString": "Server=localhost;User=SYSDBA;Password=masterkey;Database=C:\\SUJETSA\\BD\\Microsip17Ago2023.FDB"
+      "ConnectionString": "User = SYSDBA; Password = masterkey; Database =192.168.1.197:C:\\ont\\TUERCASYTORNILLOSONTICA.FDB; DataSource =192.168.1.197; Port = 3051; Dialect = 3; Charset = NONE; Role =;  Connection lifetime = 15; Pooling = true; MinPoolSize = 0; MaxPoolSize = 50; Packet Size = 8192; ServerType = 0; "
+    }
     ,
     {
       "ConnectionId": "3",
       "ConnectionName": "productosNKHidroplomexConn",
       "ConnectionString": "Server=localhost;User=SYSDBA;Password=masterkey;Database=C:\\SUJETSA\\BD\\hp16Ago23.FDB"
+      //"ConnectionString": "User = SYSDBA; Password = masterkey; Database =192.168.1.178:C:\\hp\\hpontica.fdb; DataSource =192.168.1.178; Port = 3052; Dialect = 3; Charset = NONE; Role =;  Connection lifetime = 15; Pooling = true; MinPoolSize = 0; MaxPoolSize = 50; Packet Size = 8192; ServerType = 0; "
     }
   ],
 
-  "SqlConnectionString": "Data Source=apps.sujetsa.com.mx, 5328;Initial Catalog=Sujetsa; User Id=sujetsa_user; Password=9qrtTqK@EyMR$!FB;",
+  "SqlConnectionString": "Data Source=apps.sujetsa.com.mx, 5328;Initial Catalog=Sujetsa; User Id=sujetsa_user; Password=9qrtTqK@EyMR$!FB;"
   //"SqlConnectionString": "Data Source=MSI\\MSSQLSERVER01;Initial Catalog=SujetsaDBLocal; User Id=empiria_trade; Password=admin123;"
+
 
 }
