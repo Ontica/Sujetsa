@@ -162,6 +162,30 @@ namespace TradeDataSchemaManager.Adapters {
       get; set;
     }
 
+    public decimal PRECIOLISTA5 {
+      get; set;
+    }
+
+    public decimal PRECIOLISTA6 {
+      get; set;
+    }
+
+    public decimal PRECIOLISTA7 {
+      get; set;
+    }
+
+    public decimal PRECIOLISTA8 {
+      get; set;
+    }
+
+    public decimal PRECIOLISTA9 {
+      get; set;
+    }
+
+    public decimal PRECIOLISTA10 {
+      get; set;
+    }
+
     public string EMPAQUE {
       get; set;
     } = string.Empty;

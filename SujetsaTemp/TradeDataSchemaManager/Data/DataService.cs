@@ -126,6 +126,12 @@ namespace TradeDataSchemaManager.Data {
               cmd.Parameters.Add("@PrecioLista2", SqlDbType.Decimal).Value = producto.PRECIOLISTA2;
               cmd.Parameters.Add("@PrecioLista3", SqlDbType.Decimal).Value = producto.PRECIOLISTA3;
               cmd.Parameters.Add("@PrecioLista4", SqlDbType.Decimal).Value = producto.PRECIOLISTA4;
+              cmd.Parameters.Add("@PrecioLista5", SqlDbType.Decimal).Value = producto.PRECIOLISTA5;
+              cmd.Parameters.Add("@PrecioLista6", SqlDbType.Decimal).Value = producto.PRECIOLISTA6;
+              cmd.Parameters.Add("@PrecioLista7", SqlDbType.Decimal).Value = producto.PRECIOLISTA7;
+              cmd.Parameters.Add("@PrecioLista8", SqlDbType.Decimal).Value = producto.PRECIOLISTA8;
+              cmd.Parameters.Add("@PrecioLista9", SqlDbType.Decimal).Value = producto.PRECIOLISTA9;
+              cmd.Parameters.Add("@PrecioLista10", SqlDbType.Decimal).Value = producto.PRECIOLISTA10;
               cmd.Parameters.Add("@Empaque", SqlDbType.VarChar).Value = producto.EMPAQUE;
               cmd.Parameters.Add("@MultiploReSurtido", SqlDbType.VarChar).Value = producto.MULTIPLO_RESURTIDO;
               cmd.Parameters.Add("@MinimoResurtido", SqlDbType.VarChar).Value = producto.MINIMO_RESURTIDO;
@@ -147,7 +153,7 @@ namespace TradeDataSchemaManager.Data {
               cmd.Parameters.Add("@EsSiempreImportado", SqlDbType.VarChar).Value = producto.ES_SIEMPRE_IMPORTADO;
               cmd.Parameters.Add("@Estatus", SqlDbType.Char).Value = producto.ESTATUS;
               cmd.Parameters.Add("@LineaArticuloID", SqlDbType.VarChar).Value = producto.LINEA_ARTICULO_ID;
-              cmd.Parameters.Add("@NombreLinea", SqlDbType.VarChar).Value = producto.NOMBRE_LINEA;
+              //cmd.Parameters.Add("@NombreLinea", SqlDbType.VarChar).Value = producto.NOMBRE_LINEA;
               cmd.Parameters.Add("@ExtData", SqlDbType.VarChar).Value = producto.EXTDATA;
 
               cmd.Parameters.Add("@Keywords", SqlDbType.VarChar).Value = producto.KEYWORDS;
