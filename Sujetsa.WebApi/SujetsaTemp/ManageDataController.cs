@@ -27,7 +27,7 @@ namespace Empiria.Sujetsa.WebApi {
     [Route("manage-data/count-data")]
     public SingleObjectModel GetProductsCount() {
 
-      var service = new TradeDataSchemaManager.Services.Services();
+      var service = new TradeDataSchemaManager.Services.SchemaServices();
       string list = service.GetDataCountFromDb();
 
       return new SingleObjectModel(this.Request, list);
@@ -38,7 +38,7 @@ namespace Empiria.Sujetsa.WebApi {
     [Route("manage-data/list-data")]
     public SingleObjectModel GetProductsList() {
 
-      var service = new TradeDataSchemaManager.Services.Services();
+      var service = new TradeDataSchemaManager.Services.SchemaServices();
       List<ProductosAdapter> list = service.GetDataFromDb();
 
       return new SingleObjectModel(this.Request, list);
@@ -50,7 +50,7 @@ namespace Empiria.Sujetsa.WebApi {
     [Route("manage-data/insert-to-sql")]
     public SingleObjectModel InsertProductFromFbToSql() {
 
-      var service = new TradeDataSchemaManager.Services.Services();
+      var service = new TradeDataSchemaManager.Services.SchemaServices();
 
       List<ProductosAdapter> productsToUpdate = service.GetDataFromDb();
 
@@ -65,7 +65,7 @@ namespace Empiria.Sujetsa.WebApi {
     [Route("manage-data/async-insert-to-sql")]
     public async Task<SingleObjectModel> AsyncInsertProductFromFbToSql() {
 
-      var service = new TradeDataSchemaManager.Services.Services();
+      var service = new TradeDataSchemaManager.Services.SchemaServices();
 
       List<ProductosAdapter> productsToUpdate = service.GetDataFromDb();
 
@@ -80,7 +80,7 @@ namespace Empiria.Sujetsa.WebApi {
     [Route("manage-data/get-list-sql")]
     public SingleObjectModel GetListFromSql() {
 
-      var service = new TradeDataSchemaManager.Services.Services();
+      var service = new TradeDataSchemaManager.Services.SchemaServices();
       var list = service.GetListFromSql();
 
       return new SingleObjectModel(this.Request, list);

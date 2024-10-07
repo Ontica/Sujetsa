@@ -1,8 +1,10 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
 using TradeDataSchemaManager.Adapters;
 using TradeDataSchemaManager.Services;
+
 using Xunit;
 
 namespace Empiria.Trade.Tests.Products {
@@ -18,14 +20,13 @@ namespace Empiria.Trade.Tests.Products {
 
     #endregion Initialization
 
-
     #region Facts
-
 
     [Fact]
     public void GetDataCountFromDbTest() {
 
-      var service = new Services(true);
+      var service = new SchemaServices(true);
+
       var dt = service.GetDataCountFromDb();
 
       Assert.NotNull(dt);
@@ -36,7 +37,8 @@ namespace Empiria.Trade.Tests.Products {
     [Fact]
     public void GetProductListFromFbTest() {
 
-      var service = new Services(true);
+      var service = new SchemaServices(true);
+
       List<ProductosAdapter> list = service.GetDataFromDb();
 
       Assert.NotNull(list);
@@ -47,7 +49,7 @@ namespace Empiria.Trade.Tests.Products {
     [Fact]
     public void InsertListFromFbToSqlTest() {
 
-      var service = new Services(true);
+      var service = new SchemaServices(true);
 
       List<ProductosAdapter> productsToUpdate = service.GetDataFromDb();
 
@@ -61,7 +63,7 @@ namespace Empiria.Trade.Tests.Products {
     [Fact]
     public async Task InsertProductToSqlAsyncTest() {
 
-      var service = new Services(true);
+      var service = new SchemaServices(true);
 
       List<ProductosAdapter> productsToUpdate = service.GetDataFromDb();
 
@@ -75,7 +77,7 @@ namespace Empiria.Trade.Tests.Products {
     [Fact]
     public void GetListFromSqlTest() {
 
-      var service = new TradeDataSchemaManager.Services.Services(true);
+      var service = new SchemaServices(true);
       var list = service.GetListFromSql();
 
       Assert.NotNull(list);

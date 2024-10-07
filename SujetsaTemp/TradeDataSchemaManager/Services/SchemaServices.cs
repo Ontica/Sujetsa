@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+
 using TradeDataSchemaManager.Adapters;
 using TradeDataSchemaManager.Data;
 
 namespace TradeDataSchemaManager.Services {
-  public class Services {
+
+  public class SchemaServices {
 
     private ConnectionModel conInfo = new ConnectionModel();
     private Helper helper = new Helper();
 
-    public Services(bool isTest = false) {
+    public SchemaServices(bool isTest = false) {
 
       conInfo = helper.GetConnectionInfo<ConnectionModel>(isTest);
 
@@ -30,7 +31,7 @@ namespace TradeDataSchemaManager.Services {
 
         throw new Exception($"TradeDataSchemaManager.Services.(GetDataFromDb())... {ex.Message}");
       }
-      
+
 
     }
 
@@ -54,7 +55,7 @@ namespace TradeDataSchemaManager.Services {
 
         throw new Exception($"ERROR: {ex.Message}");
       }
-      
+
     }
 
 
