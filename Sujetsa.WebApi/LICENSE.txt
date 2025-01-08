@@ -1,7 +1,7 @@
 ﻿Empiria Trade Sujetsa: Web Api Module. Licencia
 ===============================================
 
-Copyright (c) 2023-2024 La Vía Óntica SC y colaboradores.
+Copyright (c) 2023-2025 La Vía Óntica SC y colaboradores.
 --------------------------------------------------
 
 These software components are free software: you can redistribute them
