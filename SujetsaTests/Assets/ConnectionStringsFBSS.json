@@ -1,0 +1,6 @@
+﻿{
+    "ConnectionStrings": {
+        "SSConnection": "Data Source=192.168.1.219, 1433;Initial Catalog=NKsujetsaFB; User Id=admindev; Password=Proyect05202A#;",
+        "FBConnection": "User = SYSDBA; Password = masterkey; Database = 192.168.1.195:C:\\ont\\sujetsa31012025.FDB; DataSource = 192.168.1.195; Port = 3050; Dialect = 3; Charset = NONE; Role =; Connection lifetime = 15; Pooling = true; MinPoolSize = 5; MaxPoolSize = 100; Timeout=30; Packet Size = 8192; ServerType = 0;"
+    }
+}
