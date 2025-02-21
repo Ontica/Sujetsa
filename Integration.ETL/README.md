@@ -1,6 +1,6 @@
-﻿# Empiria Trade Products components.
+﻿# Empiria Trade Integration ETL Services Module
 
-Administra el catálogo de productos.
+Provides Extract-Transform-Load (ETL) services for Empiria Trade data integration.
 
 ## Licencia
 

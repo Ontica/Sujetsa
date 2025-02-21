@@ -81,7 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\extensions\Tests\Empiria.Tests.csproj" />
-    <ProjectReference Include="..\SujetsaTemp\TradeDataSchemaManager\TradeDataSchemaManager.csproj" />
+    <ProjectReference Include="..\Integration.ETL\Empiria.Trade.Integration.ETL.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="empiria.config.json">

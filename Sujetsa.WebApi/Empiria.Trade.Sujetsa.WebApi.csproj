@@ -64,7 +64,7 @@
     <ProjectReference Include="..\..\extensions\WebApi\Empiria.WebApi.csproj" />
     <ProjectReference Include="..\..\security\Security.Management.WebApi\Empiria.Security.Management.WebApi.csproj" />
     <ProjectReference Include="..\..\trade\WebApi\Empiria.Trade.WebApi.csproj" />
-    <ProjectReference Include="..\SujetsaTemp\TradeDataSchemaManager\TradeDataSchemaManager.csproj" />
+    <ProjectReference Include="..\Integration.ETL\Empiria.Trade.Integration.ETL.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="empiria.config.json">

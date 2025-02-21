@@ -1,10 +1,10 @@
 ﻿/* Empiria Trade *********************************************************************************************
 *                                                                                                            *
-*  System   : Empiria Trade                                Module  : Products                                *
-*  Assembly : TradeDataSchemaManager.dll                   Pattern : Assembly Attributes File                *
+*  System   : Empiria Trade                                Module  : Trade Integration ETL Services          *
+*  Assembly : Empiria.Trade.Integration.ETL.dll            Pattern : Assembly Attributes File                *
 *                                                          License : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Empiria Trade products.                                                                        *
+*  Summary  : Provides Extract-Transform-Load (ETL) services for Empiria Trade data integration.             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
