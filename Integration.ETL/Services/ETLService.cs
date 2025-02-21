@@ -9,12 +9,11 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
-using System.IO;
 
 using System.Data;
 using System.Data.SqlClient;
 
-using Newtonsoft.Json;
+using Empiria.Json;
 
 using Empiria.Trade.Integration.ETL.Data;
 
@@ -22,31 +21,31 @@ namespace Empiria.Trade.Integration.ETL {
 
   public class ETLService {
 
-    public void Execute(bool isTest) {
-      dynamic config = GetConnectionsInfo(isTest);
+    private readonly string _sqlServerConnection;
+    private readonly string _firebirdConnection;
 
-      string SSConnection = config.ConnectionStrings.SSConnection;
-      string FBConnection = config.ConnectionStrings.FBConnection;
+    public ETLService() {
+      var config = ConfigurationData.Get<JsonObject>("Connection.Strings");
 
-      ETL(SSConnection, FBConnection);
+      _sqlServerConnection = config.Get<string>("sqlServerConnection");
+      _firebirdConnection = config.Get<string>("firebirdConnection");
     }
 
-    #region Helpers
 
-    private int ETL(string pSSConnection, string pFBConnection) {
+    public int Execute() {
       int Ejecutado = 0;
 
-      using (SqlConnection connectionSS = SqlServerDataServices.CreateConnection(pSSConnection)) {
+      using (SqlConnection connectionSS = SqlServerDataServices.CreateConnection(_sqlServerConnection)) {
         connectionSS.Open();
 
         try {
 
           SqlServerDataServices Datasqlsvr = new SqlServerDataServices();
-          var initialTableList = Datasqlsvr.GetTablesList(pSSConnection);
+          var initialTableList = Datasqlsvr.GetTablesList(_sqlServerConnection);
 
           foreach (DataRow row in initialTableList.Rows) {
             var tableName = row[0].ToString();
-            var tableToTruncate = Datasqlsvr.GetTableToTruncate(tableName, pSSConnection);
+            var tableToTruncate = Datasqlsvr.GetTableToTruncate(tableName, _sqlServerConnection);
             string queryTruncate = $"TRUNCATE TABLE {tableToTruncate}";
 
             using (SqlCommand cmdTruncate = new SqlCommand(queryTruncate, connectionSS)) {
@@ -55,7 +54,7 @@ namespace Empiria.Trade.Integration.ETL {
 
             string selectToFB = $"SELECT * FROM {tableName}";
             FirebirdDataServices dataSelect = new FirebirdDataServices();
-            var dataFromFB = dataSelect.ReadDataFromTable(selectToFB, pFBConnection);
+            var dataFromFB = dataSelect.ReadDataFromTable(selectToFB, _firebirdConnection);
 
             using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connectionSS)) {
               bulkCopy.DestinationTableName = tableToTruncate;
@@ -65,7 +64,7 @@ namespace Empiria.Trade.Integration.ETL {
 
           }  // foreach
 
-          Ejecutado = Datasqlsvr.ExecuteMergeStoredProcedure(pSSConnection);
+          Ejecutado = Datasqlsvr.ExecuteMergeStoredProcedure(_sqlServerConnection);
 
           return Ejecutado;
 
@@ -75,26 +74,6 @@ namespace Empiria.Trade.Integration.ETL {
 
       }  // using
     }
-
-
-    private dynamic GetConnectionsInfo(bool pisTest) {
-      string jsonFilePath = "";
-      try {
-        var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-        jsonFilePath = pisTest
-            ? Path.Combine(new DirectoryInfo(baseDirectory).Parent.FullName, @"Assets\ConnectionStringsFBSS")
-            : Path.Combine(baseDirectory, "..", "..", "..", @"Assets\ConnectionStringsFBSS.json");
-
-        string jsonContent = File.ReadAllText(jsonFilePath);
-        dynamic config = JsonConvert.DeserializeObject(jsonContent);
-
-        return config;
-      } catch (Exception ex) {
-        throw new Exception($"Error en HelperFBSS.GetConnectionsInfo(): {ex.Message} - Ruta del archivo: {jsonFilePath}", ex);
-      }
-    }
-
-    #endregion Helpers
 
   }  // class ETLService
 

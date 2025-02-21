@@ -1,8 +1,8 @@
 ﻿{
-  "appName": "Empiria Trade Core Test Module",
-  "description": "Tests environment settings for the Empiria Trade Core module.",
-  "version": "3.0",
-  "date": "2023-08-07",
+  "appName": "Empiria Trade Sujetsa Test Module",
+  "description": "Tests environment settings for the Empiria Trade Sujetsa integration.",
+  "version": "4.0",
+  "date": "2025-02-21",
   "settings": [
     {
       "type": "",
