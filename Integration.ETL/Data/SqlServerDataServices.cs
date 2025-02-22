@@ -27,7 +27,7 @@ namespace Empiria.Trade.Integration.ETL.Data {
     }
 
 
-    public void ExecuteMergeStoredProcedure() {
+    internal void ExecuteMergeStoredProcedure() {
 
       using (SqlConnection dbConnection = OpenConnection()) {
 
@@ -40,7 +40,7 @@ namespace Empiria.Trade.Integration.ETL.Data {
     }
 
 
-    public string GetTableToTruncate(string tableName) {
+    internal string GetTableToTruncate(string tableName) {
       Assertion.Require(tableName, nameof(tableName));
 
       var commandString = "SELECT FullSourceTableName " +
@@ -63,7 +63,7 @@ namespace Empiria.Trade.Integration.ETL.Data {
     }
 
 
-    public FixedList<string> GetTablesList() {
+    internal FixedList<string> GetTablesList() {
       var commandString = "SELECT SourceTable " +
                           "FROM sources.OMS_Intermediate_Tables_List " +
                           "WHERE Active = 'T'";
