@@ -40,31 +40,8 @@ namespace Empiria.Trade.Integration.ETL.Data {
     }
 
 
-    internal string GetTableToTruncate(string tableName) {
-      Assertion.Require(tableName, nameof(tableName));
-
-      var commandString = "SELECT FullSourceTableName " +
-                          "FROM sources.OMS_Intermediate_Tables_List " +
-                         $"WHERE SourceTable = '{tableName}' AND Active = 'T'";
-
-      using (SqlConnection dbConnection = OpenConnection()) {
-
-        using (SqlCommand cmd = new SqlCommand(commandString, dbConnection)) {
-
-          SqlDataReader dataReader = cmd.ExecuteReader();
-
-          if (dataReader.Read()) {
-            return dataReader["FullSourceTableName"].ToString();
-          }
-
-          return string.Empty;
-        }
-      }
-    }
-
-
-    internal FixedList<string> GetTablesList() {
-      var commandString = "SELECT SourceTable " +
+    internal FixedList<ETLTable> GetTablesList() {
+      var commandString = "SELECT SourceTable, FullSourceTableName " +
                           "FROM sources.OMS_Intermediate_Tables_List " +
                           "WHERE Active = 'T'";
 
@@ -79,7 +56,8 @@ namespace Empiria.Trade.Integration.ETL.Data {
           dataTable.Load(dataReader);
 
           return dataTable.Select()
-                          .Select(row => (string) row["SourceTable"])
+                          .Select(row => new ETLTable((string) row["SourceTable"],
+                                                      (string) row["FullSourceTableName"]))
                           .ToFixedList();
         }
       }

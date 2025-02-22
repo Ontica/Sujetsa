@@ -33,17 +33,15 @@ namespace Empiria.Trade.Integration.ETL {
       var inputDataServices = new FirebirdDataServices(_inputSourceConnectionString);
       var outputDataServices = new SqlServerDataServices(_outputSourceConnectionString);
 
-      FixedList<string> tablesList = outputDataServices.GetTablesList();
+      FixedList<ETLTable> tablesToConvert = outputDataServices.GetTablesList();
 
-      foreach (string tableName in tablesList) {
+      foreach (ETLTable table in tablesToConvert) {
 
-        string tableNameToTruncate = outputDataServices.GetTableToTruncate(tableName);
+        outputDataServices.TruncateTable(table.FullSourceTableName);
 
-        outputDataServices.TruncateTable(tableNameToTruncate);
+        var newDataToStore = inputDataServices.GetDataTable($"SELECT * FROM {table.SourceTableName}");
 
-        var newDataToStore = inputDataServices.GetDataTable($"SELECT * FROM {tableName}");
-
-        outputDataServices.StoreDataTable(newDataToStore, tableNameToTruncate);
+        outputDataServices.StoreDataTable(newDataToStore, table.FullSourceTableName);
 
       }  // foreach
 

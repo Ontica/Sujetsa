@@ -27,7 +27,7 @@ namespace Empiria.Tests.Trade.Integration {
 
       var dataServices = new SqlServerDataServices(connectionString);
 
-      FixedList<string> sut = dataServices.GetTablesList();
+      FixedList<ETLTable> sut = dataServices.GetTablesList();
 
       Assert.NotNull(sut);
       Assert.NotEmpty(sut);
