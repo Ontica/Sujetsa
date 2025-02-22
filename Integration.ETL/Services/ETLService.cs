@@ -4,10 +4,9 @@
 *  Assembly : Empiria.Trade.Integration.ETL                Pattern   : Service provider                      *
 *  Type     : ETLService                                   License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Provides testing constants.                                                                    *
+*  Summary  : Provides Extract-Transform-Load services for Trade System's integration.                       *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-
 
 using Empiria.Json;
 
@@ -15,6 +14,7 @@ using Empiria.Trade.Integration.ETL.Data;
 
 namespace Empiria.Trade.Integration.ETL {
 
+  /// <summary>Provides Extract-Transform-Load services for Trade System's integration.</summary>
   public class ETLService {
 
     private readonly string _inputSourceConnectionString;
