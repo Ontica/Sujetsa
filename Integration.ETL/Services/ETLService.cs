@@ -8,10 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
-
-using System.Data;
-using System.Data.SqlClient;
 
 using Empiria.Json;
 
@@ -21,58 +17,37 @@ namespace Empiria.Trade.Integration.ETL {
 
   public class ETLService {
 
-    private readonly string _sqlServerConnection;
-    private readonly string _firebirdConnection;
+    private readonly string _inputSourceConnectionString;
+    private readonly string _outputSourceConnectionString;
 
     public ETLService() {
       var config = ConfigurationData.Get<JsonObject>("Connection.Strings");
 
-      _sqlServerConnection = config.Get<string>("sqlServerConnection");
-      _firebirdConnection = config.Get<string>("firebirdConnection");
+      _outputSourceConnectionString = config.Get<string>("sqlServerConnection");
+      _inputSourceConnectionString = config.Get<string>("firebirdConnection");
     }
 
 
-    public int Execute() {
-      int Ejecutado = 0;
+    public void Execute() {
 
-      using (SqlConnection connectionSS = SqlServerDataServices.CreateConnection(_sqlServerConnection)) {
-        connectionSS.Open();
+      var inputDataServices = new FirebirdDataServices(_inputSourceConnectionString);
+      var outputDataServices = new SqlServerDataServices(_outputSourceConnectionString);
 
-        try {
+      FixedList<string> tablesList = outputDataServices.GetTablesList();
 
-          SqlServerDataServices Datasqlsvr = new SqlServerDataServices();
-          var initialTableList = Datasqlsvr.GetTablesList(_sqlServerConnection);
+      foreach (string tableName in tablesList) {
 
-          foreach (DataRow row in initialTableList.Rows) {
-            var tableName = row[0].ToString();
-            var tableToTruncate = Datasqlsvr.GetTableToTruncate(tableName, _sqlServerConnection);
-            string queryTruncate = $"TRUNCATE TABLE {tableToTruncate}";
+        string tableNameToTruncate = outputDataServices.GetTableToTruncate(tableName);
 
-            using (SqlCommand cmdTruncate = new SqlCommand(queryTruncate, connectionSS)) {
-              cmdTruncate.ExecuteNonQuery();
-            }
+        outputDataServices.TruncateTable(tableNameToTruncate);
 
-            string selectToFB = $"SELECT * FROM {tableName}";
-            FirebirdDataServices dataSelect = new FirebirdDataServices();
-            var dataFromFB = dataSelect.ReadDataFromTable(selectToFB, _firebirdConnection);
+        var newDataToStore = inputDataServices.GetDataTable($"SELECT * FROM {tableName}");
 
-            using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connectionSS)) {
-              bulkCopy.DestinationTableName = tableToTruncate;
-              bulkCopy.BatchSize = dataFromFB.Rows.Count;
-              bulkCopy.WriteToServer(dataFromFB);
-            }
+        outputDataServices.StoreDataTable(newDataToStore, tableNameToTruncate);
 
-          }  // foreach
+      }  // foreach
 
-          Ejecutado = Datasqlsvr.ExecuteMergeStoredProcedure(_sqlServerConnection);
-
-          return Ejecutado;
-
-        } catch (Exception ex) {
-          throw new Exception("Error al ejecutar el ETL." + Ejecutado, ex);
-        }
-
-      }  // using
+      outputDataServices.ExecuteMergeStoredProcedure();
     }
 
   }  // class ETLService

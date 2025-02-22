@@ -7,78 +7,123 @@
 *  Summary  : Provides services to read and write data from SQL Server databases.                            *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 using System.Data;
 using System.Data.SqlClient;
+
+using System.Linq;
 
 namespace Empiria.Trade.Integration.ETL.Data {
 
   /// <summary>Provides services to read and write data from SQL Server databases.</summary>
   internal class SqlServerDataServices {
 
-    static public SqlConnection CreateConnection(string pSSConnection) {
-      if (string.IsNullOrEmpty(pSSConnection)) {
-        throw new ArgumentException("La cadena de conexión no puede ser nula o vacía.", nameof(pSSConnection));
-      }
-      return new SqlConnection(pSSConnection);
+    private readonly string _connectionString;
+
+    internal SqlServerDataServices(string connectionString) {
+      Assertion.Require(connectionString, nameof(connectionString));
+
+      _connectionString = connectionString;
     }
 
 
-    public int ExecuteMergeStoredProcedure(string pSSConnection) {
-      int rowsAffected = 0;
-      try {
-        using (SqlConnection connectionSS = CreateConnection(pSSConnection))
-        using (SqlCommand cmd = new SqlCommand("sources.OMS_Merge_Intermediate_Tables", connectionSS)) {
+    public void ExecuteMergeStoredProcedure() {
+
+      using (SqlConnection dbConnection = OpenConnection()) {
+
+        using (SqlCommand cmd = new SqlCommand("sources.OMS_Merge_Intermediate_Tables", dbConnection)) {
           cmd.CommandType = CommandType.StoredProcedure;
-          connectionSS.Open();
-          rowsAffected = cmd.ExecuteNonQuery();
-        }
 
-        return rowsAffected;
-      } catch (Exception ex) {
-        throw new Exception("Error al ejecutar procedimiento almacenado", ex);
+          cmd.ExecuteNonQuery();
+        }
       }
     }
 
 
-    public string GetTableToTruncate(string ptableName, string pSSConnection) {
-      try {
-        using (SqlConnection connectionSS = CreateConnection(pSSConnection))
-        using (SqlCommand cmd = new SqlCommand("SELECT FullSourceTableName FROM sources.OMS_Intermediate_Tables_List WHERE SourceTable = @SourceTable AND Active = 'T'", connectionSS)) {
-          cmd.Parameters.AddWithValue("@SourceTable", ptableName);
+    public string GetTableToTruncate(string tableName) {
+      Assertion.Require(tableName, nameof(tableName));
 
-          connectionSS.Open();
+      var commandString = "SELECT FullSourceTableName " +
+                          "FROM sources.OMS_Intermediate_Tables_List " +
+                         $"WHERE SourceTable = '{tableName}' AND Active = 'T'";
 
-          using (SqlDataReader dataReader = cmd.ExecuteReader()) {
-            if (dataReader.Read()) {
-              return dataReader["FullSourceTableName"].ToString();
-            }
+      using (SqlConnection dbConnection = OpenConnection()) {
+
+        using (SqlCommand cmd = new SqlCommand(commandString, dbConnection)) {
+
+          SqlDataReader dataReader = cmd.ExecuteReader();
+
+          if (dataReader.Read()) {
+            return dataReader["FullSourceTableName"].ToString();
           }
 
           return string.Empty;
         }
-      } catch (Exception ex) {
-        throw new Exception($"Error al truncar la tabla {ptableName}. Detalles del error: {ex.Message}", ex);
       }
     }
 
 
-    public DataTable GetTablesList(string pSSConnection) {
-      try {
-        using (SqlConnection connectionSS = CreateConnection(pSSConnection))
-        using (SqlCommand cmd = new SqlCommand("SELECT SourceTable FROM sources.OMS_Intermediate_Tables_List WHERE Active = 'T'", connectionSS)) {
-          connectionSS.Open();
-          using (var dataReader = cmd.ExecuteReader()) {
-            var dataTable = new DataTable();
-            dataTable.Load(dataReader);
-            return dataTable;
-          }
+    public FixedList<string> GetTablesList() {
+      var commandString = "SELECT SourceTable " +
+                          "FROM sources.OMS_Intermediate_Tables_List " +
+                          "WHERE Active = 'T'";
+
+      using (SqlConnection dbConnection = OpenConnection()) {
+
+        using (SqlCommand cmd = new SqlCommand(commandString, dbConnection)) {
+
+          var dataReader = cmd.ExecuteReader();
+
+          var dataTable = new DataTable();
+
+          dataTable.Load(dataReader);
+
+          return dataTable.Select()
+                          .Select(row => (string) row["SourceTable"])
+                          .ToFixedList();
         }
-      } catch (Exception ex) {
-        throw new Exception("Error al obtener la lista de tablas de sources.OMS_Intermediate_Tables_List en Sql Server.", ex);
       }
     }
+
+
+    internal void StoreDataTable(DataTable dataTable, string destinationTableName) {
+      Assertion.Require(dataTable, nameof(dataTable));
+      Assertion.Require(destinationTableName, nameof(destinationTableName));
+
+      using (SqlConnection dbConnection = OpenConnection()) {
+
+        using (SqlBulkCopy bulkCopy = new SqlBulkCopy(dbConnection)) {
+
+          bulkCopy.DestinationTableName = destinationTableName;
+          bulkCopy.BatchSize = dataTable.Rows.Count;
+          bulkCopy.WriteToServer(dataTable);
+        }
+      }
+    }
+
+
+    internal void TruncateTable(string tableName) {
+      Assertion.Require(tableName, nameof(tableName));
+
+      using (SqlConnection dbConnection = OpenConnection()) {
+
+        using (SqlCommand cmdTruncate = new SqlCommand($"TRUNCATE TABLE {tableName}", dbConnection)) {
+          cmdTruncate.ExecuteNonQuery();
+        }
+      }
+    }
+
+    #region Helpers
+
+    private SqlConnection OpenConnection() {
+      var connection = new SqlConnection(_connectionString);
+
+      connection.Open();
+
+      return connection;
+    }
+
+    #endregion Helpers
 
   }  // class SqlServerDataServices
 
