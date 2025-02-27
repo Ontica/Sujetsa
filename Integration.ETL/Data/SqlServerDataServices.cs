@@ -13,6 +13,8 @@ using System.Data.SqlClient;
 
 using System.Linq;
 
+using Empiria.Data;
+
 namespace Empiria.Trade.Integration.ETL.Data {
 
   /// <summary>Provides services to read and write data from SQL Server databases.</summary>
@@ -44,7 +46,7 @@ namespace Empiria.Trade.Integration.ETL.Data {
       Assertion.Require(fullTableName, nameof(fullTableName));
 
       string query = $@"
-            SELECT CHECKSUM_AGG(BINARY_CHECKSUM(*)) 
+            SELECT CHECKSUM_AGG(BINARY_CHECKSUM(*))
             FROM {fullTableName}";
       using (SqlConnection dbConnection = OpenConnection()) {
 
@@ -77,6 +79,13 @@ namespace Empiria.Trade.Integration.ETL.Data {
                           .ToFixedList();
         }
       }
+    }
+
+
+    internal FixedList<T> ReadData<T>(string sql) {
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetPlainObjectFixedList<T>(op);
     }
 
 
