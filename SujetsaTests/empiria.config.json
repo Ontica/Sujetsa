@@ -12,7 +12,7 @@
     {
       "type": "",
       "key": "GlobalConfigurationFile",
-      "value": "{{GLOBAL-CONFIGURATION-FILE}}"
+      "value": "E:\\empiria.files\\config.data\\empiria.trade.development.json"
     },
     {
       "type": "Tests",

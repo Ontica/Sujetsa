@@ -40,6 +40,22 @@ namespace Empiria.Trade.Integration.ETL.Data {
     }
 
 
+    internal int? GetChecksum(string fullTableName) {
+      Assertion.Require(fullTableName, nameof(fullTableName));
+
+      string query = $@"
+            SELECT CHECKSUM_AGG(BINARY_CHECKSUM(*)) 
+            FROM {fullTableName}";
+      using (SqlConnection dbConnection = OpenConnection()) {
+
+        using (SqlCommand cmd = new SqlCommand(query, dbConnection)) {
+
+          return cmd.ExecuteScalar() as int?;
+        }
+      }
+    }
+
+
     internal FixedList<ETLTable> GetTablesList() {
       var commandString = "SELECT SourceTable, FullSourceTableName " +
                           "FROM sources.OMS_Intermediate_Tables_List " +
@@ -59,6 +75,19 @@ namespace Empiria.Trade.Integration.ETL.Data {
                           .Select(row => new ETLTable((string) row["SourceTable"],
                                                       (string) row["FullSourceTableName"]))
                           .ToFixedList();
+        }
+      }
+    }
+
+
+    internal int RowCounter(string tableName) {
+      Assertion.Require(tableName, nameof(tableName));
+
+      using (SqlConnection dbConnection = OpenConnection()) {
+
+        using (SqlCommand cmd = new SqlCommand($"SELECT COUNT(*) FROM {tableName}", dbConnection)) {
+
+          return (int) cmd.ExecuteScalar();
         }
       }
     }
