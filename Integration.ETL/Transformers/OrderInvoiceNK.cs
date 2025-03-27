@@ -21,11 +21,80 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     }
 
     [DataField("TIPO")]
-    internal DateTime Tipo {
+    internal string Tipo {
       get; set;
     }
-  
 
+    [DataField("TIPOPAGO")]
+    internal string TipoPago {
+      get; set;
+    }
+
+    [DataField("FR")]
+    internal string Fr {
+      get; set;
+    }
+
+    [DataField("CLIENTE")]
+    internal string Cliente {
+      get; set;
+    }
+
+    [DataField("FORMAPAGO")]
+    internal string FormaPago {
+      get; set;
+    }
+
+    [DataField("MONEDA")]
+    internal string Moneda {
+      get; set;
+    }
+
+  
+    [DataField("TIPOCAMBIO")]
+    internal decimal TipoCambio {
+      get; set;
+    }
+
+    [DataField("IMPORTE")]
+    internal decimal Importe {
+      get; set;
+    }
+
+    [DataField("CARGOS")]
+    internal decimal Cargos {
+      get; set;
+    }
+
+    [DataField("DESCUENTO")]
+    internal decimal Descuento {
+      get; set;
+    }
+
+    [DataField("SUBTOTAL")]
+    internal decimal SubTotal {
+      get; set;
+    }
+
+    [DataField("IVA")]
+    internal decimal IVA {
+      get; set;
+    }
+
+    [DataField("R_IVA")]
+    internal decimal R_IVA {
+      get; set;
+    }
+
+    [DataField("R_ISR")]
+    internal decimal R_ISR {
+      get; set;
+    }
+
+    [DataField("TOTAL")]
+    internal decimal Total {
+      get; set;
+    }
 
 
     [DataField("BinaryChecksum")]

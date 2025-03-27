@@ -15,7 +15,7 @@ using Empiria.Trade.Integration.ETL.Data;
 
 namespace Empiria.Trade.Integration.ETL.Transformers {
 
-  /// <summary>Transforms a order(OV) from NK to Empiria Trade.</summary>
+  /// <summary>Transforms a order(Factura) from NK to Empiria Trade.</summary>
   public class OrderInvoiceTransformer {
 
     private readonly string _connectionString;
@@ -34,14 +34,22 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
       WriteTargetData(transformedData);
     }
-    /*
-    private FixedList<OrderNK> ExtractDataToTransform(FixedList<OrderNK> sourceData) {
-      return sourceData.FindAll(x => x.OldBinaryChecksum != x.BinaryChecksum || x.OldBinaryChecksum == 0);
-    }*/
+
 
     private FixedList<OrderNK> ReadSourceData() {
-      var sql = "SELECT O.OV, O.Orden, O.Prioridad, O.Cliente, O.SubCliente, O.Almacen, O.Aplicado, O.Cancelado, " +
-        "O.Vendedor, O.Moneda, O.Usr_Captura, O.Fecha, O.Estatus, O.BinaryChecksum, O.OldBinaryChecksum FROM sources.OV_TARGET O " +
+      var sql = "SELECT O.FACTURA,O.TIPO,O.TIPOPAGO,O.FR,O.CLIENTE,O.FORMAPAGO,O.MONEDA," +
+        "O.TIPOCAMBIO,O.IMPORTE,O.CARGOS,O.DESCUENTO,O.SUBTOTAL," +
+        "O.IVA,O.R_IVA,O.R_ISR,O.TOTAL,O.USUARIO,O.CANCELADA,O.FECHA," +
+        "O.PEDIDO,O.APLICADA,O.VENDEDOR,O.IEPS,O.OV,O.ALMACEN,O.ICMOV," +
+        "O.CONDICIONDEPAGO,O.FECHA_ENTREGA,O.ENTREGA,O.SUBCLIENTE," +
+        "O.VENCIMIENTOS,O.POLIZA,O.SINC_S,O.OC,O.ESTATUS,O.RUTA,O.SUBRUTA," +
+        "O.DESGLOSA_IEPS,O.USUARIOCANCELO,O.FECHACANCELO,O.CONSIGNACION," +
+        "O.MD,O.TCAMBIO,O.IMPORTE_A,O.DESCUENTO_A,O.SUBTOTAL_A,O.IEPS_A," +
+        "O.IVA_A,O.R_IVA_A,O.R_ISR_A,O.TOTAL_A,O.REVERSE_DE,O.SERIE," +
+        "O.CONTADOR,O.HORA,O.CFD,O.UBICACION,O.CONSECUTIVO,O.SALIDA," +
+        "O.VER,O.TRANSACCION,O.TELEMARKETER,O.USOCFDI,O.SAT_METODOPAGO," +
+        "O.SAT_FORMAPAGO,O.SAT_REGIMENFISCAL,O.TIPOCAMBIOUSD," +
+        "O.BinaryChecksum,O.OldBinaryChecksum FROM sources.FACTURA_TARGET O " +
         "WHERE O.FECHA >= '2025-01-01' and (O.OldBinaryChecksum != O.BinaryChecksum  " +
         "OR O.OldBinaryChecksum = 0    " +
         "OR O.OldBinaryChecksum IS NULL)";
@@ -65,12 +73,11 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       var dataServices = new TransformerDataServices(connectionString);
       string connectionStringNK = GetNKConnectionString();
       var dataServicesNK = new TransformerDataServices(connectionStringNK);
-      //toTransformData.OldBinaryChecksum = 0; insertar por que es nuevo
       if (toTransformData.OldBinaryChecksum == 0) {
         return new OrderData {
           Order_Id = dataServices.GetNextId("OMS_Orders"),
           Order_UID = System.Guid.NewGuid().ToString(),
-          Order_Type_Id = 4001,////// de types
+          Order_Type_Id = 4001,
           Order_Category_Id = -1,
           Order_No = toTransformData.OV,
           Order_Description = Empiria.EmpiriaString.BuildKeywords(toTransformData.Orden , dataServices.ReturnOldDescriptionForPriority(toTransformData.Prioridad)),
@@ -84,12 +91,12 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Requisition_Id = -1,
           Order_Contract_Id = -1,
           Order_Project_Id = -1,
-          Order_Currency_Id = 600,///// de [SimpleObjects] MXN
+          Order_Currency_Id = 600,
           Order_Source_Id = -1,
           Order_Priority = dataServices.ReturnIdForPriority(toTransformData.Prioridad),
-          Order_Authorization_Time = ExecutionServer.DateMinValue,///////
-          Order_Authorized_By_Id = -1, ////////////
-          Order_Closing_Time = dataServicesNK.GetClosedDateFromOvUbicacionConsecutivo(toTransformData.OV),//toTransformData.Fecha_Cierre,
+          Order_Authorization_Time = ExecutionServer.DateMinValue,
+          Order_Authorized_By_Id = -1,
+          Order_Closing_Time = dataServicesNK.GetClosedDateFromOvUbicacionConsecutivo(toTransformData.OV),
           Order_Closed_By_Id = dataServices.GetPartyIdFromParties(dataServicesNK.GetClosedIdFromOvUbicacionConsecutivo(toTransformData.OV).ToString()),//int.Parse(toTransformData.Usr_Cierre),
           Order_Ext_Data = "",
           Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.OV, toTransformData.Cliente, toTransformData.Almacen, toTransformData.Moneda),
@@ -101,7 +108,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         return new OrderData {
           Order_Id = dataServices.GetOrderIdFromOMSOrders(toTransformData.OV),
           Order_UID = dataServices.GetOrderUIDFromOMSOrders(toTransformData.OV),
-          Order_Type_Id = 4001,////// de types
+          Order_Type_Id = 4001,
           Order_Category_Id = -1,
           Order_No = toTransformData.OV,
           Order_Description = Empiria.EmpiriaString.BuildKeywords(toTransformData.Orden, dataServices.ReturnOldDescriptionForPriority(toTransformData.Prioridad)),
@@ -115,11 +122,11 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Requisition_Id = -1,
           Order_Contract_Id = -1,
           Order_Project_Id = -1,
-          Order_Currency_Id = 600,///// de [SimpleObjects] MXN
+          Order_Currency_Id = 600,
           Order_Source_Id = -1,
           Order_Priority = dataServices.ReturnIdForPriority(toTransformData.Prioridad),
-          Order_Authorization_Time = ExecutionServer.DateMinValue,///////
-          Order_Authorized_By_Id = -1, ////////////
+          Order_Authorization_Time = ExecutionServer.DateMinValue,
+          Order_Authorized_By_Id = -1, 
           Order_Closing_Time = dataServicesNK.GetClosedDateFromOvUbicacionConsecutivo(toTransformData.OV),//toTransformData.Fecha_Cierre,
           Order_Closed_By_Id = dataServices.GetPartyIdFromParties(dataServicesNK.GetClosedIdFromOvUbicacionConsecutivo(toTransformData.OV).ToString()),//int.Parse(toTransformData.Usr_Cierre),
           Order_Ext_Data = "",
@@ -129,8 +136,6 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Status = Convert.ToChar(toTransformData.Estatus)
         };
       }
-      //toTransformData.OldBinaryChecksum != null; actualizar por que ya existe
-
     }
     
 

@@ -17,7 +17,7 @@ using Empiria.Json;
 
 namespace Empiria.Tests.Trade.Integration {
 
-  /// <summary>Unit tests for ETLService + Produvto Transformer.</summary>
+  /// <summary>Unit tests for ETLService Transformer.</summary>
   public class ETLServiceTransformerTests {
 
     #region Facts
@@ -72,6 +72,25 @@ namespace Empiria.Tests.Trade.Integration {
       Assert.True(rowCount >= 0);
     }
 
+
+    [Fact]
+    public void Should_Order_Invoice_Transformer_Execute() {
+
+
+      string tableName = "DBO.OMS_Orders";
+
+      string connectionString = GetEmpiriaConnectionString();
+
+      var orderInvoiceTransformer = new OrderInvoiceTransformer(connectionString);
+
+      orderInvoiceTransformer.Execute();
+
+      var sut = new TransformerDataServices(connectionString);
+
+      int rowCount = sut.RowCounter(tableName);
+
+      Assert.True(rowCount >= 0);
+    }
 
 
     [Fact]

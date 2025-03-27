@@ -34,34 +34,31 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
       WriteTargetData(transformedData);
 
-      FixedList<PartyUsersNK> sourceUsersData = ReadSourceUsersData();
 
-      //FixedList<PartyNK> toTransformData = ExtractDataToTransform(sourceData);
+      FixedList<PartyUsersNK> sourceUsersData = ReadSourceUsersData();
 
       FixedList<PartyData> transformedUsersData = TransformUsers(sourceUsersData);
 
       WriteTargetData(transformedUsersData);
 
-      FixedList<PartySalespersonNK> sourceSalespersonData = ReadSourceSalespersonData();
 
-      //FixedList<PartyNK> toTransformData = ExtractDataToTransform(sourceData);
+      FixedList<PartySalespersonNK> sourceSalespersonData = ReadSourceSalespersonData();
 
       FixedList<PartyData> transformedSalespersonData = TransformSalesperson(sourceSalespersonData);
 
       WriteTargetData(transformedSalespersonData);
 
+
       FixedList<PartyData> transformedUsersDataForPartyContactIdUpdate = TransformUsersForPartyContactIdUpdate(sourceUsersData);
 
       WriteTargetData(transformedUsersDataForPartyContactIdUpdate);
+
 
       FixedList<PartyData> transformedSalespersonDataForPartyContactIdUpdate = TransformSalespersonForPartyContactIdUpdate(sourceSalespersonData);
 
       WriteTargetData(transformedSalespersonDataForPartyContactIdUpdate);
     }
-    /*
-    private FixedList<PartyNK> ExtractDataToTransform(FixedList<PartyNK> sourceData) {
-      return sourceData.FindAll(x => x.OldBinaryChecksum != x.BinaryChecksum || x.OldBinaryChecksum == 0);
-    }*/
+
 
     private FixedList<PartySalespersonNK> ReadSourceSalespersonData() {
       var sql = "SELECT VENDEDOR,NOMBRE,TELEFONO,EMAIL,ACTIVO,BinaryChecksum,OldBinaryChecksum FROM sources.VENDEDOR_TARGET PT " +
@@ -137,7 +134,6 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     private PartyData Transform(PartyNK toTransformData) {
       string connectionString = GetEmpiriaConnectionString();
       var dataServices = new TransformerDataServices(connectionString);
-      //toTransformData.OldBinaryChecksum = 0; insertar por que es nuevo
       if (toTransformData.OldBinaryChecksum == 0) {
         return new PartyData {
           Party_Id = dataServices.GetNextId("Parties"),
@@ -159,14 +155,14 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Party_Parent_Id = -1,
           Party_Posted_By_Id = -1,
           Party_Posting_Time = toTransformData.Fecha_Alta,
-          Party_Status = "A", /////PENDIENTE REGLA 
+          Party_Status = "A", 
           Party_Contact_Id = -1
         };
       } else {
         return new PartyData {
           Party_Id = dataServices.GetPartyIdFromParties(toTransformData.Cliente),
           Party_UID = dataServices.GetPartyUIDFromParties(toTransformData.Cliente),
-          Party_Type_Id = (int) ReturnIdForPartyCode(toTransformData.RFC),//////153 o 154  de types puede ser con el RFC, si comienza con 4 letras es mpoesona, con 3 es moral
+          Party_Type_Id = (int) ReturnIdForPartyCode(toTransformData.RFC),
           Party_Code = toTransformData.Cliente,
           Party_Name = toTransformData.Nombre,
           Party_Identificators = toTransformData.Cliente,
@@ -183,19 +179,16 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Party_Parent_Id = -1,
           Party_Posted_By_Id = -1,
           Party_Posting_Time = toTransformData.Fecha_Alta,
-          Party_Status = "A", /////PENDIENTE REGLA DE MEMO fechas baja
+          Party_Status = "A", 
           Party_Contact_Id = -1
         };
       }
-      //toTransformData.OldBinaryChecksum != null; actualizar por que ya existe
-
     }
 
 
     private PartyData TransformUsers(PartyUsersNK toTransformData) {
       string connectionString = GetEmpiriaConnectionString();
       var dataServices = new TransformerDataServices(connectionString);
-      //toTransformData.OldBinaryChecksum = 0; insertar por que es nuevo
       if (toTransformData.OldBinaryChecksum == 0) {
         return new PartyData {
           Party_Id = dataServices.GetNextId("Parties"),
@@ -215,7 +208,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Party_Posted_By_Id = -1,
           Party_Posting_Time = ExecutionServer.DateMinValue,
           Party_Status = "A", 
-          Party_Contact_Id = -1// dataServices.GetNextId("Parties")-1
+          Party_Contact_Id = -1
         };
       } else {
         return new PartyData {
@@ -245,7 +238,6 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     private PartyData TransformSalesperson(PartySalespersonNK toTransformData) {
       string connectionString = GetEmpiriaConnectionString();
       var dataServices = new TransformerDataServices(connectionString);
-      //toTransformData.OldBinaryChecksum = 0; insertar por que es nuevo
       if (toTransformData.OldBinaryChecksum == 0) {
         return new PartyData {
           Party_Id = dataServices.GetNextId("Parties"),
@@ -265,7 +257,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Party_Posted_By_Id = -1,
           Party_Posting_Time = ExecutionServer.DateMinValue,
           Party_Status = dataServices.ReturnStatusforPartyStatus(toTransformData.Activo).ToString(),
-          Party_Contact_Id = -1// dataServices.GetNextId("Parties")-1
+          Party_Contact_Id = -1
         };
       } else {
         return new PartyData {
@@ -286,11 +278,9 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Party_Posted_By_Id = -1,
           Party_Posting_Time = ExecutionServer.DateMinValue,
           Party_Status = dataServices.ReturnStatusforPartyStatus(toTransformData.Activo).ToString(),
-          Party_Contact_Id = -1// dataServices.GetNextId("Parties")-1
+          Party_Contact_Id = -1
         };
       }
-      //toTransformData.OldBinaryChecksum != null; actualizar por que ya existe
-
     }
 
     
@@ -348,27 +338,21 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
     private int ReturnIdForPartyCode(string RFC) {
       //Assertion.Require(RFC, nameof(RFC));
-      //153 o 154  de types puede ser con el RFC, si comienza con 4 letras es person, con 3 es moral, 4 153 personas, 3 154 empresa
       bool first3AreLetters = RFC.Length >= 3 &&
                          Char.IsLetter(RFC[0]) &&
                          Char.IsLetter(RFC[1]) &&
                          Char.IsLetter(RFC[2]);
-
-      // Verificar si los primeros 4 caracteres son letras
       bool first4AreLetters = RFC.Length >= 4 &&
                         Char.IsLetter(RFC[0]) &&
                         Char.IsLetter(RFC[1]) &&
                         Char.IsLetter(RFC[2]) &&
                         Char.IsLetter(RFC[3]);
-
-      // Retornar 153 si los primeros 4 caracteres son letras, sino retornar 154 si los primeros 3 caracteres son letras
       if (first4AreLetters) {
         return 153;
       } else if (first3AreLetters) {
         return 154;
       } else {
-        // Si ninguno de los casos es verdadero, podrías retornar un valor predeterminado o manejarlo de otra forma
-        return -1; // O cualquier valor que consideres adecuado
+        return -1;
       }
     }
 
@@ -402,6 +386,6 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
  
     #endregion Helpers
 
-  }  // class ProductTransformer
+  }  // class PartyTransformer
 
 } // namespace Empiria.Trade.Integration.ETL.Transformers

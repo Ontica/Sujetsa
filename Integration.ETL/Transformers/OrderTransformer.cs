@@ -30,15 +30,9 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
       FixedList<OrderNK> sourceData = ReadSourceData();
 
-      //FixedList<OrderNK> toTransformData = ExtractDataToTransform(sourceData);
-
       FixedList<OrderData> transformedData = Transform(sourceData);
 
       WriteTargetData(transformedData);
-    }
-
-    private FixedList<OrderNK> ExtractDataToTransform(FixedList<OrderNK> sourceData) {
-      return sourceData.FindAll(x => x.OldBinaryChecksum != x.BinaryChecksum || x.OldBinaryChecksum == 0);
     }
 
     private FixedList<OrderNK> ReadSourceData() {
@@ -67,12 +61,11 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       var dataServices = new TransformerDataServices(connectionString);
       string connectionStringNK = GetNKConnectionString();
       var dataServicesNK = new TransformerDataServices(connectionStringNK);
-      //toTransformData.OldBinaryChecksum = 0; insertar por que es nuevo
       if (toTransformData.OldBinaryChecksum == 0) {
         return new OrderData {
           Order_Id = dataServices.GetNextId("OMS_Orders"),
           Order_UID = System.Guid.NewGuid().ToString(),
-          Order_Type_Id = 4001,////// de types
+          Order_Type_Id = 4001,
           Order_Category_Id = -1,
           Order_No = toTransformData.OV,
           Order_Description = Empiria.EmpiriaString.BuildKeywords(toTransformData.Orden , dataServices.ReturnOldDescriptionForPriority(toTransformData.Prioridad)),
@@ -86,12 +79,12 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Requisition_Id = -1,
           Order_Contract_Id = -1,
           Order_Project_Id = -1,
-          Order_Currency_Id = 600,///// de [SimpleObjects] MXN
+          Order_Currency_Id = 600,
           Order_Source_Id = -1,
           Order_Priority = dataServices.ReturnIdForPriority(toTransformData.Prioridad),
-          Order_Authorization_Time = ExecutionServer.DateMinValue,///////
-          Order_Authorized_By_Id = -1, ////////////
-          Order_Closing_Time = dataServicesNK.GetClosedDateFromOvUbicacionConsecutivo(toTransformData.OV),//toTransformData.Fecha_Cierre,
+          Order_Authorization_Time = ExecutionServer.DateMinValue,
+          Order_Authorized_By_Id = -1, 
+          Order_Closing_Time = dataServicesNK.GetClosedDateFromOvUbicacionConsecutivo(toTransformData.OV),
           Order_Closed_By_Id = dataServices.GetPartyIdFromParties(dataServicesNK.GetClosedIdFromOvUbicacionConsecutivo(toTransformData.OV).ToString()),//int.Parse(toTransformData.Usr_Cierre),
           Order_Ext_Data = "",
           Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.OV, toTransformData.Cliente, toTransformData.Almacen, toTransformData.Moneda),
@@ -103,7 +96,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         return new OrderData {
           Order_Id = dataServices.GetOrderIdFromOMSOrders(toTransformData.OV),
           Order_UID = dataServices.GetOrderUIDFromOMSOrders(toTransformData.OV),
-          Order_Type_Id = 4001,////// de types
+          Order_Type_Id = 4001,
           Order_Category_Id = -1,
           Order_No = toTransformData.OV,
           Order_Description = Empiria.EmpiriaString.BuildKeywords(toTransformData.Orden, dataServices.ReturnOldDescriptionForPriority(toTransformData.Prioridad)),
@@ -117,12 +110,12 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Requisition_Id = -1,
           Order_Contract_Id = -1,
           Order_Project_Id = -1,
-          Order_Currency_Id = 600,///// de [SimpleObjects] MXN
+          Order_Currency_Id = 600,
           Order_Source_Id = -1,
           Order_Priority = dataServices.ReturnIdForPriority(toTransformData.Prioridad),
-          Order_Authorization_Time = ExecutionServer.DateMinValue,///////
-          Order_Authorized_By_Id = -1, ////////////
-          Order_Closing_Time = dataServicesNK.GetClosedDateFromOvUbicacionConsecutivo(toTransformData.OV),//toTransformData.Fecha_Cierre,
+          Order_Authorization_Time = ExecutionServer.DateMinValue,
+          Order_Authorized_By_Id = -1, 
+          Order_Closing_Time = dataServicesNK.GetClosedDateFromOvUbicacionConsecutivo(toTransformData.OV),
           Order_Closed_By_Id = dataServices.GetPartyIdFromParties(dataServicesNK.GetClosedIdFromOvUbicacionConsecutivo(toTransformData.OV).ToString()),//int.Parse(toTransformData.Usr_Cierre),
           Order_Ext_Data = "",
           Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.OV, toTransformData.Cliente, toTransformData.Almacen, toTransformData.Moneda),
@@ -131,8 +124,6 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Status = Convert.ToChar(toTransformData.Estatus)
         };
       }
-      //toTransformData.OldBinaryChecksum != null; actualizar por que ya existe
-
     }
     
 
