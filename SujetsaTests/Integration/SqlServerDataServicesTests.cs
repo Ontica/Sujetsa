@@ -52,7 +52,7 @@ namespace Empiria.Tests.Trade.Integration {
 
     [Fact]
     public void Should_Return_Checksum() {
-      string tableName = "NKsujetsaFB.sources.LISTA";
+      string tableName = "NKsujetsaFB.sources.PRODUCTOALMACENLOC";
 
       string connectionString = GetConnectionString();
 
@@ -89,8 +89,8 @@ namespace Empiria.Tests.Trade.Integration {
       dataTableTest.Columns.Add("MARGEN", typeof(decimal));
       dataTableTest.Columns.Add("PERMISO", typeof(string));
       dataTableTest.Columns.Add("BinaryChecksum", typeof(byte[]));
-      dataTableTest.Rows.Add("001", "Linea 1", 10.50, "Permiso1", null);
-      dataTableTest.Rows.Add("002", "Linea 2", 20.75, "Permiso2", null);
+      dataTableTest.Rows.Add("001", "ESTANDAR", null, null, null);
+      dataTableTest.Rows.Add("002", "FINO", null, null, null);
 
       string connectionString = GetConnectionString();
 
@@ -107,8 +107,8 @@ namespace Empiria.Tests.Trade.Integration {
 
     [Fact]
     public void Should_Try_MergeStoredProcedure() {
-      string tableName1 = "NKsujetsaFB.sources.LISTA_TARGET";
-      string tableName2 = "NKsujetsaFB.sources.LISTA";
+      string tableName1 = "NKsujetsaFB.sources.OVUBICACIONCONSECUTIVO";
+      string tableName2 = "NKsujetsaFB.sources.OVUBICACIONCONSECUTIVO_TARGET";
 
       string connectionString = GetConnectionString();
 

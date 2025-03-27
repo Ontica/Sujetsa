@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : Trade Integration ETL Services               Component : Integration Layer                     *
 *  Assembly : Empiria.Trade.Integration.ETL                Pattern   : Information holder                    *
-*  Type     : ProductNK                                    License   : Please read LICENSE.txt file          *
+*  Type     : OrderInvoiceNK                               License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : A row in Product NK table.                                                                     *
+*  Summary  : A row in Order(Factura) NK table.                                                              *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -12,44 +12,22 @@ using System;
 
 namespace Empiria.Trade.Integration.ETL.Transformers {
 
-  /// <summary>A row in Product NK table.</summary>
-  internal class ProductNK {
+  /// <summary>A row in Order(Factura) NK table.</summary>
+  internal class OrderInvoiceNK {
 
-    [DataField("PRODUCTO")]
-    internal string Producto {
+    [DataField("FACTURA")]
+    internal string Factura {
       get; set;
     }
 
-    [DataField("DESCRIPCION")]
-    internal string Descripcion {
+    [DataField("TIPO")]
+    internal DateTime Tipo {
       get; set;
     }
+  
 
-    [DataField("GRUPO")]
-    internal string Grupo {
-      get; set;
-    }
 
-    [DataField("SUBGRUPO")]
-    internal string SubGrupo {
-      get; set;
-    }
 
-    [DataField("UNIDAD")]
-    internal string UnidadMedida {
-      get; set;
-    }
-
-    [DataField("ALTA")]
-    internal DateTime FechaAlta {
-      get; set;
-    }
-
-    [DataField("BAJA")]
-    internal string  StatusProducto{
-      get; set;
-    }
-    
     [DataField("BinaryChecksum")]
     internal int BinaryChecksum {
       get; set;
@@ -59,7 +37,8 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     internal int OldBinaryChecksum {
       get; set;
     }
-    
-  }  // class ProductNK
+   
+
+  }  // class OrderInvoiceNK
 
 }  // namespace Empiria.Trade.Integration.ETL.Transformers

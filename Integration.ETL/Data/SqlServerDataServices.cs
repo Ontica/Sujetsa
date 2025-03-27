@@ -35,6 +35,7 @@ namespace Empiria.Trade.Integration.ETL.Data {
 
         using (SqlCommand cmd = new SqlCommand("sources.OMS_Merge_Intermediate_Tables", dbConnection)) {
           cmd.CommandType = CommandType.StoredProcedure;
+          cmd.CommandTimeout = 300;
 
           cmd.ExecuteNonQuery();
         }
@@ -46,7 +47,7 @@ namespace Empiria.Trade.Integration.ETL.Data {
       Assertion.Require(fullTableName, nameof(fullTableName));
 
       string query = $@"
-            SELECT CHECKSUM_AGG(BINARY_CHECKSUM(*))
+            SELECT CHECKSUM_AGG(CHECKSUM(BinaryChecksum))
             FROM {fullTableName}";
       using (SqlConnection dbConnection = OpenConnection()) {
 
@@ -81,14 +82,7 @@ namespace Empiria.Trade.Integration.ETL.Data {
       }
     }
 
-
-    internal FixedList<T> ReadData<T>(string sql) {
-      var op = DataOperation.Parse(sql);
-
-      return DataReader.GetPlainObjectFixedList<T>(op);
-    }
-
-
+ 
     internal int RowCounter(string tableName) {
       Assertion.Require(tableName, nameof(tableName));
 
@@ -109,7 +103,7 @@ namespace Empiria.Trade.Integration.ETL.Data {
       using (SqlConnection dbConnection = OpenConnection()) {
 
         using (SqlBulkCopy bulkCopy = new SqlBulkCopy(dbConnection)) {
-
+          bulkCopy.BulkCopyTimeout = 300; 
           bulkCopy.DestinationTableName = destinationTableName;
           bulkCopy.BatchSize = dataTable.Rows.Count;
           bulkCopy.WriteToServer(dataTable);
@@ -124,7 +118,8 @@ namespace Empiria.Trade.Integration.ETL.Data {
       using (SqlConnection dbConnection = OpenConnection()) {
 
         using (SqlCommand cmdTruncate = new SqlCommand($"TRUNCATE TABLE {tableName}", dbConnection)) {
-          cmdTruncate.ExecuteNonQuery();
+            cmdTruncate.ExecuteNonQuery();
+          
         }
       }
     }

@@ -15,25 +15,108 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
   /// <summary>Represents a Product in Empiria Trade OMS_Products database table.</summary>
   internal class ProductData {
 
-    internal int ProductId {
+    [DataField("Product_Id")]
+    internal int Product_Id {
       get; set;
     }
 
-    internal string ProductCode {
+    [DataField("Product_UID")]
+    internal string Product_UID {
       get; set;
     }
 
-    internal string Name {
+    [DataField("Product_Type_Id")]
+    internal int Product_Type_Id {
       get; set;
     }
 
-
-    internal DateTime StartDate {
+    [DataField("Product_Category_Id")]
+    internal int Product_Category_Id {
       get; set;
     }
 
+    [DataField("Product_Name")]
+    internal string Product_Name {
+      get; set;
+    }
 
-    internal DateTime EndDate {
+    [DataField("Product_Description")]
+    internal string Product_Description {
+      get; set;
+    }
+
+    [DataField("Product_Internal_Code")]
+    internal string Product_Internal_Code {
+      get; set;
+    }
+
+    [DataField("Product_Identificators")]
+    internal string Product_Identificators {
+      get; set;
+    }
+
+    [DataField("Product_Roles")]
+    internal string Product_Roles {
+      get; set;
+    }
+
+    [DataField("Product_Tags")]
+    internal string Product_Tags {
+      get; set;
+    }
+
+    [DataField("Product_Attributes")]
+    internal string Product_Attributes {
+      get; set;
+    }
+
+    [DataField("Product_Base_Unit_Id")]
+    internal int Product_Base_Unit_Id {
+      get; set;
+    }
+
+    [DataField("Product_Manager_Id")]
+    internal int Product_Manager_Id {
+      get; set;
+    }
+
+    [DataField("Product_Ext_Data")]
+    internal string Product_Ext_Data {
+      get; set;
+    }
+
+    [DataField("Product_Keywords")]
+    internal string Product_Keywords {
+      get; set;
+    }
+
+    [DataField("Product_Start_Date")]
+    internal DateTime Product_Start_Date {
+      get; set;
+    }
+
+    [DataField("Product_End_Date")]
+    internal DateTime Product_End_Date {
+      get; set;
+    }
+
+    [DataField("Product_Historic_Id")]
+    internal int Product_Historic_Id {
+      get; set;
+    }
+
+    [DataField("Product_Posted_By_Id")]
+    internal int Product_Posted_By_Id {
+      get; set;
+    }
+
+    [DataField("Product_Posting_Time")]
+    internal DateTime Product_Posting_Time {
+      get; set;
+    }
+
+    [DataField("Product_Status")]
+    internal char Product_Status {
       get; set;
     }
 
