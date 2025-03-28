@@ -37,22 +37,22 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
 
     private FixedList<OrderInvoiceNK> ReadSourceData() {
-      var sql = "SELECT O.FACTURA,O.TIPO,O.TIPOPAGO,O.FR,O.CLIENTE,O.FORMAPAGO,O.MONEDA," +
-        "O.TIPOCAMBIO,O.IMPORTE,O.CARGOS,O.DESCUENTO,O.SUBTOTAL," +
-        "O.IVA,O.R_IVA,O.R_ISR,O.TOTAL,O.USUARIO,O.CANCELADA,O.FECHA," +
-        "O.PEDIDO,O.APLICADA,O.VENDEDOR,O.IEPS,O.OV,O.ALMACEN,O.ICMOV," +
-        "O.CONDICIONDEPAGO,O.FECHA_ENTREGA,O.ENTREGA,O.SUBCLIENTE," +
-        "O.VENCIMIENTOS,O.POLIZA,O.SINC_S,O.OC,O.ESTATUS,O.RUTA,O.SUBRUTA," +
-        "O.DESGLOSA_IEPS,O.USUARIOCANCELO,O.FECHACANCELO,O.CONSIGNACION," +
-        "O.MD,O.TCAMBIO,O.IMPORTE_A,O.DESCUENTO_A,O.SUBTOTAL_A,O.IEPS_A," +
-        "O.IVA_A,O.R_IVA_A,O.R_ISR_A,O.TOTAL_A,O.REVERSE_DE,O.SERIE," +
-        "O.CONTADOR,O.HORA,O.CFD,O.UBICACION,O.CONSECUTIVO,O.SALIDA," +
-        "O.VER,O.TRANSACCION,O.TELEMARKETER,O.USOCFDI,O.SAT_METODOPAGO," +
-        "O.SAT_FORMAPAGO,O.SAT_REGIMENFISCAL,O.TIPOCAMBIOUSD," +
-        "O.BinaryChecksum,O.OldBinaryChecksum FROM sources.FACTURA_TARGET O " +
-        "WHERE O.FECHA >= '2025-01-01' and (O.OldBinaryChecksum != O.BinaryChecksum  " +
-        "OR O.OldBinaryChecksum = 0    " +
-        "OR O.OldBinaryChecksum IS NULL)";
+      var sql = " Select O.Factura,O.Tipo,O.Tipopago,O.Fr,O.Cliente,O.Formapago,O.Moneda, " +
+        "O.Tipocambio,O.Importe,O.Cargos,O.Descuento,O.Subtotal, " +
+        "O.Iva,O.R_Iva,O.R_Isr,O.Total,O.Usuario,O.Cancelada,O.Fecha, " +
+        "O.Pedido,O.Aplicada,O.Vendedor,O.Ieps,O.Ov,O.Almacen,O.Icmov, " +
+        "O.Condiciondepago,O.Fecha_Entrega,O.Entrega,O.Subcliente, " +
+        "O.Vencimientos,O.Poliza,O.Sinc_S,O.Oc,O.Estatus,O.Ruta,O.Subruta, " +
+        "O.Desglosa_Ieps,O.Usuariocancelo,O.Fechacancelo,O.Consignacion, " +
+        "O.Md,O.Tcambio,O.Importe_A,O.Descuento_A,O.Subtotal_A,O.Ieps_A, " +
+        "O.Iva_A,O.R_Iva_A,O.R_Isr_A,O.Total_A,O.Reverse_De,O.Serie, " +
+        "O.Contador,O.Hora,O.Cfd,O.Ubicacion,O.Consecutivo,O.Salida, " +
+        "O.Ver,O.Transaccion,O.Telemarketer,O.Usocfdi,O.Sat_Metodopago, " +
+        "O.Sat_Formapago,O.Sat_Regimenfiscal,O.Tipocambiousd, " +
+        "O.Binarychecksum,O.Oldbinarychecksum From Sources.Factura_Target O " +
+        "Where O.Fecha >= '2025-01-01' And(O.Oldbinarychecksum != O.Binarychecksum " +
+        "Or O.Oldbinarychecksum = 0 " +
+        "Or O.Oldbinarychecksum IS NULL)";
 
       var connectionString = GetNKConnectionString();
 

@@ -138,15 +138,26 @@ namespace Empiria.Trade.Integration.ETL.Data {
       }
     }
 
-    internal int GetOrderIdFromOMSOrdersItems(string ov, int det) {
-      Assertion.Require(ov, nameof(ov));
+    internal int GetOrderIdFromOMSOrdersItems(int id, int det) {
+      Assertion.Require(id, "Necesito el Order Item Order Id");
       Assertion.Require(det, "Necesito el DET");
       using (SqlConnection dbConnection = OpenConnection()) {
 
-        using (SqlCommand cmd = new SqlCommand($"SELECT Order_Id FROM dbo.OMS_Order_Items  WHERE Order_No = '{ov}' " +
+        using (SqlCommand cmd = new SqlCommand($"SELECT Order_Item_Id FROM dbo.OMS_Order_Items  WHERE Order_Item_Order_Id = '{id}' " +
           $"and Order_Item_Position = {det}", dbConnection)) {
           var result = cmd.ExecuteScalar();
 
+          return (int) result;
+        }
+      }
+    }
+
+
+    internal int GetOrderItemProviderIdFromOMSOrders(string orden) {
+      Assertion.Require(orden, nameof(orden));
+      using (SqlConnection dbConnection = OpenConnection()) {
+        using (SqlCommand cmd = new SqlCommand($"SELECT Order_Provider_Id FROM dbo.OMS_Orders WHERE Order_No = '{orden}'", dbConnection)) {
+          var result = cmd.ExecuteScalar();
           return (int) result;
         }
       }
@@ -179,12 +190,12 @@ namespace Empiria.Trade.Integration.ETL.Data {
     }
 
 
-    internal string GetOrderUIDFromOMSOrdersItems(string ov, int det) {
-      Assertion.Require(ov, nameof(ov));
+    internal string GetOrderUIDFromOMSOrdersItems(int id, int det) {
+      Assertion.Require(id, "Necesito el Order Item Order Id");
       Assertion.Require(det, "Necesito el DET");
       using (SqlConnection dbConnection = OpenConnection()) {
 
-        using (SqlCommand cmd = new SqlCommand($"SELECT Order_UID FROM dbo.OMS_Order_Items  WHERE Order_No = '{ov}' " +
+        using (SqlCommand cmd = new SqlCommand($"SELECT Order_UID FROM dbo.OMS_Order_Items  WHERE Order_Item_Order_Id = '{id}' " +
           $" and Order_Item_Position = {det}", dbConnection)) {
           var result = cmd.ExecuteScalar();
 
