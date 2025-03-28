@@ -195,7 +195,7 @@ namespace Empiria.Trade.Integration.ETL.Data {
       Assertion.Require(det, "Necesito el DET");
       using (SqlConnection dbConnection = OpenConnection()) {
 
-        using (SqlCommand cmd = new SqlCommand($"SELECT Order_UID FROM dbo.OMS_Order_Items  WHERE Order_Item_Order_Id = '{id}' " +
+        using (SqlCommand cmd = new SqlCommand($"SELECT Order_Item_UID FROM dbo.OMS_Order_Items  WHERE Order_Item_Order_Id = '{id}' " +
           $" and Order_Item_Position = {det}", dbConnection)) {
           var result = cmd.ExecuteScalar();
 

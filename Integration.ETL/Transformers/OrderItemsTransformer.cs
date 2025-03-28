@@ -41,7 +41,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     private FixedList<OrderItemsNK> ReadSourceData() {
       var sql = "SELECT O.OV,O.Producto,O.Unidad,O.Referencia,O.Cantidad,O.Precio,O.Descuento,O.Det,O.Almacen,O.OldBinaryChecksum,O.BinaryChecksum "+
           "FROM sources.OVDET_TARGET O " +
-          "JOIN sources.OV_TARGET V  ON V.OV = O.OV AND V.FECHA >= '2025-03-01' " +
+          "JOIN sources.OV_TARGET V  ON V.OV = O.OV AND V.FECHA >= '2025-01-01' " +
           "AND(O.OldBinaryChecksum != O.BinaryChecksum " +
           "OR O.OldBinaryChecksum = 0)";
 
