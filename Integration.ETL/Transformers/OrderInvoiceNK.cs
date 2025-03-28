@@ -349,13 +349,13 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     }
 
     [DataField("CONSECUTIVO")]
-    internal Decimal Consecutivo
+    internal int Consecutivo
     {
             get; set;
     }
 
     [DataField("SALIDA")]
-    internal Decimal Salida
+    internal int Salida
     {
             get; set;
     }
