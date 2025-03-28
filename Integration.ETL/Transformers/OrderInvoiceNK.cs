@@ -19,7 +19,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     internal string Factura {
       get; set;
     }
-
+    /*
     [DataField("TIPO")]
     internal string Tipo {
       get; set;
@@ -34,12 +34,12 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     internal string Fr {
       get; set;
     }
-
+    */
     [DataField("CLIENTE")]
     internal string Cliente {
       get; set;
     }
-
+    /*
     [DataField("FORMAPAGO")]
     internal string FormaPago {
       get; set;
@@ -48,9 +48,9 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     [DataField("MONEDA")]
     internal string Moneda {
       get; set;
-    }
+    }*/
 
-  
+  /*
     [DataField("TIPOCAMBIO")]
     internal decimal TipoCambio {
       get; set;
@@ -59,12 +59,12 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     [DataField("IMPORTE")]
     internal decimal Importe {
       get; set;
-    }
-
+    }*/
+    /*
     [DataField("CARGOS")]
     internal decimal Cargos {
       get; set;
-    }
+    }*/
 
     [DataField("DESCUENTO")]
     internal decimal Descuento {
@@ -75,7 +75,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     internal decimal SubTotal {
       get; set;
     }
-
+    /*
     [DataField("IVA")]
     internal decimal IVA {
       get; set;
@@ -89,7 +89,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     [DataField("R_ISR")]
     internal decimal R_ISR {
       get; set;
-    }
+    }*/
 
     [DataField("TOTAL")]
     internal decimal Total {
@@ -101,12 +101,12 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     {
           get; set;
     }
-
+    /*
     [DataField("CANCELADA")]
     internal string Cancelada
     {
           get; set;
-    }
+    }*/
 
     [DataField("FECHA")]
     internal DateTime Fecha
@@ -132,19 +132,19 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     {
           get; set;
     }
-
+    /*
     [DataField("IEPS")]
     internal decimal Ieps
     {
             get; set;
     }
-
+    */
     [DataField("OV")]
     internal string Ov
     {
             get; set;
     }
-
+   
 
     [DataField("ALMACEN")]
     internal string Almacen                    {
@@ -245,7 +245,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     {
             get; set;
     }
-
+    /*
     [DataField("CONSIGNACION")]
     internal string Consignacion
     {
@@ -407,7 +407,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     {
             get; set;
     }
-
+    */
 
     [DataField("BinaryChecksum")]
     internal int BinaryChecksum {
