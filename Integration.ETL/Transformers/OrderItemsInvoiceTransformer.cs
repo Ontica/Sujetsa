@@ -39,7 +39,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     private FixedList<OrderItemsInvoiceNK> ReadSourceData() {
       var sql = "SELECT O.Factura,O.Producto,O.Clave,O.Unidad,O.Cantidad,O.Precio,O.Descuento,O.Det,O.OldBinaryChecksum,O.BinaryChecksum " +
           "FROM sources.FACTURADET_TARGET O " +
-          "JOIN sources.FACTURA_TARGET V  ON V.Factura = O.Factura AND V.FECHA >= '2025-03-01' " +
+          "JOIN sources.FACTURA_TARGET V  ON V.Factura = O.Factura AND V.FECHA >= '2025-01-01' " +
           "AND(O.OldBinaryChecksum != O.BinaryChecksum " +
           "OR O.OldBinaryChecksum = 0)";
 
