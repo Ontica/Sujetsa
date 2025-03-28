@@ -24,12 +24,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     internal int Det {
       get; set;
     }
-    /*
-    [DataField("CLAVE")]
-    internal string Clave {
-      get; set;
-    }*/
-
+ 
     [DataField("PRODUCTO")]
     internal string Producto {
       get; set;
@@ -39,12 +34,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     internal string Unidad {
       get; set;
     }
-    /*
-    [DataField("EMPAQUE")]
-    internal int Empaque {
-      get; set;
-    }*/
-    
+
     [DataField("CANTIDAD")]
     internal decimal Cantidad {
       get; set;
@@ -54,17 +44,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     internal decimal Precio {
       get; set;
     }
-    /*
-    [DataField("PRECIOV")]
-    internal decimal Preciov {
-      get; set;
-    }*/
-    /*
-    [DataField("IMPORTE")]
-    internal decimal Importe {
-      get; set;
-    }
-    */
+  
     [DataField("DESCUENTO")]
     internal decimal Descuento {
       get; set;
@@ -79,121 +59,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     internal string Referencia {
       get; set;
     }
-    /*
-    [DataField("SUBTOTAL")]
-    internal decimal SubTotal {
-      get; set;
-    }
-
-    [DataField("IEPS")]
-    internal decimal IEPS {
-      get; set;
-    }
-
-    [DataField("IVA")]
-    internal decimal IVA {
-      get; set;
-    }
-
-    [DataField("TOTAL")]
-    internal decimal Total {
-      get; set;
-    }
-
-    [DataField("MARGEN")]
-    internal decimal Margen {
-      get; set;
-    }*/
-    /*
-    [DataField("COMPROMETIDO")]
-    internal decimal Comprometido {
-      get; set;
-    }*/
-    /*
-    [DataField("FACTURADO")]
-    internal decimal Facturado {
-      get; set;
-    }*/
-    /*
-   [DataField("CORRECCION")]
-    internal decimal Correccion {
-      get; set;
-    }
-    */
-    /*
-    [DataField("FACTURAC")]
-    internal int Facturac {
-      get; set;
-    }
-
-    [DataField("NEGADOS")]
-    internal decimal Negados {
-      get; set;
-    }*/
-    /*
-     [DataField("DESCUENTOSM")]
-     internal string Descuentosm {
-       get; set;
-     }
-    */
-    /*
-     [DataField("DESCUENTOS")]
-     internal string Descuentos {
-       get; set;
-     }*/
-    /*
-     [DataField("EXISTENCIA")]
-     internal decimal Existencia {
-       get; set;
-     }
-
-     [DataField("DISPONIBLE")]
-     internal decimal Disponible {
-       get; set;
-     }
-
-     [DataField("PIVA")]
-     internal decimal PIVA {
-       get; set;
-     }
-
-     [DataField("PIEPS")]
-     internal string PIEPS {
-       get; set;
-     }
-    *//*
-     [DataField("UBICACION")]
-     internal string Ubicacion {
-       get; set;
-     }
-
-     [DataField("PRECIO_NETO")]
-     internal decimal Precio_Neto {
-       get; set;
-     }
-
-
-
-     [DataField("PRECIO_MINIMO")]
-     internal decimal Precio_Minimo {
-       get; set;
-     }
-
-     [DataField("PRECIO_NETO_IVA")]
-     internal decimal Precio_Neto_IVA {
-       get; set;
-     }*/
-    /*
-    [DataField("CLAVEIMPUESTO")]
-    internal string ClaveImpuesto {
-      get; set;
-    }
-
-    [DataField("MARGENV")]
-    internal decimal Margenv {
-      get; set;
-    }*/
-
+  
     [DataField("BinaryChecksum")]
     internal int BinaryChecksum {
       get; set;
@@ -204,6 +70,6 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       get; set;
     }
 
-  }  // class OrderNK
+  }  // class OrderItemsNK
 
 }  // namespace Empiria.Trade.Integration.ETL.Transformers

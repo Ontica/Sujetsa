@@ -47,10 +47,6 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           "JOIN sources.OV_TARGET V  ON V.OV = O.OV AND V.FECHA >= '2025-03-01' " +
           "AND(O.OldBinaryChecksum != O.BinaryChecksum " +
           "OR O.OldBinaryChecksum = 0)";
-        /*"SELECT O.* FROM sources.OVDET_TARGET O " +
-        "WHERE O.OldBinaryChecksum != O.BinaryChecksum  " +
-        "OR O.OldBinaryChecksum = 0    " +
-        "OR O.OldBinaryChecksum IS NULL*/
 
       var connectionString = GetNKConnectionString();
 
@@ -69,7 +65,6 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     private OrderItemsData Transform(OrderItemsNK toTransformData) {
       string connectionString = GetEmpiriaConnectionString();
       var dataServices = new TransformerDataServices(connectionString);
-      //toTransformData.OldBinaryChecksum = 0; insertar por que es nuevo
       if (toTransformData.OldBinaryChecksum == 0) {
         return new OrderItemsData {
           Order_Item_Id = dataServices.GetNextId("OMS_Order_Items"),
@@ -125,7 +120,6 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Item_Status = Convert.ToChar(dataServices.GetOrderItemStatusFromOMSOrders(toTransformData.OV))/////(char) 'A' /////PENDIENTE ir por status a mos orders
         };
       }
-      //toTransformData.OldBinaryChecksum != null; actualizar por que ya existe
     }
     
 
@@ -163,6 +157,6 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
  
     #endregion Helpers
 
-  }  // class OrderTransformer
+  }  // class OrderItemsTransformer
   } // namespace Empiria.Trade.Integration.ETL.Transformers
 

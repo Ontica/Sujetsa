@@ -165,7 +165,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
 
     [DataField("FECHA_ENTREGA")]
-    internal DateTime Fecha_entrega
+    internal DateTime FechaEntrega
     {
             get; set;
     }
@@ -177,7 +177,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     }
 
     [DataField("SUBCLIENTE")]
-    internal string Subcliente
+    internal string SubCliente
     {
             get; set;
     }
@@ -235,13 +235,13 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     }
 
     [DataField("USUARIOCANCELO")]
-    internal string Usuariocancelo
+    internal string UsuarioCancelo
     {
             get; set;
     }
 
     [DataField("FECHACANCELO")]
-    internal DateTime Fechacancelo
+    internal DateTime FechaCancelo
     {
             get; set;
     }
