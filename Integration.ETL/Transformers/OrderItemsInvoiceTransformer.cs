@@ -33,6 +33,12 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       FixedList<OrderItemsData> transformedData = Transform(sourceData);
 
       WriteTargetData(transformedData);
+
+      var connectionString = GetNKConnectionString();
+
+      var outputDataServices = new SqlServerDataServices(connectionString);
+
+      outputDataServices.ExecuteUpdateOrderItemsStatusStoredProcedure();
     }
 
 
@@ -74,7 +80,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Item_Discount = toTransformData.Descuento,
           Order_Item_Currency_Id = 600,
           Order_Item_Related_Item_Id = -1,
-          Order_Item_Requisition_Item_Id = toTransformData.Det,
+          Order_Item_Requisition_Item_Id = -1,///////toTransformData.Det,
           Order_Item_Requested_By_Id = dataServices.GetRequestedUserIdFromOMSOrders(toTransformData.Factura),
           Order_Item_Budget_Account_Id = -1,
           Order_Item_Project_Id = -1,

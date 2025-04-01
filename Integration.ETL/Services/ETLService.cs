@@ -79,6 +79,7 @@ namespace Empiria.Trade.Integration.ETL {
       }  // foreach
 
       outputDataServices.ExecuteMergeStoredProcedure();
+      outputDataServices.ExecuteFillCommonStorageStoredProcedure();
     }
 
   }  // class ETLService

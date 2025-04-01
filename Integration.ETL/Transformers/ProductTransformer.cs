@@ -32,6 +32,13 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       FixedList<ProductData> transformedData = Transform(sourceData);
 
       WriteTargetData(transformedData);
+
+      var connectionString = GetNKConnectionString();
+
+      var outputDataServices = new SqlServerDataServices(connectionString);
+
+      outputDataServices.ExecuteUpdateProductStatusProcedure();
+      
     }
 
 

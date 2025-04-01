@@ -29,6 +29,48 @@ namespace Empiria.Trade.Integration.ETL.Data {
     }
 
 
+    internal void ExecuteFillCommonStorageStoredProcedure() {
+
+      using (SqlConnection dbConnection = OpenConnection()) {
+
+        using (SqlCommand cmd = new SqlCommand("sources.OMS_Fill_Common_Storage", dbConnection)) {
+          cmd.CommandType = CommandType.StoredProcedure;
+          cmd.CommandTimeout = 300;
+
+          cmd.ExecuteNonQuery();
+        }
+      }
+    }
+
+
+    internal void ExecuteUpdateOrderItemsStatusStoredProcedure() {
+
+      using (SqlConnection dbConnection = OpenConnection()) {
+
+        using (SqlCommand cmd = new SqlCommand("sources.OMS_Update_Order_Items_Status", dbConnection)) {
+          cmd.CommandType = CommandType.StoredProcedure;
+          cmd.CommandTimeout = 300;
+
+          cmd.ExecuteNonQuery();
+        }
+      }
+    }
+
+
+    internal void ExecuteUpdateProductStatusProcedure() {
+
+      using (SqlConnection dbConnection = OpenConnection()) {
+
+        using (SqlCommand cmd = new SqlCommand("sources.OMS_Update_Product_Status", dbConnection)) {
+          cmd.CommandType = CommandType.StoredProcedure;
+          cmd.CommandTimeout = 300;
+
+          cmd.ExecuteNonQuery();
+        }
+      }
+    }
+
+
     internal void ExecuteMergeStoredProcedure() {
 
       using (SqlConnection dbConnection = OpenConnection()) {

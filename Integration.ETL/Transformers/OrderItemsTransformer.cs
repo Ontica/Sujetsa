@@ -30,8 +30,6 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
       FixedList<OrderItemsNK> sourceData = ReadSourceData();
 
-      //FixedList<OrderItemsNK> toTransformData = ExtractDataToTransform(sourceData);
-
       FixedList<OrderItemsData> transformedData = Transform(sourceData);
 
       WriteTargetData(transformedData);
