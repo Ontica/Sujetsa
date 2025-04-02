@@ -14,6 +14,7 @@ using Empiria.Json;
 
 using Empiria.Trade.Integration.ETL.Data;
 using Empiria.Trade.Integration.ETL.Transformers;
+using System;
 
 namespace Empiria.Tests.Trade.Integration {
 
@@ -35,6 +36,34 @@ namespace Empiria.Tests.Trade.Integration {
       Assert.NotNull(sut);
       Assert.True(sut > 0);
       Assert.Equal(39, sut);
+    }
+
+    
+    [Fact]
+    public void Should_Get_Closed_Date_From_OvUbicacion_Consecutivo() {
+      string connectionString =  GetNKConnectionString();
+
+      string OV = "OV00145255";
+
+      var dataServices = new TransformerDataServices(connectionString);
+      var sut = dataServices.GetClosedDateFromOvUbicacionConsecutivo(OV);
+
+      DateTime expectedDate = new DateTime(2025, 1, 6, 11, 52, 38);
+
+      Assert.Equal(expectedDate, sut);
+    }
+
+
+    [Fact]
+    public void Should_Get_Closed_Id_From_OvUbicacion_Consecutivo() {
+      string connectionString = GetNKConnectionString();
+
+      string OV = "OV00145255";
+
+      var dataServices = new TransformerDataServices(connectionString);
+      var sut = dataServices.GetClosedIdFromOvUbicacionConsecutivo(OV);
+
+      Assert.Equal(04, sut);
     }
 
 
@@ -81,6 +110,19 @@ namespace Empiria.Tests.Trade.Integration {
 
 
     [Fact]
+    public void Should_Get_Order_Item_Provider_Id_From_OMSOrders() {
+      string connectionString = GetEmpiriaConnectionString();
+
+      string factura = "A0069214";
+
+      var dataServices = new TransformerDataServices(connectionString);
+      var sut = dataServices.GetOrderItemProviderIdFromOMSOrders(factura);
+
+      Assert.Equal(146,sut);
+    }
+
+
+    [Fact]
     public void Should_Get_Party_Id_From_Parties() {
       string connectionString = GetEmpiriaConnectionString();
 
@@ -105,6 +147,34 @@ namespace Empiria.Tests.Trade.Integration {
 
       Assert.NotNull(sut);
       Assert.Equal("d5dc4e55-b935-4459-8fa5-22ce95f65f56", sut);
+    }
+
+
+    [Fact]
+    public void Should_Get_Posted_User_Id_From_OMSOrders() {
+      string connectionString = GetEmpiriaConnectionString();
+
+      string factura = "A0069214";
+
+      var dataServices = new TransformerDataServices(connectionString);
+      var sut = dataServices.GetPostedUserIdFromOMSOrders(factura);
+
+      Assert.Equal(1673, sut);
+    }
+
+
+    [Fact]
+    public void Should_Get_Posted_Date_From_OMSOrders() {
+      string connectionString = GetEmpiriaConnectionString();
+
+      string factura = "A0069214";
+
+      var dataServices = new TransformerDataServices(connectionString);
+      var sut = dataServices.GetPostedDateFromOMSOrders(factura);
+
+      DateTime expectedDate = new DateTime(2025, 1, 6, 0, 0, 0);
+
+      Assert.Equal(expectedDate, sut);
     }
 
 
@@ -135,32 +205,57 @@ namespace Empiria.Tests.Trade.Integration {
       Assert.Equal("e1cffa3b-b597-48ea-b379-64836dcf7fb4", sut);
     }
 
-    
+
     [Fact]
-    public void Should_Read_Data() {
-      string connectionString = GetNKConnectionString();
+    public void Should_Get_Order_Item_Status_From_OMSOrders() {
+      string connectionString = GetEmpiriaConnectionString();
 
-      var con = new TransformerDataServices(connectionString);
+      string factura = "A0069214";
 
-      var sql = "SELECT * FROM sources.PRODUCTO_TARGET";
+      var dataServices = new TransformerDataServices(connectionString);
+      var sut = dataServices.GetOrderItemStatusFromOMSOrders(factura);
 
-      FixedList<ProductNK> sut = con.ReadData<ProductNK>(sql);
-
-      Assert.NotNull(sut);
+      Assert.Equal("Y", sut);
     }
 
 
     [Fact]
-    public void Should_Return_Valid_Row_Count() {
-      string tableName = "sources.PRODUCTO_TARGET";
+    public void Should_Get_Order_Id_From_OMS_Order_Items() {
+      string connectionString = GetEmpiriaConnectionString();
 
-      string connectionString = GetNKConnectionString();
+      int id = 2;
+      int det = 2;
 
-      var sut = new TransformerDataServices(connectionString);
+      var dataServices = new TransformerDataServices(connectionString);
+      var sut = dataServices.GetOrderIdFromOMSOrderItems(id,det);
 
-      int rowCount = sut.RowCounter(tableName);
+      Assert.Equal(3, sut);
+    }
 
-      Assert.True(rowCount >= 0);
+
+    [Fact]
+    public void Should_Get_Order_UID_From_OMS_Order_Items() {
+      string connectionString = GetEmpiriaConnectionString();
+
+      int id = 2;
+      int det = 2;
+
+      var dataServices = new TransformerDataServices(connectionString);
+      var sut = dataServices.GetOrderUIDFromOMSOrderItems(id, det);
+
+      Assert.Equal("eeace2a6-bf06-4031-b4ee-decfdeb9402a", sut);
+    }
+
+    [Fact]
+    public void Should_Get_Requested_User_Id_From_OMSOrders() {
+      string connectionString = GetEmpiriaConnectionString();
+
+      string factura = "A0069215";
+
+      var dataServices = new TransformerDataServices(connectionString);
+      var sut = dataServices.GetRequestedUserIdFromOMSOrders(factura);
+
+      Assert.Equal(843, sut);
     }
 
 
@@ -175,6 +270,105 @@ namespace Empiria.Tests.Trade.Integration {
 
       Assert.True(sut > 145);
       Assert.Equal(146, sut);
+    }
+
+    [Fact]
+    public void Should_Contact_Transformer_Execute() {
+
+
+      string tableName = "DBO.Contacts";
+
+      string connectionString = GetEmpiriaConnectionString();
+
+      var contactTransformer = new ContactTransformer(connectionString);
+
+      contactTransformer.Execute();
+
+      var sut = new TransformerDataServices(connectionString);
+
+      int rowCount = sut.RowCounter(tableName);
+
+      Assert.True(rowCount > 0);
+    }
+
+
+    [Fact]
+    public void Should_Order_Transformer_Execute() {
+
+
+      string tableName = "DBO.OMS_Orders";
+
+      string connectionString = GetEmpiriaConnectionString();
+
+      var orderTransformer = new OrderTransformer(connectionString);
+
+      orderTransformer.Execute();
+
+      var sut = new TransformerDataServices(connectionString);
+
+      int rowCount = sut.RowCounter(tableName);
+
+      Assert.True(rowCount >= 0);
+    }
+
+
+    [Fact]
+    public void Should_Order_Invoice_Transformer_Execute() {
+
+
+      string tableName = "DBO.OMS_Orders";
+
+      string connectionString = GetEmpiriaConnectionString();
+
+      var orderInvoiceTransformer = new OrderInvoiceTransformer(connectionString);
+
+      orderInvoiceTransformer.Execute();
+
+      var sut = new TransformerDataServices(connectionString);
+
+      int rowCount = sut.RowCounter(tableName);
+
+      Assert.True(rowCount >= 0);
+    }
+
+
+    [Fact]
+    public void Should_Order_Items_InvoiceTransformer_Execute() {
+
+
+      string tableName = "DBO.OMS_Order_Items";
+
+      string connectionString = GetEmpiriaConnectionString();
+
+      var orderItemsInvoiceTransformer = new OrderItemsInvoiceTransformer(connectionString);
+
+      orderItemsInvoiceTransformer.Execute();
+
+      var sut = new TransformerDataServices(connectionString);
+
+      int rowCount = sut.RowCounter(tableName);
+
+      Assert.True(rowCount >= 0);
+    }
+
+
+    [Fact]
+    public void Should_Order_Items_Transformer_Execute() {
+
+
+      string tableName = "DBO.OMS_Order_Items";
+
+      string connectionString = GetEmpiriaConnectionString();
+
+      var orderItemsTransformer = new OrderItemsTransformer(connectionString);
+
+      orderItemsTransformer.Execute();
+
+      var sut = new TransformerDataServices(connectionString);
+
+      int rowCount = sut.RowCounter(tableName);
+
+      Assert.True(rowCount >= 0);
     }
 
 
@@ -209,6 +403,82 @@ namespace Empiria.Tests.Trade.Integration {
       var productTransformer = new ProductTransformer(connectionString);
 
       productTransformer.Execute();
+
+      var sut = new TransformerDataServices(connectionString);
+
+      int rowCount = sut.RowCounter(tableName);
+
+      Assert.True(rowCount >= 0);
+    }
+
+
+    [Fact]
+    public void Should_Read_Data() {
+      string connectionString = GetNKConnectionString();
+
+      var con = new TransformerDataServices(connectionString);
+
+      var sql = "SELECT * FROM sources.PRODUCTO_TARGET";
+
+      FixedList<ProductNK> sut = con.ReadData<ProductNK>(sql);
+
+      Assert.NotNull(sut);
+    }
+
+
+    [Fact]
+    public void Should_Return_Id_For_Priority() {
+      string prioridad = "1";
+      string connectionString = GetNKConnectionString();
+
+      var dataServices = new TransformerDataServices(connectionString);
+      var sut = dataServices.ReturnIdForPriority(prioridad);
+
+      Assert.Equal('U', sut);
+    }
+
+
+    [Fact]
+    public void Should_Return_Id_For_Product_Base_Unit_Id() {
+      string prioridad = "H87";
+      string connectionString = GetNKConnectionString();
+
+      var dataServices = new TransformerDataServices(connectionString);
+      var sut = dataServices.ReturnIdForProductBaseUnitId(prioridad);
+
+      Assert.Equal(1110, sut);
+    }
+
+
+    [Fact]
+    public void Should_Return_Old_Description_For_Priority() {
+      string prioridad = "1";
+      string connectionString = GetNKConnectionString();
+
+      var dataServices = new TransformerDataServices(connectionString);
+      var sut = dataServices.ReturnOldDescriptionForPriority(prioridad);
+
+      Assert.Equal("OCURRE", sut);
+    }
+
+
+    [Fact]
+    public void Should_Return_Status_For_Party_Status() {
+      string prioridad = "S";
+      string connectionString = GetNKConnectionString();
+
+      var dataServices = new TransformerDataServices(connectionString);
+      var sut = dataServices.ReturnStatusForPartyStatus(prioridad);
+
+      Assert.Equal('A', sut);
+    }
+
+
+    [Fact]
+    public void Should_Return_Valid_Row_Count() {
+      string tableName = "sources.PRODUCTO_TARGET";
+
+      string connectionString = GetNKConnectionString();
 
       var sut = new TransformerDataServices(connectionString);
 

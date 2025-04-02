@@ -116,7 +116,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Authorization_Time = ExecutionServer.DateMinValue,
           Order_Authorized_By_Id = -1, 
           Order_Closing_Time = dataServicesNK.GetClosedDateFromOvUbicacionConsecutivo(toTransformData.OV),
-          Order_Closed_By_Id = dataServices.GetPartyIdFromParties(dataServicesNK.GetClosedIdFromOvUbicacionConsecutivo(toTransformData.OV).ToString()),//int.Parse(toTransformData.Usr_Cierre),
+          Order_Closed_By_Id = dataServices.GetPartyIdFromParties(dataServicesNK.GetClosedIdFromOvUbicacionConsecutivo(toTransformData.OV).ToString()),
           Order_Ext_Data = "",
           Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.OV, toTransformData.Cliente, toTransformData.Almacen, toTransformData.Moneda),
           Order_Posted_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usr_Captura),

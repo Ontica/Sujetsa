@@ -89,8 +89,8 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         };
       } else {
         return new OrderItemsData {
-          Order_Item_Id = dataServices.GetOrderIdFromOMSOrdersItems(dataServices.GetOrderIdFromOMSOrders(toTransformData.OV), toTransformData.Det),
-          Order_Item_UID = dataServices.GetOrderUIDFromOMSOrdersItems(dataServices.GetOrderIdFromOMSOrders(toTransformData.OV), toTransformData.Det),
+          Order_Item_Id = dataServices.GetOrderIdFromOMSOrderItems(dataServices.GetOrderIdFromOMSOrders(toTransformData.OV), toTransformData.Det),
+          Order_Item_UID = dataServices.GetOrderUIDFromOMSOrderItems(dataServices.GetOrderIdFromOMSOrders(toTransformData.OV), toTransformData.Det),
           Order_Item_Type_Id = 4001, 
           Order_Item_Order_Id = dataServices.GetOrderIdFromOMSOrders(toTransformData.OV),
           Order_Item_Product_Id = dataServices.GetProductIdFromOMSProducts(toTransformData.Producto), 

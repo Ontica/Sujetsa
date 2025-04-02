@@ -22,6 +22,55 @@ namespace Empiria.Tests.Trade.Integration {
 
     #region Facts
 
+
+    [Fact]
+    public void Should_Execute_Update_Order_Items_Status_Stored_Proceduree() {
+
+      string connectionString = GetConnectionString();
+
+      var sut = new SqlServerDataServices(connectionString);
+
+      sut.ExecuteUpdateOrderItemsStatusStoredProcedure();
+
+      Assert.NotNull(sut);
+
+    }
+
+
+    [Fact]
+    public void Should_Execute_Update_Product_Status_Procedure() {
+   
+      string connectionString = GetConnectionString();
+
+      var sut = new SqlServerDataServices(connectionString);
+
+      sut.ExecuteUpdateProductStatusProcedure();
+
+      Assert.NotNull(sut);
+
+    }
+
+
+    [Fact]
+    public void Should_Execute_Fill_Common_Storage_Stored_Procedure() {
+
+      string connectionString = GetConnectionString();
+
+      var sut = new SqlServerDataServices(connectionString);
+
+      sut.ExecuteFillCommonStorageStoredProcedure();
+
+      Assert.NotNull(sut);
+
+      string fullTableName = "[sujetsa].DBO.[Common_Storage]";
+
+      int rowCount = sut.RowCounter(fullTableName);
+
+      Assert.True(rowCount >= 0);
+
+    }
+
+
     [Fact]
     public void Should_Get_Tables_List() {
       string connectionString = GetConnectionString();

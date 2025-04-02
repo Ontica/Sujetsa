@@ -138,12 +138,12 @@ namespace Empiria.Trade.Integration.ETL.Data {
       }
     }
 
-    internal int GetOrderIdFromOMSOrdersItems(int id, int det) {
+    internal int GetOrderIdFromOMSOrderItems(int id, int det) {
       Assertion.Require(id, "Necesito el Order Item Order Id");
       Assertion.Require(det, "Necesito el DET");
       using (SqlConnection dbConnection = OpenConnection()) {
 
-        using (SqlCommand cmd = new SqlCommand($"SELECT Order_Item_Id FROM dbo.OMS_Order_Items  WHERE Order_Item_Order_Id = '{id}' " +
+        using (SqlCommand cmd = new SqlCommand($"SELECT Order_Item_Id FROM dbo.OMS_Order_Items  WHERE Order_Item_Order_Id = {id} " +
           $"and Order_Item_Position = {det}", dbConnection)) {
           var result = cmd.ExecuteScalar();
 
@@ -190,12 +190,12 @@ namespace Empiria.Trade.Integration.ETL.Data {
     }
 
 
-    internal string GetOrderUIDFromOMSOrdersItems(int id, int det) {
+    internal string GetOrderUIDFromOMSOrderItems(int id, int det) {
       Assertion.Require(id, "Necesito el Order Item Order Id");
       Assertion.Require(det, "Necesito el DET");
       using (SqlConnection dbConnection = OpenConnection()) {
 
-        using (SqlCommand cmd = new SqlCommand($"SELECT Order_Item_UID FROM dbo.OMS_Order_Items  WHERE Order_Item_Order_Id = '{id}' " +
+        using (SqlCommand cmd = new SqlCommand($"SELECT Order_Item_UID FROM dbo.OMS_Order_Items  WHERE Order_Item_Order_Id = {id} " +
           $" and Order_Item_Position = {det}", dbConnection)) {
           var result = cmd.ExecuteScalar();
 
@@ -357,7 +357,7 @@ namespace Empiria.Trade.Integration.ETL.Data {
     }
 
     
-    internal char ReturnStatusforPartyStatus(string activo) {
+    internal char ReturnStatusForPartyStatus(string activo) {
       switch (activo) {
         case "N":
           return 'S';
