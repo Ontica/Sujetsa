@@ -37,7 +37,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
       private FixedList<PartyData> ReadSourceData() {
       var sql = "SELECT * FROM dbo.Parties " +
-        "WHERE Party_Id >= 1567  ";
+        "WHERE Party_Id >= 1571 AND Party_Id <= 1733 ";
 
       var connectionString = GetEmpiriaConnectionString();
 
