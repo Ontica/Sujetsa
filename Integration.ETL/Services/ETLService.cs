@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using Empiria.Json;
 
@@ -29,58 +30,52 @@ namespace Empiria.Trade.Integration.ETL {
       _inputSourceConnectionString = config.Get<string>("firebirdConnection");
     }
 
-
     public void Execute() {
-
       var inputDataServices = new FirebirdDataServices(_inputSourceConnectionString);
       var outputDataServices = new SqlServerDataServices(_outputSourceConnectionString);
-      var newDataToStore = (DataTable) null;
 
-      FixedList<ETLTable> tablesToConvert = outputDataServices.GetTablesList();
+      var tablesToConvert = outputDataServices.GetTablesList();
 
-      foreach (ETLTable table in tablesToConvert) {
-
+      foreach (var table in tablesToConvert) {
         outputDataServices.TruncateTable(table.FullSourceTableName);
-
-        if (table.SourceTableName == "CAPA" || table.SourceTableName == "OV" 
-           || table.SourceTableName == "ICMOV" || table.SourceTableName == "FACTURA"
-           || table.SourceTableName == "REML") {
-            newDataToStore = inputDataServices.GetDataTable($"SELECT * FROM {table.SourceTableName} WHERE FECHA >= '2025-01-01'");
-
-        } else if (table.SourceTableName == "PRODUCTOALMACENLOC") {
-            newDataToStore = inputDataServices.GetDataTable($"SELECT (PRODUCTO || '' || ALMACEN || '' || COALESCE(RACK, '') || '' || FECHAMOV) AS DB_KEY, " +
-              $"PRODUCTO, ALMACEN, RACK, NIVEL, INDICE, FECHA, RACKANT, NIVELANT, INDICEANT, FECHAANT, " +
-              $" COMPRA, FECHAMOV, USUARIO FROM {table.SourceTableName} WHERE FECHAMOV >= '2025-01-01' order by FECHAMOV");
-          
-        } else if (table.SourceTableName == "OVUBICACIONCONSECUTIVO") {
-          newDataToStore = inputDataServices.GetDataTable($"SELECT * FROM {table.SourceTableName} WHERE INI_SURTIO >= '2025-01-01' ");
-
-        } else if (table.SourceTableName == "PRODUCTOALMACEN") {
-            newDataToStore = inputDataServices.GetDataTable($"SELECT PA.* FROM {table.SourceTableName} PA JOIN ALMACEN A ON PA.ALMACEN = A.ALMACEN ");
-
-        } else if (table.SourceTableName == "OVDET") {
-            newDataToStore = inputDataServices.GetDataTable($"SELECT OT.* FROM {table.SourceTableName} OT JOIN OV O  ON O.OV = OT.OV AND O.FECHA >= '2025-01-01' ");
-
-        } else if (table.SourceTableName == "ICMOVDET") {
-            newDataToStore = inputDataServices.GetDataTable($"SELECT OT.* FROM {table.SourceTableName} OT JOIN ICMOV O ON O.ICMOV = OT.ICMOV AND O.FECHA >= '2025-01-01' ");
-
-        } else if (table.SourceTableName == "FACTURADET") {
-          newDataToStore = inputDataServices.GetDataTable($"SELECT OT.* FROM {table.SourceTableName} OT JOIN FACTURA O ON O.FACTURA = OT.FACTURA AND O.FECHA > '2025-01-01' ");
-
-        } else if (table.SourceTableName == "REMLDET") {
-          newDataToStore = inputDataServices.GetDataTable($"SELECT OT.* FROM {table.SourceTableName} OT JOIN REML O ON O.REML= OT.REML AND O.FECHA > '2025-01-01' ");
-
-        } else {
-            newDataToStore = inputDataServices.GetDataTable($"SELECT * FROM {table.SourceTableName}");
-        }
-
+        string query = GetQueryForTable(table.SourceTableName);
+        var newDataToStore = inputDataServices.GetDataTable(query);
         outputDataServices.StoreDataTable(newDataToStore, table.FullSourceTableName);
-
-      }  // foreach
+      }
 
       outputDataServices.ExecuteMergeStoredProcedure();
       outputDataServices.ExecuteFillCommonStorageStoredProcedure();
     }
+
+    private string GetQueryForTable(string tableName) {
+      var baseDateFilter = "FECHA >= '2025-01-01'";
+
+      var queries = new Dictionary<string, string>
+      {
+        { "OV", $"SELECT * FROM {tableName} WHERE {baseDateFilter}" },
+        { "ICMOV", $"SELECT * FROM {tableName} WHERE {baseDateFilter}" },
+        { "FACTURA", $"SELECT * FROM {tableName} WHERE {baseDateFilter}" },
+        { "REML", $"SELECT * FROM {tableName} WHERE {baseDateFilter}" },
+        { "COMPRA", $"SELECT * FROM {tableName} WHERE {baseDateFilter}" },
+        { "PRODUCTOALMACENLOC", $@"SELECT 
+            (PRODUCTO || '' || ALMACEN || '' || COALESCE(RACK, '') || '' || FECHAMOV) AS DB_KEY,
+            PRODUCTO, ALMACEN, RACK, NIVEL, INDICE, FECHA, RACKANT, NIVELANT, INDICEANT, FECHAANT,
+            COMPRA, FECHAMOV, USUARIO 
+            FROM {tableName} WHERE FECHAMOV >= '2025-01-01' ORDER BY FECHAMOV" },
+        { "OVUBICACIONCONSECUTIVO", $"SELECT * FROM {tableName} WHERE INI_SURTIO >= '2025-01-01'" },
+        { "PRODUCTOALMACEN", $"SELECT PA.* FROM {tableName} PA JOIN ALMACEN A ON PA.ALMACEN = A.ALMACEN" },
+        { "OVDET", $"SELECT OT.* FROM {tableName} OT JOIN OV O ON O.OV = OT.OV AND {baseDateFilter}" },
+        { "ICMOVDET", $"SELECT OT.* FROM {tableName} OT JOIN ICMOV O ON O.ICMOV = OT.ICMOV AND {baseDateFilter}" },
+        { "FACTURADET", $"SELECT OT.* FROM {tableName} OT JOIN FACTURA O ON O.FACTURA = OT.FACTURA AND {baseDateFilter}" },
+        { "REMLDET", $"SELECT OT.* FROM {tableName} OT JOIN REML O ON O.REML = OT.REML AND {baseDateFilter}" },
+        { "COMPRADET", $"SELECT OT.* FROM {tableName} OT JOIN COMPRA O ON O.COMPRA = OT.COMPRA AND {baseDateFilter}" },
+        { "DEVOLUCIONDET", $"SELECT OT.* FROM {tableName} OT JOIN DEVOLUCION O ON O.DEVOLUCION = OT.DEVOLUCION AND {baseDateFilter}" },
+        { "NOTACREDITODET", $"SELECT OT.* FROM {tableName} OT JOIN NOTACREDITO O ON O.NOTACREDITO = OT.NOTACREDITO AND {baseDateFilter}" }
+    };
+
+      return queries.TryGetValue(tableName, out string query) ? query : $"SELECT * FROM {tableName}";
+    }
+
 
   }  // class ETLService
 
