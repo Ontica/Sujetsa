@@ -2,25 +2,24 @@
 *                                                                                                            *
 *  Module   : Trade Integration ETL Services               Component : Services Layer                        *
 *  Assembly : Empiria.Trade.Integration.ETL                Pattern   : Service provider                      *
-*  Type     : OrderInvoiceTransformer                      License   : Please read LICENSE.txt file          *
+*  Type     : OrderPurchaseTransformer                     License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Transforms a Order(Factura) from NK to Empiria Trade.                                          *
+*  Summary  : Transforms a Order(Compra) from NK to Empiria Trade.                                           *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
 using Empiria.Data;
 using Empiria.Json;
 using Empiria.Trade.Integration.ETL.Data;
 
 namespace Empiria.Trade.Integration.ETL.Transformers {
 
-  /// <summary>Transforms a order(Factura) from NK to Empiria Trade.</summary>
-  public class OrderInvoiceTransformer {
+  /// <summary>Transforms a order(Compra) from NK to Empiria Trade.</summary>
+  public class OrderPurchaseTransformer {
 
     private readonly string _connectionString;
 
-    internal OrderInvoiceTransformer(string connectionString) {
+    internal OrderPurchaseTransformer(string connectionString) {
       Assertion.Require(connectionString, nameof(connectionString));
 
       _connectionString = connectionString;
@@ -28,7 +27,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
     public void Execute() {
 
-      FixedList<OrderInvoiceNK> sourceData = ReadSourceData();
+      FixedList<OrderPurchaseNK> sourceData = ReadSourceData();
 
       FixedList<OrderData> transformedData = Transform(sourceData);
 
@@ -36,20 +35,16 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     }
 
 
-    private FixedList<OrderInvoiceNK> ReadSourceData() {
-      var sql = " Select O.Factura,O.Tipo,O.Tipopago,O.Fr,O.Cliente,O.Formapago,O.Moneda, " +
-        "O.Tipocambio,O.Importe,O.Cargos,O.Descuento,O.Subtotal, " +
-        "O.Iva,O.R_Iva,O.R_Isr,O.Total,O.Usuario,O.Cancelada,O.Fecha, " +
-        "O.Pedido,O.Aplicada,O.Vendedor,O.Ieps,O.Ov,O.Almacen,O.Icmov, " +
-        "O.Condiciondepago,O.Fecha_Entrega,O.Entrega,O.Subcliente, " +
-        "O.Vencimientos,O.Poliza,O.Sinc_S,O.Oc,O.Estatus,O.Ruta,O.Subruta, " +
-        "O.Desglosa_Ieps,O.Usuariocancelo,O.Fechacancelo,O.Consignacion, " +
-        "O.Md,O.Tcambio,O.Importe_A,O.Descuento_A,O.Subtotal_A,O.Ieps_A, " +
-        "O.Iva_A,O.R_Iva_A,O.R_Isr_A,O.Total_A,O.Reverse_De,O.Serie, " +
-        "O.Contador,O.Hora,O.Cfd,O.Ubicacion,O.Consecutivo,O.Salida, " +
-        "O.Ver,O.Transaccion,O.Telemarketer,O.Usocfdi,O.Sat_Metodopago, " +
-        "O.Sat_Formapago,O.Sat_Regimenfiscal,O.Tipocambiousd, " +
-        "O.Binarychecksum,O.Oldbinarychecksum From Sources.Factura_Target O " +
+    private FixedList<OrderPurchaseNK> ReadSourceData() {
+      var sql = "SELECT O.Compra,	 O.Fecha,	 O.OC,	 O.Almacen,	 O.Proveedor," +
+        " O.Factura,	 O.Flete,	 O.Porcentaje_Flete,	 O.Fecha_Recepcion," +
+        " O.Fecha_Facturap,	 O.Fecha_Embarquep,	 O.Referencia,	 O.Icmov," +
+        " O.Vencimientos,	 O.Aplicado,	 O.Cancelada,	 O.Impreso,	 O.Fecha_PP," +
+        " O.Plazo_EN,	 O.Captura,	 O.Usuario,	 O.F_Recep_Factoriginal," +
+        " O.Clase_Docto,	 O.Aptipo,	 O.Moneda,	 O.Importacion,	 O.ClaveImpuesto_Flete," +
+        " O.Sinc,	 O.Utilizar_Fv_Fija,	 O.Fv_Fija,	 O.CFDP,	 O.TipoCompra," +
+        "	 O.R_IVA_PCT,	 O.Serie,	 O.Contador,	 O.Binarychecksum,	 O.Oldbinarychecksum" +
+        "  FROM sources.COMPRA_TARGET O " +
         "Where O.Fecha >= '2025-01-01' And(O.Oldbinarychecksum != O.Binarychecksum " +
         "Or O.Oldbinarychecksum = 0 " +
         "Or O.Oldbinarychecksum IS NULL)";
@@ -58,17 +53,17 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
       var inputDataService = new TransformerDataServices(connectionString);
 
-      return inputDataService.ReadData<OrderInvoiceNK>(sql);
+      return inputDataService.ReadData<OrderPurchaseNK>(sql);
     }
 
 
-    private FixedList<OrderData> Transform(FixedList<OrderInvoiceNK> toTransformData) {
+    private FixedList<OrderData> Transform(FixedList<OrderPurchaseNK> toTransformData) {
       return toTransformData.Select(x => Transform(x))
                             .ToFixedList();
     }
 
 
-    private OrderData Transform(OrderInvoiceNK toTransformData) {
+    private OrderData Transform(OrderPurchaseNK toTransformData) {
       string connectionString = GetEmpiriaConnectionString();
       var dataServices = new TransformerDataServices(connectionString);
       string connectionStringNK = GetNKConnectionString();
@@ -77,16 +72,16 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         return new OrderData {
           Order_Id = dataServices.GetNextId("OMS_Orders"),
           Order_UID = System.Guid.NewGuid().ToString(),
-          Order_Type_Id = 4001,
+          Order_Type_Id = 4005,
           Order_Category_Id = -1,
-          Order_No = toTransformData.Factura,
-          Order_Description = Empiria.EmpiriaString.BuildKeywords(toTransformData.Factura, toTransformData.Cliente,  toTransformData.Ov, toTransformData.Almacen, toTransformData.Icmov),
+          Order_No = toTransformData.Compra,
+          Order_Description = toTransformData.Referencia,
           Order_Identificators = toTransformData.Factura,
-          Order_Tags = Empiria.EmpiriaString.BuildKeywords(toTransformData.Factura, toTransformData.Cliente, toTransformData.SubCliente, toTransformData.Almacen),
-          Order_Requested_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Cliente),
-          Order_Responsible_Id = dataServices.GetPartyIdFromParties(toTransformData.Vendedor),
-          Order_Beneficary_Id = dataServices.GetPartyIdFromParties(toTransformData.Cliente),
-          Order_Provider_Id  =  dataServices.GetWareHouseIdFromCommonStorage(toTransformData.Almacen),
+          Order_Tags = Empiria.EmpiriaString.BuildKeywords(toTransformData.Factura, toTransformData.Compra, toTransformData.OC, toTransformData.Almacen, toTransformData.Icmov),
+          Order_Requested_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
+          Order_Responsible_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
+          Order_Beneficary_Id = dataServices.GetWareHouseIdFromCommonStorage(toTransformData.Almacen),
+          Order_Provider_Id  = dataServices.GetPartyIdFromParties(toTransformData.Proveedor),
           Order_Budget_Id = -1,
           Order_Requisition_Id = -1,
           Order_Contract_Id = -1,
@@ -96,28 +91,28 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Priority = ' ',////////////
           Order_Authorization_Time = toTransformData.Fecha,
           Order_Authorized_By_Id = -1,
-          Order_Closing_Time = toTransformData.FechaEntrega,
-          Order_Closed_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Vendedor),/////////////
+          Order_Closing_Time = toTransformData.Fecha_Recepcion,
+          Order_Closed_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),/////////////
           Order_Ext_Data = "",
-          Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Factura, toTransformData.Cliente, toTransformData.SubCliente, toTransformData.Almacen),
-          Order_Posted_By_Id  = dataServices.GetPartyIdFromParties(toTransformData.Vendedor),
-          Order_Posting_Time  = toTransformData.Fecha,
+          Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Factura, toTransformData.Compra, toTransformData.TipoCompra, toTransformData.Almacen),
+          Order_Posted_By_Id  = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
+          Order_Posting_Time  = toTransformData.Captura,
           Order_Status = 'Y'//////toTransformData.Estatus///////////////////
         };
       } else {
         return new OrderData {
           Order_Id = dataServices.GetOrderIdFromOMSOrders(toTransformData.Factura),
           Order_UID = dataServices.GetOrderUIDFromOMSOrders(toTransformData.Factura),
-          Order_Type_Id = 4001,
+          Order_Type_Id = 4005,
           Order_Category_Id = -1,
-          Order_No = toTransformData.Factura,
-          Order_Description = Empiria.EmpiriaString.BuildKeywords(toTransformData.Factura, toTransformData.Cliente, toTransformData.Ov, toTransformData.Almacen, toTransformData.Icmov),
+          Order_No = toTransformData.Compra,
+          Order_Description = toTransformData.Referencia,
           Order_Identificators = toTransformData.Factura,
-          Order_Tags = Empiria.EmpiriaString.BuildKeywords(toTransformData.Factura, toTransformData.Cliente, toTransformData.SubCliente, toTransformData.Almacen),
-          Order_Requested_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Cliente),
-          Order_Responsible_Id = dataServices.GetPartyIdFromParties(toTransformData.Vendedor),
-          Order_Beneficary_Id = dataServices.GetPartyIdFromParties(toTransformData.Cliente),
-          Order_Provider_Id = dataServices.GetWareHouseIdFromCommonStorage(toTransformData.Almacen),
+          Order_Tags = Empiria.EmpiriaString.BuildKeywords(toTransformData.Factura, toTransformData.Compra, toTransformData.OC, toTransformData.Almacen, toTransformData.Icmov),
+          Order_Requested_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
+          Order_Responsible_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
+          Order_Beneficary_Id = dataServices.GetWareHouseIdFromCommonStorage(toTransformData.Almacen),
+          Order_Provider_Id = dataServices.GetPartyIdFromParties(toTransformData.Proveedor),
           Order_Budget_Id = -1,
           Order_Requisition_Id = -1,
           Order_Contract_Id = -1,
@@ -127,13 +122,13 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Priority = ' ',////////////
           Order_Authorization_Time = toTransformData.Fecha,
           Order_Authorized_By_Id = -1,
-          Order_Closing_Time = toTransformData.FechaEntrega,
-          Order_Closed_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Vendedor),/////////////
+          Order_Closing_Time = toTransformData.Fecha_Recepcion,
+          Order_Closed_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),/////////////
           Order_Ext_Data = "",
-          Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Factura, toTransformData.Cliente, toTransformData.SubCliente, toTransformData.Almacen),
-          Order_Posted_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Vendedor),
-          Order_Posting_Time = toTransformData.Fecha,
-          Order_Status = 'Y'/////toTransformData.Estatus///////////////////
+          Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Factura, toTransformData.Compra, toTransformData.TipoCompra, toTransformData.Almacen),
+          Order_Posted_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
+          Order_Posting_Time = toTransformData.Captura,
+          Order_Status = 'Y'//////toTransformData.Estatus///////////////////
         };
       }
     }
@@ -173,7 +168,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
     #endregion Helpers
 
-  }  // class OrderInvoiceTransformer
+  }  // class OrderPurchaseTransformer
 
 } // namespace Empiria.Trade.Integration.ETL.Transformers
 

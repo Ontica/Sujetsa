@@ -94,7 +94,47 @@ namespace Empiria.Tests.Trade.Integration {
 
 
     [Fact]
-    public void Should_Order_Items_InvoiceTransformer_Execute() {
+    public void Should_Order_Purchase_Transformer_Execute() {
+
+
+      string tableName = "DBO.OMS_Orders";
+
+      string connectionString = GetEmpiriaConnectionString();
+
+      var orderPurchaseTransformer = new OrderPurchaseTransformer(connectionString);
+
+      orderPurchaseTransformer.Execute();
+
+      var sut = new TransformerDataServices(connectionString);
+
+      int rowCount = sut.RowCounter(tableName);
+
+      Assert.True(rowCount >= 0);
+    }
+
+
+    [Fact]
+    public void Should_Order_Items_Purchase_Transformer_Execute() {
+
+
+      string tableName = "DBO.OMS_Order_Items";
+
+      string connectionString = GetEmpiriaConnectionString();
+
+      var orderItemsPurchaseTransformer = new OrderItemsPurchaseTransformer(connectionString);
+
+      orderItemsPurchaseTransformer.Execute();
+
+      var sut = new TransformerDataServices(connectionString);
+
+      int rowCount = sut.RowCounter(tableName);
+
+      Assert.True(rowCount >= 0);
+    }
+
+
+    [Fact]
+    public void Should_Order_Items_Invoice_Transformer_Execute() {
 
 
       string tableName = "DBO.OMS_Order_Items";
@@ -131,7 +171,6 @@ namespace Empiria.Tests.Trade.Integration {
 
       Assert.True(rowCount >= 0);
     }
-
 
 
     [Fact]
