@@ -92,7 +92,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Authorization_Time = toTransformData.Fecha,
           Order_Authorized_By_Id = -1,
           Order_Closing_Time = toTransformData.Fecha_Recepcion,
-          Order_Closed_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),/////////////
+          Order_Closed_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
           Order_Ext_Data = "",
           Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Factura, toTransformData.Compra, toTransformData.TipoCompra, toTransformData.Almacen),
           Order_Posted_By_Id  = dataServices.GetPartyIdFromParties(toTransformData.Usuario),

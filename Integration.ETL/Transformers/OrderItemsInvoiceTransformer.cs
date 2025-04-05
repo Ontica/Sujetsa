@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Trade.Integration.ETL                Pattern   : Service provider                      *
 *  Type     : OrderItemsInvoiceTransformer                 License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Transforms a OrderItem(OVDet) from NK to Empiria Trade.                                        *
+*  Summary  : Transforms a OrderItem(FacturaDet) from NK to Empiria Trade.                                        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
