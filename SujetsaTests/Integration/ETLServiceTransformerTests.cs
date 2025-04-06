@@ -52,7 +52,8 @@ namespace Empiria.Tests.Trade.Integration {
       Assert.True(rowCount > 0);
     }
 
-
+    /*
+     * ov
     [Fact]
     public void Should_Order_Transformer_Execute() {
 
@@ -70,7 +71,7 @@ namespace Empiria.Tests.Trade.Integration {
       int rowCount = sut.RowCounter(tableName);
 
       Assert.True(rowCount >= 0);
-    }
+    }*/
 
 
     [Fact]
@@ -114,6 +115,26 @@ namespace Empiria.Tests.Trade.Integration {
 
 
     [Fact]
+    public void Should_Order_Return_Transformer_Execute() {
+
+
+      string tableName = "DBO.OMS_Orders";
+
+      string connectionString = GetEmpiriaConnectionString();
+
+      var orderReturnTransformer = new OrderReturnTransformer(connectionString);
+
+      orderReturnTransformer.Execute();
+
+      var sut = new TransformerDataServices(connectionString);
+
+      int rowCount = sut.RowCounter(tableName);
+
+      Assert.True(rowCount >= 0);
+    }
+
+
+    [Fact]
     public void Should_Order_Items_Purchase_Transformer_Execute() {
 
 
@@ -124,6 +145,26 @@ namespace Empiria.Tests.Trade.Integration {
       var orderItemsPurchaseTransformer = new OrderItemsPurchaseTransformer(connectionString);
 
       orderItemsPurchaseTransformer.Execute();
+
+      var sut = new TransformerDataServices(connectionString);
+
+      int rowCount = sut.RowCounter(tableName);
+
+      Assert.True(rowCount >= 0);
+    }
+
+
+    [Fact]
+    public void Should_Order_Items_Return_Transformer_Execute() {
+
+
+      string tableName = "DBO.OMS_Order_Items";
+
+      string connectionString = GetEmpiriaConnectionString();
+
+      var orderItemsReturnTransformer = new OrderItemsReturnTransformer(connectionString);
+
+      orderItemsReturnTransformer.Execute();
 
       var sut = new TransformerDataServices(connectionString);
 
@@ -152,7 +193,8 @@ namespace Empiria.Tests.Trade.Integration {
       Assert.True(rowCount >= 0);
     }
 
-
+    /*
+     * OVDET
     [Fact]
     public void Should_Order_Items_Transformer_Execute() {
 
@@ -170,7 +212,7 @@ namespace Empiria.Tests.Trade.Integration {
       int rowCount = sut.RowCounter(tableName);
 
       Assert.True(rowCount >= 0);
-    }
+    }*/
 
 
     [Fact]
