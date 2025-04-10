@@ -171,7 +171,12 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     {
             get; set;
     }
-    
+
+    [DataField("CANCELADA")]
+    internal string Cancelada {
+      get; set;
+    }
+
     [DataField("BinaryChecksum")]
     internal int BinaryChecksum {
       get; set;

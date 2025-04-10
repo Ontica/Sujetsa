@@ -369,6 +369,17 @@ namespace Empiria.Trade.Integration.ETL.Data {
     }
 
 
+    internal char ReturnStatusForOrdersStatus(string status) {
+      switch (status) {
+        case "N":
+          return 'A';
+        case "S":
+          return 'X';
+        default:
+          return 'A';
+      }
+    }
+
     internal int RowCounter(string tableName) {
       Assertion.Require(tableName, nameof(tableName));
 

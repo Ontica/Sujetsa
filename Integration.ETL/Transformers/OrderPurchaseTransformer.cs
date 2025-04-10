@@ -88,7 +88,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Project_Id = -1,
           Order_Currency_Id = 600,
           Order_Source_Id = -1,
-          Order_Priority = ' ',////////////
+          Order_Priority = ' ',
           Order_Authorization_Time = toTransformData.Fecha,
           Order_Authorized_By_Id = -1,
           Order_Closing_Time = toTransformData.Fecha_Recepcion,
@@ -97,7 +97,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Factura, toTransformData.Compra, toTransformData.TipoCompra, toTransformData.Almacen),
           Order_Posted_By_Id  = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
           Order_Posting_Time  = toTransformData.Captura,
-          Order_Status = 'Y'//////toTransformData.Estatus///////////////////
+          Order_Status = dataServices.ReturnStatusForOrdersStatus(toTransformData.Cancelada)
         };
       } else {
         return new OrderData {
@@ -119,16 +119,16 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Project_Id = -1,
           Order_Currency_Id = 600,
           Order_Source_Id = -1,
-          Order_Priority = ' ',////////////
+          Order_Priority = ' ',
           Order_Authorization_Time = toTransformData.Fecha,
           Order_Authorized_By_Id = -1,
           Order_Closing_Time = toTransformData.Fecha_Recepcion,
-          Order_Closed_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),/////////////
+          Order_Closed_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
           Order_Ext_Data = "",
           Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Factura, toTransformData.Compra, toTransformData.TipoCompra, toTransformData.Almacen),
           Order_Posted_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
           Order_Posting_Time = toTransformData.Captura,
-          Order_Status = 'Y'//////toTransformData.Estatus///////////////////
+          Order_Status = dataServices.ReturnStatusForOrdersStatus(toTransformData.Cancelada)
         };
       }
     }

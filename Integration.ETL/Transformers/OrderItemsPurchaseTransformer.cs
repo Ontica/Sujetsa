@@ -15,7 +15,7 @@ using Empiria.Trade.Integration.ETL.Data;
 
 namespace Empiria.Trade.Integration.ETL.Transformers {
 
-  /// <summary>Transforms a order item(FacturaDet) from NK to Empiria Trade.</summary>
+  /// <summary>Transforms a order item(CompraDet) from NK to Empiria Trade.</summary>
   public class OrderItemsPurchaseTransformer {
 
     private readonly string _connectionString;
@@ -43,7 +43,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
 
     private FixedList<OrderItemsPurchaseNK> ReadSourceData() {
-      var sql = "SELECT 	O.COMPRA,	O.DET,O.PRODUCTO,O.CLAVE,O.CANTIDAD,O.UNIDAD,O.PRECIO,O.COSTO,O.DESCUENTOS," +
+      var sql = "SELECT	O.COMPRA,	O.DET,O.PRODUCTO,O.CLAVE,O.CANTIDAD,O.UNIDAD,O.PRECIO,O.COSTO,O.DESCUENTOS," +
         " O.SUBTOTAL,O.IVA,O.TOTAL,O.BinaryChecksum,O.OldBinaryChecksum" +
         " FROM sources.COMPRADET_TARGET O " +
         " JOIN sources.COMPRA_TARGET V  ON V.COMPRA = O.COMPRA AND V.FECHA >= '2025-01-01' " +
@@ -71,7 +71,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         return new OrderItemsData {
           Order_Item_Id = dataServices.GetNextId("OMS_Order_Items"),
           Order_Item_UID = System.Guid.NewGuid().ToString(),
-          Order_Item_Type_Id = 4001,
+          Order_Item_Type_Id = 4054,
           Order_Item_Order_Id = dataServices.GetOrderIdFromOMSOrders(toTransformData.Compra),
           Order_Item_Product_Id = dataServices.GetProductIdFromOMSProducts(toTransformData.Producto), 
           Order_Item_Description = Empiria.EmpiriaString.BuildKeywords(toTransformData.Compra, toTransformData.Producto, toTransformData.Clave),
@@ -81,7 +81,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Item_Discount = string.IsNullOrEmpty(toTransformData.Descuentos)?  0: Convert.ToDecimal(toTransformData.Descuentos),
           Order_Item_Currency_Id = 600,
           Order_Item_Related_Item_Id = -1,
-          Order_Item_Requisition_Item_Id = -1,///////toTransformData.Det,
+          Order_Item_Requisition_Item_Id = -1,
           Order_Item_Requested_By_Id = dataServices.GetRequestedUserIdFromOMSOrders(toTransformData.Compra),
           Order_Item_Budget_Account_Id = -1,
           Order_Item_Project_Id = -1,
@@ -98,7 +98,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         return new OrderItemsData {
           Order_Item_Id = dataServices.GetOrderIdFromOMSOrderItems(dataServices.GetOrderIdFromOMSOrders(toTransformData.Compra), toTransformData.Det),
           Order_Item_UID = dataServices.GetOrderUIDFromOMSOrderItems(dataServices.GetOrderIdFromOMSOrders(toTransformData.Compra), toTransformData.Det),
-          Order_Item_Type_Id = 4001,
+          Order_Item_Type_Id = 4054,
           Order_Item_Order_Id = dataServices.GetOrderIdFromOMSOrders(toTransformData.Compra),
           Order_Item_Product_Id = dataServices.GetProductIdFromOMSProducts(toTransformData.Producto),
           Order_Item_Description = Empiria.EmpiriaString.BuildKeywords(toTransformData.Compra, toTransformData.Producto,  toTransformData.Clave),
@@ -108,7 +108,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Item_Discount = string.IsNullOrEmpty(toTransformData.Descuentos) ? 0 : Convert.ToDecimal(toTransformData.Descuentos),
           Order_Item_Currency_Id = 600,
           Order_Item_Related_Item_Id = -1,
-          Order_Item_Requisition_Item_Id = -1,///////toTransformData.Det,
+          Order_Item_Requisition_Item_Id = -1,
           Order_Item_Requested_By_Id = dataServices.GetRequestedUserIdFromOMSOrders(toTransformData.Compra),
           Order_Item_Budget_Account_Id = -1,
           Order_Item_Project_Id = -1,
