@@ -57,6 +57,7 @@ namespace Empiria.Trade.Integration.ETL {
         { "FACTURA", $"SELECT * FROM {tableName} WHERE {baseDateFilter}" },
         { "REML", $"SELECT * FROM {tableName} WHERE {baseDateFilter}" },
         { "COMPRA", $"SELECT * FROM {tableName} WHERE {baseDateFilter}" },
+        { "NOTACREDITO", $"SELECT * FROM {tableName} WHERE {baseDateFilter} AND TIPO = 'D'" },
         { "PRODUCTOALMACENLOC", $@"SELECT 
             (PRODUCTO || '' || ALMACEN || '' || COALESCE(RACK, '') || '' || FECHAMOV) AS DB_KEY,
             PRODUCTO, ALMACEN, RACK, NIVEL, INDICE, FECHA, RACKANT, NIVELANT, INDICEANT, FECHAANT,
@@ -70,7 +71,7 @@ namespace Empiria.Trade.Integration.ETL {
         { "REMLDET", $"SELECT OT.* FROM {tableName} OT JOIN REML O ON O.REML = OT.REML AND {baseDateFilter}" },
         { "COMPRADET", $"SELECT OT.* FROM {tableName} OT JOIN COMPRA O ON O.COMPRA = OT.COMPRA AND {baseDateFilter}" },
         { "DEVOLUCIONDET", $"SELECT OT.* FROM {tableName} OT JOIN DEVOLUCION O ON O.DEVOLUCION = OT.DEVOLUCION AND {baseDateFilter}" },
-        { "NOTACREDITODET", $"SELECT OT.* FROM {tableName} OT JOIN NOTACREDITO O ON O.NOTACREDITO = OT.NOTACREDITO AND {baseDateFilter}" }
+        { "NOTACREDITODET", $"SELECT OT.* FROM {tableName} OT JOIN NOTACREDITO O ON O.NOTACREDITO = OT.NOTACREDITO AND {baseDateFilter} AND O.TIPO = 'D'" }
     };
 
       return queries.TryGetValue(tableName, out string query) ? query : $"SELECT * FROM {tableName}";
