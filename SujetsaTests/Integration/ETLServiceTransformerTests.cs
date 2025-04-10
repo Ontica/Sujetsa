@@ -21,7 +21,6 @@ namespace Empiria.Tests.Trade.Integration {
   public class ETLServiceTransformerTests {
 
     #region Facts
-
     [Fact]
     public void Should_Execute_ETL_Service() {
 
@@ -70,7 +69,7 @@ namespace Empiria.Tests.Trade.Integration {
 
       int rowCount = sut.RowCounter(tableName);
 
-      Assert.True(rowCount >= 0);
+      Assert.True(rowCount > 0);
     }*/
 
 
@@ -90,7 +89,27 @@ namespace Empiria.Tests.Trade.Integration {
 
       int rowCount = sut.RowCounter(tableName);
 
-      Assert.True(rowCount >= 0);
+      Assert.True(rowCount > 0);
+    }
+
+
+    [Fact]
+    public void Should_Order_Credit_Note_Transformer_Execute() {
+
+
+      string tableName = "DBO.OMS_Orders";
+
+      string connectionString = GetEmpiriaConnectionString();
+
+      var orderCreditNoteTransformer = new OrderCreditNoteTransformer(connectionString);
+
+      orderCreditNoteTransformer.Execute();
+
+      var sut = new TransformerDataServices(connectionString);
+
+      int rowCount = sut.RowCounter(tableName);
+
+      Assert.True(rowCount > 0);
     }
 
 
@@ -110,10 +129,30 @@ namespace Empiria.Tests.Trade.Integration {
 
       int rowCount = sut.RowCounter(tableName);
 
-      Assert.True(rowCount >= 0);
+      Assert.True(rowCount > 0);
     }
 
 
+    [Fact]
+    public void Should_Order_Rem_Transformer_Execute() {
+
+
+      string tableName = "DBO.OMS_Orders";
+
+      string connectionString = GetEmpiriaConnectionString();
+
+      var orderRemTransformer = new OrderRemTransformer(connectionString);
+
+      orderRemTransformer.Execute();
+
+      var sut = new TransformerDataServices(connectionString);
+
+      int rowCount = sut.RowCounter(tableName);
+
+      Assert.True(rowCount > 0);
+    }
+
+    /*
     [Fact]
     public void Should_Order_Return_Transformer_Execute() {
 
@@ -130,7 +169,27 @@ namespace Empiria.Tests.Trade.Integration {
 
       int rowCount = sut.RowCounter(tableName);
 
-      Assert.True(rowCount >= 0);
+      Assert.True(rowCount > 0);
+    }*/
+
+
+    [Fact]
+    public void Should_Order_Items_Credit_Note_Transformer_Execute() {
+
+
+      string tableName = "DBO.OMS_Order_Items";
+
+      string connectionString = GetEmpiriaConnectionString();
+
+      var orderItemsCreditNoteTransformer = new OrderItemsCreditNoteTransformer(connectionString);
+
+      orderItemsCreditNoteTransformer.Execute();
+
+      var sut = new TransformerDataServices(connectionString);
+
+      int rowCount = sut.RowCounter(tableName);
+
+      Assert.True(rowCount > 0);
     }
 
 
@@ -150,10 +209,30 @@ namespace Empiria.Tests.Trade.Integration {
 
       int rowCount = sut.RowCounter(tableName);
 
-      Assert.True(rowCount >= 0);
+      Assert.True(rowCount > 0);
     }
 
 
+    [Fact]
+    public void Should_Order_Items_Rem_Transformer_Execute() {
+
+
+      string tableName = "DBO.OMS_Order_Items";
+
+      string connectionString = GetEmpiriaConnectionString();
+
+      var orderItemsRemTransformer = new OrderItemsRemTransformer(connectionString);
+
+      orderItemsRemTransformer.Execute();
+
+      var sut = new TransformerDataServices(connectionString);
+
+      int rowCount = sut.RowCounter(tableName);
+
+      Assert.True(rowCount > 0);
+    }
+
+    /*
     [Fact]
     public void Should_Order_Items_Return_Transformer_Execute() {
 
@@ -170,8 +249,8 @@ namespace Empiria.Tests.Trade.Integration {
 
       int rowCount = sut.RowCounter(tableName);
 
-      Assert.True(rowCount >= 0);
-    }
+      Assert.True(rowCount > 0);
+    }*/
 
 
     [Fact]
@@ -190,7 +269,7 @@ namespace Empiria.Tests.Trade.Integration {
 
       int rowCount = sut.RowCounter(tableName);
 
-      Assert.True(rowCount >= 0);
+      Assert.True(rowCount > 0);
     }
 
     /*
@@ -211,7 +290,7 @@ namespace Empiria.Tests.Trade.Integration {
 
       int rowCount = sut.RowCounter(tableName);
 
-      Assert.True(rowCount >= 0);
+      Assert.True(rowCount > 0);
     }*/
 
 
@@ -231,7 +310,7 @@ namespace Empiria.Tests.Trade.Integration {
 
       int rowCount = sut.RowCounter(tableName);
 
-      Assert.True(rowCount >= 0);
+      Assert.True(rowCount > 0);
     }
 
 
@@ -250,7 +329,7 @@ namespace Empiria.Tests.Trade.Integration {
 
       int rowCount = sut.RowCounter(tableName);
 
-      Assert.True(rowCount >= 0);
+      Assert.True(rowCount > 0);
     }
 
     #endregion Facts
