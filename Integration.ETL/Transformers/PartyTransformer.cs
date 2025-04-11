@@ -65,10 +65,6 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
       WriteTargetData(transformedSalespersonDataForPartyContactIdUpdate);
 
-
-      //FixedList<PartyData> transformedSupplierDataForPartyContactIdUpdate = TransformSupplierForPartyContactIdUpdate(sourceSupplierData);
-
-      //WriteTargetData(transformedSupplierDataForPartyContactIdUpdate);
     }
 
 
@@ -164,13 +160,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       return toTransformData.Select(x => TransformSalespersonForPartyContactIdUpdate(x))
                             .ToFixedList();
     }
-
-    /*
-    private FixedList<PartyData> TransformSupplierForPartyContactIdUpdate(FixedList<PartySupplierNK> toTransformData) {
-      return toTransformData.Select(x => TransformSupplierForPartyContactIdUpdate(x))
-                            .ToFixedList();
-    }*/
-   
+ 
 
     private PartyData Transform(PartyNK toTransformData) {
       string connectionString = GetEmpiriaConnectionString();
@@ -183,13 +173,13 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Party_Code = toTransformData.Cliente,
           Party_Name =  toTransformData.Nombre,
           Party_Identificators = toTransformData.Cliente,
-          Party_Roles = Empiria.EmpiriaString.BuildKeywords(toTransformData.Nombre, toTransformData.RFC, toTransformData.SAT_pais, toTransformData.SAT_FormaPago,
-          toTransformData.SAT_MetodoPago, toTransformData.SAT_RegimenFiscal, toTransformData.SAT_UsoCFDI),
+          Party_Roles = "Client",
           Party_Tags = toTransformData.RFC,
           Party_Ext_Data = "",
           Party_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Nombre, toTransformData.TSM, toTransformData.RFC, toTransformData.Nombre_Comercial,
           toTransformData.Calle, toTransformData.Numero, toTransformData.Numero_Interior, toTransformData.Colonia, toTransformData.CP, toTransformData.Localidad,  
-          toTransformData.Ciudad1, toTransformData.Municipio, toTransformData.Estado1, toTransformData.Pais1, toTransformData.Telefono1, toTransformData.Telefono2),
+          toTransformData.Ciudad1, toTransformData.Municipio, toTransformData.Estado1, toTransformData.Pais1, toTransformData.Telefono1, toTransformData.Telefono2,
+          toTransformData.SAT_MetodoPago, toTransformData.SAT_RegimenFiscal, toTransformData.SAT_UsoCFDI),
           Party_Historic_Id = -1,
           Party_Start_Date = toTransformData.Fecha_Alta,
           Party_End_Date =  ExecutionServer.DateMaxValue,
@@ -204,23 +194,20 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Party_Id = dataServices.GetPartyIdFromParties(toTransformData.Cliente),
           Party_UID = dataServices.GetPartyUIDFromParties(toTransformData.Cliente),
           Party_Type_Id = (int) ReturnIdForPartyCode(toTransformData.RFC),
-          Party_Code = toTransformData.Cliente,
-          Party_Name = toTransformData.Nombre,
-          Party_Identificators = toTransformData.Cliente,
-          Party_Roles = Empiria.EmpiriaString.BuildKeywords(toTransformData.Nombre, toTransformData.RFC, toTransformData.SAT_pais, toTransformData.SAT_FormaPago,
-          toTransformData.SAT_MetodoPago, toTransformData.SAT_RegimenFiscal, toTransformData.SAT_UsoCFDI),
+          Party_Roles = "Client",
           Party_Tags = toTransformData.RFC,
           Party_Ext_Data = "",
           Party_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Nombre, toTransformData.TSM, toTransformData.RFC, toTransformData.Nombre_Comercial,
           toTransformData.Calle, toTransformData.Numero, toTransformData.Numero_Interior, toTransformData.Colonia, toTransformData.CP, toTransformData.Localidad,
-          toTransformData.Ciudad1, toTransformData.Municipio, toTransformData.Estado1, toTransformData.Pais1, toTransformData.Telefono1, toTransformData.Telefono2),
+          toTransformData.Ciudad1, toTransformData.Municipio, toTransformData.Estado1, toTransformData.Pais1, toTransformData.Telefono1, toTransformData.Telefono2,
+          toTransformData.SAT_MetodoPago, toTransformData.SAT_RegimenFiscal, toTransformData.SAT_UsoCFDI),
           Party_Historic_Id = -1,
           Party_Start_Date = toTransformData.Fecha_Alta,
           Party_End_Date = ExecutionServer.DateMaxValue,
           Party_Parent_Id = -1,
           Party_Posted_By_Id = -1,
           Party_Posting_Time = toTransformData.Fecha_Alta,
-          Party_Status = "A", 
+          Party_Status = "A",
           Party_Contact_Id = -1
         };
       }
@@ -238,10 +225,10 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Party_Code = toTransformData.Usuario,
           Party_Name = toTransformData.Nombre,
           Party_Identificators = toTransformData.Usuario,
-          Party_Roles = Empiria.EmpiriaString.BuildKeywords(toTransformData.Usuario, toTransformData.Nombre, toTransformData.Perfil),
+          Party_Roles = "User",
           Party_Tags = toTransformData.Usuario,
           Party_Ext_Data = "",
-          Party_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Usuario, toTransformData.Perfil),
+          Party_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Usuario, toTransformData.Nombre, toTransformData.Perfil),
           Party_Historic_Id = -1,
           Party_Start_Date = ExecutionServer.DateMinValue,
           Party_End_Date = ExecutionServer.DateMaxValue,
@@ -259,10 +246,10 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Party_Code = toTransformData.Usuario,
           Party_Name = toTransformData.Nombre,
           Party_Identificators = toTransformData.Usuario,
-          Party_Roles = Empiria.EmpiriaString.BuildKeywords(toTransformData.Usuario, toTransformData.Nombre, toTransformData.Perfil),
+          Party_Roles = "User",
           Party_Tags = toTransformData.Usuario,
           Party_Ext_Data = "",
-          Party_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Usuario),
+          Party_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Usuario, toTransformData.Nombre, toTransformData.Perfil),
           Party_Historic_Id = -1,
           Party_Start_Date = ExecutionServer.DateMinValue,
           Party_End_Date = ExecutionServer.DateMaxValue,
@@ -287,10 +274,10 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Party_Code = toTransformData.Vendedor,
           Party_Name = toTransformData.Nombre,
           Party_Identificators = toTransformData.Vendedor,
-          Party_Roles = Empiria.EmpiriaString.BuildKeywords(toTransformData.Vendedor, toTransformData.Nombre, toTransformData.Email),
+          Party_Roles = "Salesperson",
           Party_Tags = toTransformData.Vendedor,
           Party_Ext_Data = "",
-          Party_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Vendedor, toTransformData.Telefono),
+          Party_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Vendedor, toTransformData.Telefono, toTransformData.Nombre, toTransformData.Email),
           Party_Historic_Id = -1,
           Party_Start_Date = ExecutionServer.DateMinValue,
           Party_End_Date = ExecutionServer.DateMaxValue,
@@ -308,10 +295,10 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Party_Code = toTransformData.Vendedor,
           Party_Name = toTransformData.Nombre,
           Party_Identificators = toTransformData.Vendedor,
-          Party_Roles = Empiria.EmpiriaString.BuildKeywords(toTransformData.Vendedor, toTransformData.Nombre, toTransformData.Email),
+          Party_Roles = "Salesperson",
           Party_Tags = toTransformData.Vendedor,
           Party_Ext_Data = "",
-          Party_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Vendedor, toTransformData.Telefono),
+          Party_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Vendedor, toTransformData.Telefono, toTransformData.Nombre, toTransformData.Email),
           Party_Historic_Id = -1,
           Party_Start_Date = ExecutionServer.DateMinValue,
           Party_End_Date = ExecutionServer.DateMaxValue,
@@ -336,7 +323,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Party_Code = toTransformData.Proveedor,
           Party_Name = toTransformData.Nombre_Comercial,
           Party_Identificators = toTransformData.Proveedor,
-          Party_Roles = Empiria.EmpiriaString.BuildKeywords(toTransformData.Proveedor, toTransformData.Nombre, toTransformData.Email1, toTransformData.RFC),
+          Party_Roles = "Supplier",
           Party_Tags = toTransformData.RFC,
           Party_Ext_Data = "",
           Party_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Proveedor, toTransformData.Nombre, toTransformData.Email1, toTransformData.RFC),
@@ -357,7 +344,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Party_Code = toTransformData.Proveedor,
           Party_Name = toTransformData.Nombre_Comercial,
           Party_Identificators = toTransformData.Proveedor,
-          Party_Roles = Empiria.EmpiriaString.BuildKeywords(toTransformData.Proveedor, toTransformData.Nombre, toTransformData.Email1, toTransformData.RFC),
+          Party_Roles = "Supplier",
           Party_Tags = toTransformData.RFC,
           Party_Ext_Data = "",
           Party_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Proveedor, toTransformData.Nombre, toTransformData.Email1, toTransformData.RFC),
@@ -384,7 +371,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         Party_Code = toTransformData.Vendedor,
         Party_Name = toTransformData.Nombre,
         Party_Identificators = toTransformData.Vendedor,
-        Party_Roles = "Salesperson",//Empiria.EmpiriaString.BuildKeywords(toTransformData.Vendedor, toTransformData.Nombre, toTransformData.Email),
+        Party_Roles = "Salesperson",
         Party_Tags = toTransformData.Vendedor,
         Party_Ext_Data = "",
         Party_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Vendedor, toTransformData.Telefono, toTransformData.Nombre, toTransformData.Email),
@@ -399,32 +386,6 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       };
     }
 
-    /*
-    private PartyData TransformSupplierForPartyContactIdUpdate(PartySupplierNK toTransformData) {
-      string connectionString = GetEmpiriaConnectionString();
-      var dataServices = new TransformerDataServices(connectionString);
-      return new PartyData {
-        Party_Id = dataServices.GetPartyIdFromParties(toTransformData.Proveedor),
-        Party_UID = dataServices.GetPartyUIDFromParties(toTransformData.Proveedor),
-        Party_Type_Id = (int) ReturnIdForPartyCode(toTransformData.RFC),
-        Party_Code = toTransformData.Proveedor,
-        Party_Name = toTransformData.Nombre_Comercial,
-        Party_Identificators = toTransformData.Proveedor,
-        Party_Roles = Empiria.EmpiriaString.BuildKeywords(toTransformData.Proveedor, toTransformData.Nombre, toTransformData.Email1, toTransformData.RFC),
-        Party_Tags = toTransformData.RFC,
-        Party_Ext_Data = "",
-        Party_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Proveedor, toTransformData.Nombre, toTransformData.Email1, toTransformData.RFC),
-        Party_Historic_Id = -1,
-        Party_Start_Date = ExecutionServer.DateMinValue,
-        Party_End_Date = ExecutionServer.DateMaxValue,
-        Party_Parent_Id = -1,
-        Party_Posted_By_Id = -1,
-        Party_Posting_Time = ExecutionServer.DateMinValue,
-        Party_Status = dataServices.ReturnStatusForPartyStatus("S").ToString(),
-        Party_Contact_Id = dataServices.GetPartyIdFromParties(toTransformData.Proveedor)
-      };
-    }*/
-
 
     private PartyData TransformUsersForPartyContactIdUpdate(PartyUsersNK toTransformData) {
       string connectionString = GetEmpiriaConnectionString();
@@ -436,7 +397,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Party_Code = toTransformData.Usuario,
           Party_Name = toTransformData.Nombre,
           Party_Identificators = toTransformData.Usuario,
-          Party_Roles = "User",//Empiria.EmpiriaString.BuildKeywords(toTransformData.Usuario, toTransformData.Nombre, toTransformData.Perfil),
+          Party_Roles = "User",
           Party_Tags = toTransformData.Usuario,
           Party_Ext_Data = "",
           Party_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Usuario, toTransformData.Nombre, toTransformData.Perfil),
@@ -453,7 +414,6 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
 
     private int ReturnIdForPartyCode(string RFC) {
-      //Assertion.Require(RFC, nameof(RFC));
       bool first3AreLetters = RFC.Length >= 3 &&
                          Char.IsLetter(RFC[0]) &&
                          Char.IsLetter(RFC[1]) &&
