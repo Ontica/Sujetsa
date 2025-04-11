@@ -66,9 +66,9 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       WriteTargetData(transformedSalespersonDataForPartyContactIdUpdate);
 
 
-      FixedList<PartyData> transformedSupplierDataForPartyContactIdUpdate = TransformSupplierForPartyContactIdUpdate(sourceSupplierData);
+      //FixedList<PartyData> transformedSupplierDataForPartyContactIdUpdate = TransformSupplierForPartyContactIdUpdate(sourceSupplierData);
 
-      WriteTargetData(transformedSupplierDataForPartyContactIdUpdate);
+      //WriteTargetData(transformedSupplierDataForPartyContactIdUpdate);
     }
 
 
@@ -165,11 +165,11 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
                             .ToFixedList();
     }
 
-
+    /*
     private FixedList<PartyData> TransformSupplierForPartyContactIdUpdate(FixedList<PartySupplierNK> toTransformData) {
       return toTransformData.Select(x => TransformSupplierForPartyContactIdUpdate(x))
                             .ToFixedList();
-    }
+    }*/
    
 
     private PartyData Transform(PartyNK toTransformData) {
@@ -270,7 +270,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Party_Posted_By_Id = -1,
           Party_Posting_Time = ExecutionServer.DateMinValue,
           Party_Status = "A",
-          Party_Contact_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario)
+          Party_Contact_Id = -1
         };
       }
     }
@@ -384,10 +384,10 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         Party_Code = toTransformData.Vendedor,
         Party_Name = toTransformData.Nombre,
         Party_Identificators = toTransformData.Vendedor,
-        Party_Roles = Empiria.EmpiriaString.BuildKeywords(toTransformData.Vendedor, toTransformData.Nombre, toTransformData.Email),
+        Party_Roles = "Salesperson",//Empiria.EmpiriaString.BuildKeywords(toTransformData.Vendedor, toTransformData.Nombre, toTransformData.Email),
         Party_Tags = toTransformData.Vendedor,
         Party_Ext_Data = "",
-        Party_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Vendedor, toTransformData.Telefono),
+        Party_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Vendedor, toTransformData.Telefono, toTransformData.Nombre, toTransformData.Email),
         Party_Historic_Id = -1,
         Party_Start_Date = ExecutionServer.DateMinValue,
         Party_End_Date = ExecutionServer.DateMaxValue,
@@ -399,7 +399,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       };
     }
 
-
+    /*
     private PartyData TransformSupplierForPartyContactIdUpdate(PartySupplierNK toTransformData) {
       string connectionString = GetEmpiriaConnectionString();
       var dataServices = new TransformerDataServices(connectionString);
@@ -423,7 +423,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         Party_Status = dataServices.ReturnStatusForPartyStatus("S").ToString(),
         Party_Contact_Id = dataServices.GetPartyIdFromParties(toTransformData.Proveedor)
       };
-    }
+    }*/
 
 
     private PartyData TransformUsersForPartyContactIdUpdate(PartyUsersNK toTransformData) {
@@ -436,10 +436,10 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Party_Code = toTransformData.Usuario,
           Party_Name = toTransformData.Nombre,
           Party_Identificators = toTransformData.Usuario,
-          Party_Roles = Empiria.EmpiriaString.BuildKeywords(toTransformData.Usuario, toTransformData.Nombre, toTransformData.Perfil),
+          Party_Roles = "User",//Empiria.EmpiriaString.BuildKeywords(toTransformData.Usuario, toTransformData.Nombre, toTransformData.Perfil),
           Party_Tags = toTransformData.Usuario,
           Party_Ext_Data = "",
-          Party_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Usuario),
+          Party_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Usuario, toTransformData.Nombre, toTransformData.Perfil),
           Party_Historic_Id = -1,
           Party_Start_Date = ExecutionServer.DateMinValue,
           Party_End_Date = ExecutionServer.DateMaxValue,

@@ -37,7 +37,8 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
       private FixedList<PartyData> ReadSourceData() {
       var sql = "SELECT * FROM dbo.Parties " +
-        "WHERE Party_Id >= 1571 AND Party_Id <= 1733 ";
+                " WHERE Party_Roles = 'Salesperson' " +
+                " OR Party_Roles = 'User' ";
 
       var connectionString = GetEmpiriaConnectionString();
 
@@ -67,7 +68,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 	        ContactEmail="",
 	        ContactTags= toTransformData.Party_Tags,
           ContactExtData = toTransformData.Party_Ext_Data,
-          ContactKeywords = toTransformData.Party_Keywords,
+          ContactKeywords = toTransformData.Party_Roles,//toTransformData.Party_Keywords,
           ContactStatus = Convert.ToChar(toTransformData.Party_Status)
         };
     }
