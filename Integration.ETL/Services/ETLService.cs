@@ -22,12 +22,14 @@ namespace Empiria.Trade.Integration.ETL {
 
     private readonly string _inputSourceConnectionString;
     private readonly string _outputSourceConnectionString;
+    private readonly string _outputSourceEmpiriaConnectionString;
 
     public ETLService() {
       var config = ConfigurationData.Get<JsonObject>("Connection.Strings");
 
       _outputSourceConnectionString = config.Get<string>("sqlServerConnection");
       _inputSourceConnectionString = config.Get<string>("firebirdConnection");
+      _outputSourceEmpiriaConnectionString = config.Get<string>("empiriaSqlServerConnection");
     }
 
     public void Execute() {
@@ -44,7 +46,7 @@ namespace Empiria.Trade.Integration.ETL {
       }
 
       outputDataServices.ExecuteMergeStoredProcedure();
-      outputDataServices.ExecuteFillCommonStorageStoredProcedure();
+     // outputDataServices.ExecuteFillCommonStorageStoredProcedure();
     }
 
     private string GetQueryForTable(string tableName) {
@@ -75,6 +77,23 @@ namespace Empiria.Trade.Integration.ETL {
     };
 
       return queries.TryGetValue(tableName, out string query) ? query : $"SELECT * FROM {tableName}";
+    }
+
+
+    public void ExecuteReverseETL() {
+      var inputDataServices = new SqlServerDataServices(_outputSourceEmpiriaConnectionString);
+      var outputDataServices = new FirebirdDataServices(_inputSourceConnectionString);
+
+      const string sourceTable = "dbo.OMS_Inventory_Entries";
+      const string destinationTable = "OMS_INVENTORY_ENTRIES"; 
+
+      string query = $"SELECT * FROM {sourceTable}";
+
+      outputDataServices.TruncateTable(destinationTable);  
+
+      var dataToTransfer = inputDataServices.GetDataTable(query);
+
+      outputDataServices.BulkInsertToFirebird(dataToTransfer, destinationTable);
     }
 
 

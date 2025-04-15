@@ -29,6 +29,16 @@ namespace Empiria.Tests.Trade.Integration {
       Assert.NotNull(service);
     }
 
+    [Fact]
+    public void Should_Execute_Reverse_ETL() {
+
+      var service = new ETLService();
+
+      service.ExecuteReverseETL();
+
+      Assert.NotNull(service);
+    }
+
     #endregion Facts
 
   }  // class ETLServiceTests

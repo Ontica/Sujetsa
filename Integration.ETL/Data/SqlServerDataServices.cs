@@ -13,8 +13,6 @@ using System.Data.SqlClient;
 
 using System.Linq;
 
-using Empiria.Data;
-
 namespace Empiria.Trade.Integration.ETL.Data {
 
   /// <summary>Provides services to read and write data from SQL Server databases.</summary>
@@ -80,6 +78,19 @@ namespace Empiria.Trade.Integration.ETL.Data {
           cmd.CommandTimeout = 300;
 
           cmd.ExecuteNonQuery();
+        }
+      }
+    }
+
+    internal DataTable GetDataTable(string query) {
+      Assertion.Require(query, nameof(query));
+
+      using (SqlConnection dbConnection = OpenConnection()) 
+      {
+        using (SqlDataAdapter dataAdapter = new SqlDataAdapter(query, dbConnection)) {
+          var dataTable = new DataTable();
+          dataAdapter.Fill(dataTable);
+          return dataTable;
         }
       }
     }
