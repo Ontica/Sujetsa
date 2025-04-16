@@ -80,16 +80,14 @@ namespace Empiria.Trade.Integration.ETL {
     }
 
 
-    public void ExecuteReverseETL() {
+    public void ExecuteReverseETL(int id_inv) {
       var inputDataServices = new SqlServerDataServices(_outputSourceEmpiriaConnectionString);
       var outputDataServices = new FirebirdDataServices(_inputSourceConnectionString);
 
-      const string sourceTable = "dbo.VW_Inventory_Products ORDER BY ID_EMPIRIA_INV ";
+      const string sourceTable = "dbo.VW_Inventory_Products WHERE ESTATUS_EMPIRIA_INV = 'C' AND ID_EMPIRIA_INV = ";
       const string destinationTable = "INVENTORY_PRODUCTS_EMPIRIA"; 
 
-      string query = $"SELECT * FROM {sourceTable}";
-
-      outputDataServices.TruncateTable(destinationTable);  
+      string query = $"SELECT * FROM {sourceTable}"+ id_inv;
 
       var dataToTransfer = inputDataServices.GetDataTable(query);
 

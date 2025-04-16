@@ -93,20 +93,6 @@ namespace Empiria.Trade.Integration.ETL.Data {
       }
     }
 
-    internal void TruncateTable(string tableName) {
-      Assertion.Require(tableName, nameof(tableName));
-
-      using (FbConnection dbConnection = OpenConnection()) {
-        using (FbTransaction transaction = dbConnection.BeginTransaction()) {
-          using (FbCommand cmdDelete = new FbCommand($"DELETE FROM {tableName}", dbConnection, transaction)) {
-            cmdDelete.ExecuteNonQuery();
-          }
-
-          transaction.Commit(); // Confirma la transacción
-        }
-      }
-    }
-
 
     #region Helpers
 
