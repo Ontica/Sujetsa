@@ -34,9 +34,9 @@ namespace Empiria.Tests.Trade.Integration {
 
       var service = new ETLService();
 
-      var user_id = 3;
+      var inv_id = 9;
 
-      service.ExecuteReverseETL(user_id);
+      service.ExecuteReverseETL(inv_id);
 
       Assert.NotNull(service);
     }
