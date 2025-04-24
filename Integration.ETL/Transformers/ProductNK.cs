@@ -49,7 +49,12 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     internal string  StatusProducto{
       get; set;
     }
-    
+
+    [DataField("EMPAQUE")]
+    internal int Empaque {
+      get; set;
+    }
+
     [DataField("BinaryChecksum")]
     internal int BinaryChecksum {
       get; set;

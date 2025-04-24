@@ -11,6 +11,7 @@
 using Empiria.Data;
 using Empiria.Json;
 using Empiria.Trade.Integration.ETL.Data;
+using Newtonsoft.Json;
 
 namespace Empiria.Trade.Integration.ETL.Transformers {
 
@@ -43,7 +44,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
 
     private FixedList<ProductNK> ReadSourceData() {
-      var sql = "SELECT PT.PRODUCTO,PT.DESCRIPCION,PT.GRUPO,PT.SUBGRUPO,PT.UNIDAD,PT.ALTA,PT.BAJA,PT.BinaryChecksum,PT.OldBinaryChecksum " +
+      var sql = "SELECT PT.PRODUCTO,PT.DESCRIPCION,PT.GRUPO,PT.SUBGRUPO,PT.UNIDAD,PT.ALTA,PT.BAJA,PT.EMPAQUE,PT.BinaryChecksum,PT.OldBinaryChecksum " +
         "FROM sources.PRODUCTO_TARGET PT " +
         "WHERE PT.OldBinaryChecksum != PT.BinaryChecksum " +
         "OR PT.OldBinaryChecksum = 0 " +
@@ -78,7 +79,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Product_Identificators = Empiria.EmpiriaString.BuildKeywords(toTransformData.Grupo, toTransformData.SubGrupo),
           Product_Roles = "",
           Product_Tags = dataServices.GetObjectTagsFromCommonStorage(toTransformData.Grupo, toTransformData.SubGrupo),
-          Product_Attributes = "",
+          Product_Attributes = JsonConvert.SerializeObject(new { packagingSize = (toTransformData.Empaque).ToString() }),
           Product_Base_Unit_Id = (int) dataServices.ReturnIdForProductBaseUnitId(toTransformData.UnidadMedida),
           Product_Manager_Id = 1,
           Product_Ext_Data = "",
@@ -102,7 +103,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Product_Identificators = Empiria.EmpiriaString.BuildKeywords(toTransformData.Grupo, toTransformData.SubGrupo),
           Product_Roles = "",
           Product_Tags = dataServices.GetObjectTagsFromCommonStorage(toTransformData.Grupo, toTransformData.SubGrupo),
-          Product_Attributes = "",
+          Product_Attributes = JsonConvert.SerializeObject(new { packagingSize = (toTransformData.Empaque).ToString() }),
           Product_Base_Unit_Id = (int) dataServices.ReturnIdForProductBaseUnitId(toTransformData.UnidadMedida),
           Product_Manager_Id = 1,
           Product_Ext_Data = "",

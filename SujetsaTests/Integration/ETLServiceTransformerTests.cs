@@ -329,7 +329,7 @@ namespace Empiria.Tests.Trade.Integration {
 
       int rowCount = sut.RowCounter(tableName);
 
-      Assert.True(rowCount > 0);
+      Assert.True(rowCount > 1);
     }
 
     #endregion Facts
