@@ -76,7 +76,12 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Product_Name = toTransformData.Producto,
           Product_Description = toTransformData.Descripcion,
           Product_Internal_Code = toTransformData.Producto,
-          Product_Identificators = Empiria.EmpiriaString.BuildKeywords(toTransformData.Grupo, toTransformData.SubGrupo),
+          Product_Identificators = JsonConvert.SerializeObject(new {
+            toTransformData.Grupo,
+            toTransformData.SubGrupo,
+            Object_Category_Id = toTransformData.Grupo,
+            Object_Classification_Id = toTransformData.SubGrupo
+          }),
           Product_Roles = "",
           Product_Tags = dataServices.GetObjectTagsFromCommonStorage(toTransformData.Grupo, toTransformData.SubGrupo),
           Product_Attributes = JsonConvert.SerializeObject(new { packagingSize = (toTransformData.Empaque).ToString() }),
@@ -100,7 +105,12 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Product_Name = toTransformData.Producto,
           Product_Description = toTransformData.Descripcion,
           Product_Internal_Code = toTransformData.Producto,
-          Product_Identificators = Empiria.EmpiriaString.BuildKeywords(toTransformData.Grupo, toTransformData.SubGrupo),
+          Product_Identificators = JsonConvert.SerializeObject(new {
+            toTransformData.Grupo,
+            toTransformData.SubGrupo,
+            Object_Category_Id = toTransformData.Grupo,
+            Object_Classification_Id = toTransformData.SubGrupo
+          }),
           Product_Roles = "",
           Product_Tags = dataServices.GetObjectTagsFromCommonStorage(toTransformData.Grupo, toTransformData.SubGrupo),
           Product_Attributes = JsonConvert.SerializeObject(new { packagingSize = (toTransformData.Empaque).ToString() }),

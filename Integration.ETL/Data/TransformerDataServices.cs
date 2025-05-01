@@ -34,14 +34,14 @@ namespace Empiria.Trade.Integration.ETL.Data {
       int subGrupoInt = int.Parse(subGrupo);
       using (SqlConnection dbConnection = OpenConnection()) {
 
-        using (SqlCommand cmd = new SqlCommand($"SELECT Object_ID FROM DBO.Common_Storage WHERE Object_Category_Id = {grupoInt} AND Object_Classification_Id = {subGrupoInt}", dbConnection)) {
+        using (SqlCommand cmd = new SqlCommand($"SELECT Object_Category_Id FROM DBO.Common_Storage WHERE Object_Category_Id = {grupoInt} AND Object_Classification_Id = {subGrupoInt}", dbConnection)) {
           var result = cmd.ExecuteScalar();
 
           if (result != null && (int) result != 0) {
 
             return (int) result;
           } else {
-            return -1;
+            return grupoInt;
           }
         }
       }
