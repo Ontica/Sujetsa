@@ -87,7 +87,12 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Product_Attributes = JsonConvert.SerializeObject(new { packagingSize = (toTransformData.Empaque).ToString() }),
           Product_Base_Unit_Id = (int) dataServices.ReturnIdForProductBaseUnitId(toTransformData.UnidadMedida),
           Product_Manager_Id = 1,
-          Product_Ext_Data = "",
+          Product_Ext_Data = JsonConvert.SerializeObject(new {
+            toTransformData.Grupo,
+            toTransformData.SubGrupo,
+            Object_Category_Id = toTransformData.Grupo,
+            Object_Classification_Id = toTransformData.SubGrupo
+          }),
           Product_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Producto, toTransformData.Descripcion, toTransformData.Grupo, toTransformData.SubGrupo, toTransformData.UnidadMedida),
           Product_Start_Date = toTransformData.FechaAlta,
           Product_End_Date = ExecutionServer.DateMaxValue,
@@ -116,7 +121,12 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Product_Attributes = JsonConvert.SerializeObject(new { packagingSize = (toTransformData.Empaque).ToString() }),
           Product_Base_Unit_Id = (int) dataServices.ReturnIdForProductBaseUnitId(toTransformData.UnidadMedida),
           Product_Manager_Id = 1,
-          Product_Ext_Data = "",
+          Product_Ext_Data =  JsonConvert.SerializeObject(new {
+            toTransformData.Grupo,
+            toTransformData.SubGrupo,
+            Object_Category_Id = toTransformData.Grupo,
+            Object_Classification_Id = toTransformData.SubGrupo
+          }),
           Product_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Producto, toTransformData.Descripcion, toTransformData.Grupo, toTransformData.SubGrupo, toTransformData.UnidadMedida),
           Product_Start_Date = toTransformData.FechaAlta,
           Product_End_Date = ExecutionServer.DateMaxValue,
