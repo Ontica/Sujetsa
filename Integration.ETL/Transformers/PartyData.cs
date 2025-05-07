@@ -12,7 +12,7 @@ using System;
 
 namespace Empiria.Trade.Integration.ETL.Transformers {
 
-  /// <summary>Represents a Sales Order in Empiria Trade OMS_Parties database table.</summary>
+  /// <summary>Represents a Sales Order in Empiria Trade Parties database table.</summary>
   internal class PartyData {
 
     [DataField("Party_Id")]
