@@ -80,7 +80,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Project_Id = -1,
           Order_Currency_Id = 600,
           Order_Source_Id = -1,
-          Order_Priority = ' ',
+          Order_Priority = 'N',
           Order_Authorization_Time = toTransformData.Fecha_Aplicado,
           Order_Authorized_By_Id = -1,
           Order_Closing_Time = toTransformData.Fecha_Aplicado,

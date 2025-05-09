@@ -81,7 +81,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Project_Id = -1,
           Order_Currency_Id = 600,
           Order_Source_Id = -1,
-          Order_Priority = dataServices.ReturnIdForPriority(toTransformData.Prioridad),
+          Order_Priority = dataServices.ReturnIdForPriority(toTransformData.Prioridad),//////////
           Order_Authorization_Time = ExecutionServer.DateMinValue,
           Order_Authorized_By_Id = -1, 
           Order_Closing_Time = dataServicesNK.GetClosedDateFromOvUbicacionConsecutivo(toTransformData.OV),
