@@ -56,9 +56,9 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     }
 
     [DataField("COSTO_BASE")]
-    internal decimal Costo_Base {
+    internal decimal CostoBase {
       get; set;
-    }
+    } = 0.00000m;
 
     [DataField("BinaryChecksum")]
     internal int BinaryChecksum {

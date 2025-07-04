@@ -67,6 +67,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
     private ProductData Transform(ProductNK toTransformData) {
       string connectionString = GetEmpiriaConnectionString();
+      string CostoBase = toTransformData.CostoBase.ToString();
       var dataServices = new TransformerDataServices(connectionString);
       if (toTransformData.OldBinaryChecksum == 0) {
         return new ProductData {
@@ -82,7 +83,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
             toTransformData.SubGrupo,
             Object_Category_Id = toTransformData.Grupo,
             Object_Classification_Id = toTransformData.SubGrupo,
-            toTransformData.Costo_Base
+            CostoBase
           }),
           Product_Roles = "",
           Product_Tags = dataServices.GetObjectTagsFromCommonStorage(toTransformData.Grupo, toTransformData.SubGrupo),
@@ -94,7 +95,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
             toTransformData.SubGrupo,
             Object_Category_Id = toTransformData.Grupo,
             Object_Classification_Id = toTransformData.SubGrupo,
-            toTransformData.Costo_Base
+            CostoBase
           }),
           Product_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Producto, toTransformData.Descripcion, toTransformData.Grupo, toTransformData.SubGrupo, toTransformData.UnidadMedida),
           Product_Start_Date = toTransformData.FechaAlta,
@@ -118,7 +119,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
             toTransformData.SubGrupo,
             Object_Category_Id = toTransformData.Grupo,
             Object_Classification_Id = toTransformData.SubGrupo,
-            toTransformData.Costo_Base
+            CostoBase
           }),
           Product_Roles = "",
           Product_Tags = dataServices.GetObjectTagsFromCommonStorage(toTransformData.Grupo, toTransformData.SubGrupo),
@@ -130,7 +131,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
             toTransformData.SubGrupo,
             Object_Category_Id = toTransformData.Grupo,
             Object_Classification_Id = toTransformData.SubGrupo,
-            toTransformData.Costo_Base
+            CostoBase
           }),
           Product_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Producto, toTransformData.Descripcion, toTransformData.Grupo, toTransformData.SubGrupo, toTransformData.UnidadMedida),
           Product_Start_Date = toTransformData.FechaAlta,
