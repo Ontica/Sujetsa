@@ -44,11 +44,12 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
 
     private FixedList<ProductNK> ReadSourceData() {
-      var sql = "SELECT PT.PRODUCTO,PT.DESCRIPCION,PT.GRUPO,PT.SUBGRUPO,PT.UNIDAD,PT.ALTA,PT.BAJA,PT.EMPAQUE,PT.BinaryChecksum,PT.OldBinaryChecksum " +
-        "FROM sources.PRODUCTO_TARGET PT " +
-        "WHERE PT.OldBinaryChecksum != PT.BinaryChecksum " +
-        "OR PT.OldBinaryChecksum = 0 " +
-        "OR PT.OldBinaryChecksum IS NULL ";
+      var sql = "SELECT PT.PRODUCTO,PT.DESCRIPCION,PT.GRUPO,PT.SUBGRUPO,PT.UNIDAD,PT.ALTA," +
+                "PT.BAJA,PT.EMPAQUE,PT.COSTO_BASE,PT.BinaryChecksum,PT.OldBinaryChecksum " +
+                "FROM sources.PRODUCTO_TARGET PT " +
+                "WHERE PT.OldBinaryChecksum != PT.BinaryChecksum " +
+                "OR PT.OldBinaryChecksum = 0 " +
+                "OR PT.OldBinaryChecksum IS NULL ";
 
       var connectionString = GetNKConnectionString();
 
@@ -80,7 +81,8 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
             toTransformData.Grupo,
             toTransformData.SubGrupo,
             Object_Category_Id = toTransformData.Grupo,
-            Object_Classification_Id = toTransformData.SubGrupo
+            Object_Classification_Id = toTransformData.SubGrupo,
+            toTransformData.Costo_Base
           }),
           Product_Roles = "",
           Product_Tags = dataServices.GetObjectTagsFromCommonStorage(toTransformData.Grupo, toTransformData.SubGrupo),
@@ -91,7 +93,8 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
             toTransformData.Grupo,
             toTransformData.SubGrupo,
             Object_Category_Id = toTransformData.Grupo,
-            Object_Classification_Id = toTransformData.SubGrupo
+            Object_Classification_Id = toTransformData.SubGrupo,
+            toTransformData.Costo_Base
           }),
           Product_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Producto, toTransformData.Descripcion, toTransformData.Grupo, toTransformData.SubGrupo, toTransformData.UnidadMedida),
           Product_Start_Date = toTransformData.FechaAlta,
@@ -114,7 +117,8 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
             toTransformData.Grupo,
             toTransformData.SubGrupo,
             Object_Category_Id = toTransformData.Grupo,
-            Object_Classification_Id = toTransformData.SubGrupo
+            Object_Classification_Id = toTransformData.SubGrupo,
+            toTransformData.Costo_Base
           }),
           Product_Roles = "",
           Product_Tags = dataServices.GetObjectTagsFromCommonStorage(toTransformData.Grupo, toTransformData.SubGrupo),
@@ -125,7 +129,8 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
             toTransformData.Grupo,
             toTransformData.SubGrupo,
             Object_Category_Id = toTransformData.Grupo,
-            Object_Classification_Id = toTransformData.SubGrupo
+            Object_Classification_Id = toTransformData.SubGrupo,
+            toTransformData.Costo_Base
           }),
           Product_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Producto, toTransformData.Descripcion, toTransformData.Grupo, toTransformData.SubGrupo, toTransformData.UnidadMedida),
           Product_Start_Date = toTransformData.FechaAlta,

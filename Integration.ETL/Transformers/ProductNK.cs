@@ -46,12 +46,17 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     }
 
     [DataField("BAJA")]
-    internal string  StatusProducto{
+    internal string StatusProducto {
       get; set;
     }
 
     [DataField("EMPAQUE")]
     internal int Empaque {
+      get; set;
+    }
+
+    [DataField("COSTO_BASE")]
+    internal decimal Costo_Base {
       get; set;
     }
 
