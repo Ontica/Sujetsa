@@ -83,6 +83,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Item_Per_Each_Item_Id = -1,
           Order_Item_Ext_Data = JsonConvert.SerializeObject(new { Name = "OV" }),
           Order_Item_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.OV, toTransformData.Producto),
+          Order_Item_Location_Id = -1,
           Order_Item_Position = toTransformData.Det,
           Order_Item_Posted_By_Id = dataServices.GetPostedUserIdFromOMSOrders(toTransformData.OV),
           Order_Item_Posting_Time = dataServices.GetPostedDateFromOMSOrders(toTransformData.OV), 
@@ -110,6 +111,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Item_Per_Each_Item_Id = -1,
           Order_Item_Ext_Data = JsonConvert.SerializeObject(new { Name = "OV" }),
           Order_Item_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.OV, toTransformData.Producto),
+          Order_Item_Location_Id = -1,
           Order_Item_Position = toTransformData.Det,
           Order_Item_Posted_By_Id = dataServices.GetPostedUserIdFromOMSOrders(toTransformData.OV),
           Order_Item_Posting_Time = dataServices.GetPostingDateFromOMSOrders(toTransformData.OV),
@@ -131,7 +133,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         o.Order_Item_Product_Id,  o.Order_Item_Description,  o.Order_Item_Product_Unit_Id,  o.Order_Item_Product_Qty,  o.Order_Item_Unit_Price,
         o.Order_Item_Discount,  o.Order_Item_Currency_Id,  o.Order_Item_Related_Item_Id,  o.Order_Item_Requisition_Item_Id,  o.Order_Item_Requested_By_Id,
         o.Order_Item_Budget_Account_Id,  o.Order_Item_Project_Id,  o.Order_Item_Provider_Id,  o.Order_Item_Per_Each_Item_Id,  o.Order_Item_Ext_Data,
-        o.Order_Item_Keywords,  o.Order_Item_Position,  o.Order_Item_Posted_By_Id,  o.Order_Item_Posting_Time,  o.Order_Item_Status);
+        o.Order_Item_Keywords, o.Order_Item_Location_Id, o.Order_Item_Position,  o.Order_Item_Posted_By_Id,  o.Order_Item_Posting_Time,  o.Order_Item_Status);
 
       DataWriter.Execute(op);
     }

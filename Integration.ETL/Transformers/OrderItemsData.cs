@@ -15,6 +15,12 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
   /// <summary>Represents a Sales Order Detail (Item) in Empiria Trade OMS_OrderItems database table.</summary>
   internal class OrderItemsData {
 
+    [DataField("Order_Item_Location_Id")]
+    public int Order_Item_Location_Id {
+      get;
+      internal set;
+    }
+
     [DataField("Order_Item_Id")]
     internal int Order_Item_Id {
       get; set;

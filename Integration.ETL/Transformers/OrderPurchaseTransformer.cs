@@ -96,6 +96,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Closed_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
           Order_Ext_Data = JsonConvert.SerializeObject(new { Name = "Compra" }),
           Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Factura, toTransformData.Compra, toTransformData.TipoCompra, toTransformData.Almacen),
+          Order_Location_Id = dataServices.GetWareHouseIdFromCommonStorage(toTransformData.Almacen),
           Order_Posted_By_Id  = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
           Order_Posting_Time  = toTransformData.Captura,
           Order_Status = dataServices.ReturnStatusForOrdersStatus(toTransformData.Cancelada)
@@ -127,6 +128,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Closed_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
           Order_Ext_Data = JsonConvert.SerializeObject(new { Name = "Compra" }),
           Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Factura, toTransformData.Compra, toTransformData.TipoCompra, toTransformData.Almacen),
+          Order_Location_Id = dataServices.GetWareHouseIdFromCommonStorage(toTransformData.Almacen),
           Order_Posted_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
           Order_Posting_Time = toTransformData.Captura,
           Order_Status = dataServices.ReturnStatusForOrdersStatus(toTransformData.Cancelada)
@@ -147,7 +149,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
        ,o.Order_Description, o.Order_Identificators, o.Order_Tags, o.Order_Requested_By_Id, o.Order_Responsible_Id, o.Order_Beneficary_Id
        ,o.Order_Provider_Id, o.Order_Budget_Id, o.Order_Requisition_Id, o.Order_Contract_Id, o.Order_Project_Id, o.Order_Currency_Id
        ,o.Order_Source_Id, o.Order_Priority, o.Order_Authorization_Time, o.Order_Authorized_By_Id, o.Order_Closing_Time, o.Order_Closed_By_Id
-       ,o.Order_Ext_Data, o.Order_Keywords, o.Order_Posted_By_Id, o.Order_Posting_Time, o.Order_Status);
+       ,o.Order_Ext_Data, o.Order_Keywords, o.Order_Location_Id, o.Order_Posted_By_Id, o.Order_Posting_Time, o.Order_Status);
 
       DataWriter.Execute(op);
     }
