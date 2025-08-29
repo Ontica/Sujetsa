@@ -12,6 +12,7 @@ using System;
 using Empiria.Data;
 using Empiria.Json;
 using Empiria.Trade.Integration.ETL.Data;
+using Newtonsoft.Json;
 
 namespace Empiria.Trade.Integration.ETL.Transformers {
 
@@ -65,7 +66,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         return new OrderData {
           Order_Id = dataServices.GetNextId("OMS_Orders"),
           Order_UID = System.Guid.NewGuid().ToString(),
-          Order_Type_Id = 4001,
+          Order_Type_Id = 4011,
           Order_Category_Id = -1,
           Order_No = toTransformData.OV,
           Order_Description = Empiria.EmpiriaString.BuildKeywords(toTransformData.Orden , dataServices.ReturnOldDescriptionForPriority(toTransformData.Prioridad)),
@@ -86,7 +87,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Authorized_By_Id = -1, 
           Order_Closing_Time = dataServicesNK.GetClosedDateFromOvUbicacionConsecutivo(toTransformData.OV),
           Order_Closed_By_Id = dataServices.GetPartyIdFromParties(dataServicesNK.GetClosedIdFromOvUbicacionConsecutivo(toTransformData.OV).ToString()),
-          Order_Ext_Data = "",
+          Order_Ext_Data = JsonConvert.SerializeObject(new { Name = "OV" }),
           Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.OV, toTransformData.Cliente, toTransformData.Almacen, toTransformData.Moneda),
           Order_Posted_By_Id  = dataServices.GetPartyIdFromParties(toTransformData.Usr_Captura),
           Order_Posting_Time  = toTransformData.Fecha,
@@ -96,7 +97,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         return new OrderData {
           Order_Id = dataServices.GetOrderIdFromOMSOrders(toTransformData.OV),
           Order_UID = dataServices.GetOrderUIDFromOMSOrders(toTransformData.OV),
-          Order_Type_Id = 4001,
+          Order_Type_Id = 4011,
           Order_Category_Id = -1,
           Order_No = toTransformData.OV,
           Order_Description = Empiria.EmpiriaString.BuildKeywords(toTransformData.Orden, dataServices.ReturnOldDescriptionForPriority(toTransformData.Prioridad)),
@@ -117,7 +118,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Authorized_By_Id = -1, 
           Order_Closing_Time = dataServicesNK.GetClosedDateFromOvUbicacionConsecutivo(toTransformData.OV),
           Order_Closed_By_Id = dataServices.GetPartyIdFromParties(dataServicesNK.GetClosedIdFromOvUbicacionConsecutivo(toTransformData.OV).ToString()),
-          Order_Ext_Data = "",
+          Order_Ext_Data = JsonConvert.SerializeObject(new { Name = "OV" }),
           Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.OV, toTransformData.Cliente, toTransformData.Almacen, toTransformData.Moneda),
           Order_Posted_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usr_Captura),
           Order_Posting_Time = toTransformData.Fecha,

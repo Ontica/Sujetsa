@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Trade.Integration.ETL                Pattern   : Information holder                    *
 *  Type     : OrderItemsReturnNK                         License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : A row in OrderItems(OVDET) NK table.                                                           *
+*  Summary  : A row in OrderItems(DevolucionDet) NK table.                                                           *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -12,7 +12,7 @@ using System;
 
 namespace Empiria.Trade.Integration.ETL.Transformers {
 
-  /// <summary>A row in OrderItems(OVDET) NK table.</summary>
+  /// <summary>A row in OrderItems(DevolucionDet) NK table.</summary>
   internal class OrderItemsReturnNK {
 
     [DataField("DEVOLUCION")]

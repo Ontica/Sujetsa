@@ -11,6 +11,7 @@
 using Empiria.Data;
 using Empiria.Json;
 using Empiria.Trade.Integration.ETL.Data;
+using Newtonsoft.Json;
 
 namespace Empiria.Trade.Integration.ETL.Transformers {
 
@@ -88,7 +89,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Authorized_By_Id = -1,
           Order_Closing_Time = ExecutionServer.DateMinValue,
           Order_Closed_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
-          Order_Ext_Data = "",
+          Order_Ext_Data = JsonConvert.SerializeObject(new {Name = "NotaCredito" }),
           Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.NotaCredito, toTransformData.Factura, toTransformData.Devolucion, toTransformData.Factura, toTransformData.Almacen, toTransformData.Icmov, toTransformData.NotaCredito, toTransformData.Tipo_NC),
           Order_Posted_By_Id  = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
           Order_Posting_Time  = toTransformData.FechaCaptura,
@@ -119,7 +120,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Authorized_By_Id = -1,
           Order_Closing_Time = ExecutionServer.DateMinValue,
           Order_Closed_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
-          Order_Ext_Data = "",
+          Order_Ext_Data = JsonConvert.SerializeObject(new { Name = "NotaCredito" }),
           Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.NotaCredito, toTransformData.Factura, toTransformData.Devolucion, toTransformData.Factura, toTransformData.Almacen, toTransformData.Icmov, toTransformData.NotaCredito, toTransformData.Tipo_NC),
           Order_Posted_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
           Order_Posting_Time = toTransformData.FechaCaptura,

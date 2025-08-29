@@ -11,6 +11,7 @@
 using Empiria.Data;
 using Empiria.Json;
 using Empiria.Trade.Integration.ETL.Data;
+using Newtonsoft.Json;
 
 namespace Empiria.Trade.Integration.ETL.Transformers {
 
@@ -64,7 +65,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         return new OrderData {
           Order_Id = dataServices.GetNextId("OMS_Orders"),
           Order_UID = System.Guid.NewGuid().ToString(),
-          Order_Type_Id = 4008,
+          Order_Type_Id = 4011,
           Order_Category_Id = -1,
           Order_No = toTransformData.Reml,
           Order_Description = Empiria.EmpiriaString.BuildKeywords(toTransformData.Reml, toTransformData.Almacen, toTransformData.Cliente, toTransformData.Icmov),
@@ -85,7 +86,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Authorized_By_Id = -1,
           Order_Closing_Time = toTransformData.Fecha_Aplicado,
           Order_Closed_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
-          Order_Ext_Data = "",
+          Order_Ext_Data = JsonConvert.SerializeObject(new { Name = "Remision" }),
           Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Reml, toTransformData.Almacen, toTransformData.Cliente, toTransformData.Icmov),
           Order_Posted_By_Id  = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
           Order_Posting_Time  = toTransformData.Fecha,
@@ -95,7 +96,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         return new OrderData {
           Order_Id = dataServices.GetOrderIdFromOMSOrders(toTransformData.Reml),
           Order_UID = dataServices.GetOrderUIDFromOMSOrders(toTransformData.Reml),
-          Order_Type_Id = 4008,
+          Order_Type_Id = 4011,
           Order_Category_Id = -1,
           Order_No = toTransformData.Reml,
           Order_Description = Empiria.EmpiriaString.BuildKeywords(toTransformData.Reml, toTransformData.Almacen, toTransformData.Cliente, toTransformData.Icmov),
@@ -116,7 +117,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Authorized_By_Id = -1,
           Order_Closing_Time = toTransformData.Fecha_Aplicado,
           Order_Closed_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
-          Order_Ext_Data = "",
+          Order_Ext_Data = JsonConvert.SerializeObject(new { Name = "Remision" }),
           Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Reml, toTransformData.Almacen, toTransformData.Cliente, toTransformData.Icmov),
           Order_Posted_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
           Order_Posting_Time = toTransformData.Fecha,

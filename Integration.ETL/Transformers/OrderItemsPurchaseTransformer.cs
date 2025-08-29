@@ -12,6 +12,7 @@ using System;
 using Empiria.Data;
 using Empiria.Json;
 using Empiria.Trade.Integration.ETL.Data;
+using Newtonsoft.Json;
 
 namespace Empiria.Trade.Integration.ETL.Transformers {
 
@@ -87,7 +88,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Item_Project_Id = -1,
           Order_Item_Provider_Id = (int) dataServices.GetOrderItemProviderIdFromOMSOrders(toTransformData.Compra),//////////////
           Order_Item_Per_Each_Item_Id = -1,
-          Order_Item_Ext_Data = "",
+          Order_Item_Ext_Data = JsonConvert.SerializeObject(new { Name = "Compra" }),
           Order_Item_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Compra, toTransformData.Producto,  toTransformData.Clave),
           Order_Item_Position = toTransformData.Det,
           Order_Item_Posted_By_Id = dataServices.GetPostedUserIdFromOMSOrders(toTransformData.Compra),
@@ -114,7 +115,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Item_Project_Id = -1,
           Order_Item_Provider_Id = (int) dataServices.GetOrderItemProviderIdFromOMSOrders(toTransformData.Compra),//////////////
           Order_Item_Per_Each_Item_Id = -1,
-          Order_Item_Ext_Data = "",
+          Order_Item_Ext_Data = JsonConvert.SerializeObject(new { Name = "Compra" }),
           Order_Item_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Compra, toTransformData.Producto,  toTransformData.Clave),
           Order_Item_Position = toTransformData.Det,
           Order_Item_Posted_By_Id = dataServices.GetPostedUserIdFromOMSOrders(toTransformData.Compra),

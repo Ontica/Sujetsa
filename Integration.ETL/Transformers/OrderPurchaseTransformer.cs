@@ -11,6 +11,7 @@
 using Empiria.Data;
 using Empiria.Json;
 using Empiria.Trade.Integration.ETL.Data;
+using Newtonsoft.Json;
 
 namespace Empiria.Trade.Integration.ETL.Transformers {
 
@@ -93,7 +94,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Authorized_By_Id = -1,
           Order_Closing_Time = toTransformData.Fecha_Recepcion,
           Order_Closed_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
-          Order_Ext_Data = "",
+          Order_Ext_Data = JsonConvert.SerializeObject(new { Name = "Compra" }),
           Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Factura, toTransformData.Compra, toTransformData.TipoCompra, toTransformData.Almacen),
           Order_Posted_By_Id  = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
           Order_Posting_Time  = toTransformData.Captura,
@@ -124,7 +125,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Authorized_By_Id = -1,
           Order_Closing_Time = toTransformData.Fecha_Recepcion,
           Order_Closed_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
-          Order_Ext_Data = "",
+          Order_Ext_Data = JsonConvert.SerializeObject(new { Name = "Compra" }),
           Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Factura, toTransformData.Compra, toTransformData.TipoCompra, toTransformData.Almacen),
           Order_Posted_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
           Order_Posting_Time = toTransformData.Captura,

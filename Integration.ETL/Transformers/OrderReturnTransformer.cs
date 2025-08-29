@@ -11,6 +11,7 @@
 using Empiria.Data;
 using Empiria.Json;
 using Empiria.Trade.Integration.ETL.Data;
+using Newtonsoft.Json;
 
 namespace Empiria.Trade.Integration.ETL.Transformers {
 
@@ -67,7 +68,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         return new OrderData {
           Order_Id = dataServices.GetNextId("OMS_Orders"),
           Order_UID = System.Guid.NewGuid().ToString(),
-          Order_Type_Id = 4005,
+          Order_Type_Id = 4007,
           Order_Category_Id = -1,
           Order_No = toTransformData.Devolucion,
           Order_Description = toTransformData.Referencia,
@@ -83,12 +84,12 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Project_Id = -1,
           Order_Currency_Id = 600,
           Order_Source_Id = -1,
-          Order_Priority = ' ',////////////
+          Order_Priority = ' ',
           Order_Authorization_Time = toTransformData.Fecha,
           Order_Authorized_By_Id = -1,
           Order_Closing_Time = ExecutionServer.DateMinValue,
           Order_Closed_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
-          Order_Ext_Data = "",
+          Order_Ext_Data = JsonConvert.SerializeObject(new { Name = "Devolucion" }),
           Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Factura, toTransformData.Devolucion, toTransformData.Factura, toTransformData.Almacen, toTransformData.ICMOV, toTransformData.NotaCredito, toTransformData.Tipo_NC),
           Order_Posted_By_Id  = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
           Order_Posting_Time  = toTransformData.FechaCaptura,
@@ -98,7 +99,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         return new OrderData {
           Order_Id = dataServices.GetOrderIdFromOMSOrders(toTransformData.Factura),
           Order_UID = dataServices.GetOrderUIDFromOMSOrders(toTransformData.Factura),
-          Order_Type_Id = 4005,
+          Order_Type_Id = 4007,
           Order_Category_Id = -1,
           Order_No = toTransformData.Devolucion,
           Order_Description = toTransformData.Referencia,
@@ -114,12 +115,12 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Project_Id = -1,
           Order_Currency_Id = 600,
           Order_Source_Id = -1,
-          Order_Priority = ' ',////////////
+          Order_Priority = ' ',
           Order_Authorization_Time = toTransformData.Fecha,
           Order_Authorized_By_Id = -1,
           Order_Closing_Time = ExecutionServer.DateMinValue,
           Order_Closed_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
-          Order_Ext_Data = "",
+          Order_Ext_Data = JsonConvert.SerializeObject(new { Name = "Devolucion" }),
           Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Factura, toTransformData.Devolucion, toTransformData.Factura, toTransformData.Almacen, toTransformData.ICMOV, toTransformData.NotaCredito),
           Order_Posted_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
           Order_Posting_Time = toTransformData.FechaCaptura,

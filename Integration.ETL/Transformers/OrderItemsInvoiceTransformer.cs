@@ -12,6 +12,7 @@ using System;
 using Empiria.Data;
 using Empiria.Json;
 using Empiria.Trade.Integration.ETL.Data;
+using Newtonsoft.Json;
 
 namespace Empiria.Trade.Integration.ETL.Transformers {
 
@@ -70,7 +71,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         return new OrderItemsData {
           Order_Item_Id = dataServices.GetNextId("OMS_Order_Items"),
           Order_Item_UID = System.Guid.NewGuid().ToString(),
-          Order_Item_Type_Id = 4057,
+          Order_Item_Type_Id = 4060,
           Order_Item_Order_Id = dataServices.GetOrderIdFromOMSOrders(toTransformData.Factura),
           Order_Item_Product_Id = dataServices.GetProductIdFromOMSProducts(toTransformData.Producto), 
           Order_Item_Description = Empiria.EmpiriaString.BuildKeywords(toTransformData.Factura, toTransformData.Producto,  toTransformData.Clave),
@@ -86,7 +87,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Item_Project_Id = -1,
           Order_Item_Provider_Id = (int) dataServices.GetOrderItemProviderIdFromOMSOrders(toTransformData.Factura),
           Order_Item_Per_Each_Item_Id = -1,
-          Order_Item_Ext_Data = "",
+          Order_Item_Ext_Data = JsonConvert.SerializeObject(new { Name = "Factura" }),
           Order_Item_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Factura, toTransformData.Producto, toTransformData.Clave),
           Order_Item_Position = toTransformData.Det,
           Order_Item_Posted_By_Id = dataServices.GetPostedUserIdFromOMSOrders(toTransformData.Factura),
@@ -97,7 +98,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         return new OrderItemsData {
           Order_Item_Id = dataServices.GetOrderIdFromOMSOrderItems(dataServices.GetOrderIdFromOMSOrders(toTransformData.Factura), toTransformData.Det),
           Order_Item_UID = dataServices.GetOrderUIDFromOMSOrderItems(dataServices.GetOrderIdFromOMSOrders(toTransformData.Factura), toTransformData.Det),
-          Order_Item_Type_Id = 4057,
+          Order_Item_Type_Id = 4060,
           Order_Item_Order_Id = dataServices.GetOrderIdFromOMSOrders(toTransformData.Factura),
           Order_Item_Product_Id = dataServices.GetProductIdFromOMSProducts(toTransformData.Producto),
           Order_Item_Description = Empiria.EmpiriaString.BuildKeywords(toTransformData.Factura, toTransformData.Producto, toTransformData.Clave),
@@ -113,7 +114,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Item_Project_Id = -1,
           Order_Item_Provider_Id = (int) dataServices.GetOrderItemProviderIdFromOMSOrders(toTransformData.Factura),
           Order_Item_Per_Each_Item_Id = -1,
-          Order_Item_Ext_Data = "",
+          Order_Item_Ext_Data = JsonConvert.SerializeObject(new { Name = "Factura" }),
           Order_Item_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Factura, toTransformData.Producto, toTransformData.Clave),
           Order_Item_Position = toTransformData.Det,
           Order_Item_Posted_By_Id = dataServices.GetPostedUserIdFromOMSOrders(toTransformData.Factura),
