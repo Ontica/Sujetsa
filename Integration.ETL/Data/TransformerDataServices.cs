@@ -41,7 +41,7 @@ namespace Empiria.Trade.Integration.ETL.Data {
 
             return (int) result;
           } else {
-            return grupoInt;
+            return -1;
           }
         }
       }
