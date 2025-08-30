@@ -268,8 +268,8 @@ namespace Empiria.Tests.Trade.Integration {
       var dataServices = new TransformerDataServices(connectionString);
       var sut = dataServices.GetWareHouseIdFromCommonStorage(almacen);
 
-      Assert.True(sut > 145);
-      Assert.Equal(146, sut);
+      Assert.True(sut > 2145);
+      Assert.Equal(2146, sut);
     }
 
     [Fact]
