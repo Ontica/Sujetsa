@@ -80,7 +80,8 @@ namespace TradeDataSchemaManager.Services {
 
       try {
 
-        return await Task.Run(() => data.InsertProductToSql(productsToUpdate, conInfo.SqlConnectionString)).ConfigureAwait(false);
+        return await Task.Run(() => data.InsertProductToSql(productsToUpdate, conInfo.SqlConnectionString))
+                         .ConfigureAwait(false);
 
       } catch (Exception ex) {
 

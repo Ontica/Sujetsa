@@ -7,7 +7,6 @@
 *  Summary  : Query web API used to retrieve temporary data products.                                        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -69,7 +68,8 @@ namespace Empiria.Sujetsa.WebApi {
 
       List<ProductosAdapter> productsToUpdate = service.GetDataFromDb();
 
-      string message = await service.InsertProductToSqlAsync(productsToUpdate).ConfigureAwait(false);
+      string message = await service.InsertProductToSqlAsync(productsToUpdate)
+                                    .ConfigureAwait(false);
 
       return new SingleObjectModel(this.Request, message);
 

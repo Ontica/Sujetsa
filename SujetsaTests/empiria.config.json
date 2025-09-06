@@ -2,26 +2,16 @@
   "appName": "Empiria Trade Sujetsa Test Module",
   "description": "Tests environment settings for the Empiria Trade Sujetsa integration.",
   "version": "4.0",
-  "date": "2025-02-21",
+  "date": "2025-06-25",
   "settings": [
     {
       "type": "",
-      "key": "ApplicationKey",
-      "value": "{{APPLICATION-KEY}}"
+      "key": "GlobalConfigurationFile",
+      "value": "{{GLOBAL-CONFIGURATION-FILE}}"
     },
     {
       "type": "",
-      "key": "GlobalConfigurationFile",
-      "value": "E:\\empiria.files\\config.data\\empiria.trade.development.json"
-    },
-    {
-      "type": "Tests",
-      "key": "SessionToken",
-      "value": "{{TESTING-SESSION-TOKEN}}"
-    },
-    {
-      "type": "Data",
-      "key": "IsObjectIdGeneratorServer",
+      "key": "IsTestingModule",
       "value": true
     }
   ]

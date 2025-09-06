@@ -67,7 +67,8 @@ namespace Empiria.Trade.Tests.Products {
 
       List<ProductosAdapter> productsToUpdate = service.GetDataFromDb();
 
-      string message = await service.InsertProductToSqlAsync(productsToUpdate).ConfigureAwait(false);
+      string message = await service.InsertProductToSqlAsync(productsToUpdate)
+                                    .ConfigureAwait(false);
 
       Assert.NotNull(message);
 
