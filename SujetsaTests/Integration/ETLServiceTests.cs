@@ -20,7 +20,7 @@ namespace Empiria.Tests.Trade.Integration {
     #region Facts
 
     [Fact]
-    public void Should_Execute_ETL_Service() {
+    public void Should_Execute() {
 
       var service = new ETLService();
 
@@ -29,8 +29,33 @@ namespace Empiria.Tests.Trade.Integration {
       Assert.NotNull(service);
     }
 
+
     [Fact]
-    public void Should_Execute_Reverse_ETL() {
+    public void Should_ExecuteAll() {
+      var sut = new ETLService();
+
+      sut.ExecuteAll();
+
+      //var tests = new ETLServiceTransformerTests();
+      //tests.Should_Execute_ETL_Service();
+      //tests.Should_Product_Transformer_Execute();
+      //tests.Should_Party_Transformer_Execute();
+      //tests.Should_Contact_Transformer_Execute();
+
+      //tests.Should_Order_Invoice_Transformer_Execute();
+      //tests.Should_Order_Credit_Note_Transformer_Execute();
+      //tests.Should_Order_Purchase_Transformer_Execute();
+      //tests.Should_Order_Rem_Transformer_Execute();
+
+      //tests.Should_Order_Items_Credit_Note_Transformer_Execute();
+      //tests.Should_Order_Items_Purchase_Transformer_Execute();
+      //tests.Should_Order_Items_Rem_Transformer_Execute();
+      //tests.Should_Order_Items_Invoice_Transformer_Execute();
+    }
+
+
+    [Fact]
+    public void Should_ExecuteReverseETL() {
 
       var service = new ETLService();
 

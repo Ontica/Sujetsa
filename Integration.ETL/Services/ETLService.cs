@@ -10,7 +10,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data;
+using System.Threading.Tasks;
 using Empiria.Json;
 
 using Empiria.Trade.Integration.ETL.Data;
@@ -32,6 +32,7 @@ namespace Empiria.Trade.Integration.ETL {
       _outputSourceEmpiriaConnectionString = config.Get<string>("empiriaSqlServerConnection");
     }
 
+
     public void Execute() {
       var inputDataServices = new FirebirdDataServices(_inputSourceConnectionString);
       var outputDataServices = new SqlServerDataServices(_outputSourceConnectionString);
@@ -46,14 +47,36 @@ namespace Empiria.Trade.Integration.ETL {
       }
 
       outputDataServices.ExecuteMergeStoredProcedure();
-     // outputDataServices.ExecuteFillCommonStorageStoredProcedure();
+      // outputDataServices.ExecuteFillCommonStorageStoredProcedure();
     }
+
+
+    public async Task ExecuteAll() {
+      await Task.FromException(new NotImplementedException());
+    }
+
+
+    public void ExecuteReverseETL(string order_no) {
+      var inputDataServices = new SqlServerDataServices(_outputSourceEmpiriaConnectionString);
+      var outputDataServices = new FirebirdDataServices(_inputSourceConnectionString);
+
+      const string sourceTable = "[dbo].[VW_Inventory_Return] WHERE ESTATUS_PARTIDA = 'P' AND INV_NO =  ";
+      const string destinationTable = "INV_SUJ";
+
+      string query = $"SELECT * FROM {sourceTable} '" + order_no + "'";
+
+      var dataToTransfer = inputDataServices.GetDataTable(query);
+
+      outputDataServices.BulkInsertToFirebird(dataToTransfer, destinationTable);
+    }
+
+
+    #region Helpers
 
     private string GetQueryForTable(string tableName) {
       var baseDateFilter = "FECHA >= '2025-01-01'";
 
-      var queries = new Dictionary<string, string>
-      {
+      var queries = new Dictionary<string, string> {
         { "OV", $"SELECT * FROM {tableName} WHERE {baseDateFilter}" },
         { "ICMOV", $"SELECT * FROM {tableName} WHERE {baseDateFilter}" },
         { "FACTURA", $"SELECT * FROM {tableName} WHERE {baseDateFilter}" },
@@ -74,26 +97,12 @@ namespace Empiria.Trade.Integration.ETL {
         { "COMPRADET", $"SELECT OT.* FROM {tableName} OT JOIN COMPRA O ON O.COMPRA = OT.COMPRA AND {baseDateFilter}" },
         { "DEVOLUCIONDET", $"SELECT OT.* FROM {tableName} OT JOIN DEVOLUCION O ON O.DEVOLUCION = OT.DEVOLUCION AND {baseDateFilter}" },
         { "NOTACREDITODET", $"SELECT OT.* FROM {tableName} OT JOIN NOTACREDITO O ON O.NOTACREDITO = OT.NOTACREDITO AND {baseDateFilter} AND O.TIPO = 'D'" }
-    };
+      };
 
       return queries.TryGetValue(tableName, out string query) ? query : $"SELECT * FROM {tableName}";
     }
 
-
-    public void ExecuteReverseETL(string order) {
-      var inputDataServices = new SqlServerDataServices(_outputSourceEmpiriaConnectionString);
-      var outputDataServices = new FirebirdDataServices(_inputSourceConnectionString);
-
-      const string sourceTable = "[dbo].[VW_Inventory_Return] WHERE ESTATUS_PARTIDA = 'P' AND INV_NO =  ";
-      const string destinationTable = "INV_SUJ"; 
-
-      string query = $"SELECT * FROM {sourceTable} '"+ order+"'";
-
-      var dataToTransfer = inputDataServices.GetDataTable(query);
-
-      outputDataServices.BulkInsertToFirebird(dataToTransfer, destinationTable);
-    }
-
+    #endregion Helpers
 
   }  // class ETLService
 
