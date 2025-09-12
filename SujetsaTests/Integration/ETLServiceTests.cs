@@ -31,10 +31,10 @@ namespace Empiria.Tests.Trade.Integration {
 
 
     [Fact]
-    public void Should_ExecuteAll() {
+    public async void Should_ExecuteAll() {
       var sut = new ETLService();
 
-      sut.ExecuteAll();
+      await sut.ExecuteAll();
 
       //var tests = new ETLServiceTransformerTests();
       //tests.Should_Execute_ETL_Service();

@@ -60,7 +60,7 @@ namespace Empiria.Trade.Integration.ETL {
       var inputDataServices = new SqlServerDataServices(_outputSourceEmpiriaConnectionString);
       var outputDataServices = new FirebirdDataServices(_inputSourceConnectionString);
 
-      const string sourceTable = "[dbo].[VW_Inventory_Return] WHERE ESTATUS_PARTIDA = 'P' AND INV_NO =  ";
+      const string sourceTable = "[dbo].[VW_Inventory_Return] WHERE ESTATUS_PARTIDA = 'C' AND INV_NO =  ";
       const string destinationTable = "INV_SUJ";
 
       string query = $"SELECT * FROM {sourceTable} '" + order_no + "'";

@@ -1,27 +1,38 @@
 ﻿/* Empiria Trade *********************************************************************************************
 *                                                                                                            *
-*  Module   : Sujetsa Inventory Management               Component : Web Api                                 *
-*  Assembly : Empiria.Trade.Sujetsa.WebApi.dll           Pattern   : Controller                              *
-*  Type     : InventoryOrdersController                  License   : Please read LICENSE.txt file            *
+*  Module   : Product Management                         Component : Web Api                                 *
+*  Assembly : Empiria.Trade.Products.dll                 Pattern   : Controller                              *
+*  Type     : ProductTests                               License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Query web API used to retrieve Inventory orders.                                               *
+*  Summary  : Query web API used to retrieve temporary data products.                                        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-
-using System.Threading.Tasks;
 using System.Web.Http;
-
-using Empiria.Trade.Inventory.Adapters;
-using Empiria.Trade.Inventory.UseCases;
+using System.Threading.Tasks;
 
 using Empiria.WebApi;
 
 using Empiria.Trade.Integration.ETL;
+using Empiria.Inventory.UseCases;
+using Empiria.Inventory.Adapters;
+
+
+
 
 namespace Empiria.Sujetsa.WebApi {
 
-  /// <summary>Query web API used to retrieve Inventory orders.</summary>
-  public class InventoryOrdersController : WebApiController {
+  /// <summary>Query web API used to retrieve temporary data products.</summary>
+  public class OrdersController : WebApiController {
+
+
+    [HttpGet]
+    [Route("v4/trade-sujetsa/test")]
+    public SingleObjectModel GetProductsCount() {
+
+      var message = "Esto es una prueba";
+
+      return new SingleObjectModel(this.Request, message);
+    }
 
     [HttpPost]
     [Route("v4/trade-sujetsa/inventory/orders/{inventoryOrderUID:guid}/close")]
@@ -29,11 +40,11 @@ namespace Empiria.Sujetsa.WebApi {
 
       using (var usecases = InventoryOrderUseCases.UseCaseInteractor()) {
 
-        InventoryOrderDto inventoryOrder = usecases.CloseInventoryOrder(inventoryOrderUID);
+        InventoryHolderDto inventoryOrder = usecases.CloseInventoryOrder(inventoryOrderUID);
 
         var etlService = new ETLService();
 
-        Task.Run(() => etlService.ExecuteReverseETL(inventoryOrder.InventoryOrderNo))
+        Task.Run(() => etlService.ExecuteReverseETL(inventoryOrder.Order.OrderNo))
             .ConfigureAwait(false)
             .GetAwaiter();
 
@@ -44,13 +55,13 @@ namespace Empiria.Sujetsa.WebApi {
 
     [HttpPost]
     [Route("v4/trade-sujetsa/inventory/orders/search")]
-    public SingleObjectModel SearchInventoryOrders([FromBody] InventoryOrderQuery query) {
+    public SingleObjectModel SearchInventoryOrderList([FromBody] InventoryOrderQuery query) {
 
       ETLServiceInvoker.Start();
 
       using (var usecases = InventoryOrderUseCases.UseCaseInteractor()) {
 
-        InventoryOrderDataDto inventoryOrderDto = usecases.SearchInventoryOrders(query);
+        InventoryOrderDataDto inventoryOrderDto = usecases.SearchInventoryOrder(query);
 
         return new SingleObjectModel(this.Request, inventoryOrderDto);
       }
@@ -68,6 +79,6 @@ namespace Empiria.Sujetsa.WebApi {
       return new NoDataModel(base.Request);
     }
 
-  } // class InventoryOrdersController
+  } // class ManageDataController
 
-} // namespace Empiria.Sujetsa.WebApi
+} // namespace Empiria.Trade.WebApi.SujetsaTemp
