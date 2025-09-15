@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Empiria.Json;
 
 using Empiria.Trade.Integration.ETL.Data;
+using Empiria.Trade.Integration.ETL.Transformers;
 
 namespace Empiria.Trade.Integration.ETL {
 
@@ -52,7 +53,39 @@ namespace Empiria.Trade.Integration.ETL {
 
 
     public async Task ExecuteAll() {
-      await Task.FromException(new NotImplementedException());
+      //quitar exception de  no implementado
+      //await Task.FromException(new NotImplementedException());
+      //paso 1 Should_Execute (FB --> SQLServer).
+      await Task.Run(() => {
+        Execute();
+      //paso 2 Should_Execute_All_Transformers_In_Sequence(todos los de abajo).
+      var productTransformer = new ProductTransformer(_outputSourceEmpiriaConnectionString);
+      productTransformer.Execute();
+
+      var orderInvoiceTransformer = new OrderInvoiceTransformer(_outputSourceEmpiriaConnectionString);
+      orderInvoiceTransformer.Execute();
+
+      var orderCreditNoteTransformer = new OrderCreditNoteTransformer(_outputSourceEmpiriaConnectionString);
+      orderCreditNoteTransformer.Execute();
+
+      var orderPurchaseTransformer = new OrderPurchaseTransformer(_outputSourceEmpiriaConnectionString);
+      orderPurchaseTransformer.Execute();
+
+      var orderRemTransformer = new OrderRemTransformer(_outputSourceEmpiriaConnectionString);
+      orderRemTransformer.Execute();
+
+      var orderItemsCreditNoteTransformer = new OrderItemsCreditNoteTransformer(_outputSourceEmpiriaConnectionString);
+      orderItemsCreditNoteTransformer.Execute();
+
+      var orderItemsPurchaseTransformer = new OrderItemsPurchaseTransformer(_outputSourceEmpiriaConnectionString);
+      orderItemsPurchaseTransformer.Execute();
+
+      var orderItemsRemTransformer = new OrderItemsRemTransformer(_outputSourceEmpiriaConnectionString);
+      orderItemsRemTransformer.Execute();
+
+      var orderItemsInvoiceTransformer = new OrderItemsInvoiceTransformer(_outputSourceEmpiriaConnectionString);
+      orderItemsInvoiceTransformer.Execute();
+      });
     }
 
 

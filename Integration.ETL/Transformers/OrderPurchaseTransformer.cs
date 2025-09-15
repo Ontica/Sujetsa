@@ -103,8 +103,8 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         };
       } else {
         return new OrderData {
-          Order_Id = dataServices.GetOrderIdFromOMSOrders(toTransformData.Factura),
-          Order_UID = dataServices.GetOrderUIDFromOMSOrders(toTransformData.Factura),
+          Order_Id = dataServices.GetOrderIdFromOMSOrders(toTransformData.Compra),
+          Order_UID = dataServices.GetOrderUIDFromOMSOrders(toTransformData.Compra),
           Order_Type_Id = 4005,
           Order_Category_Id = -1,
           Order_No = toTransformData.Compra,

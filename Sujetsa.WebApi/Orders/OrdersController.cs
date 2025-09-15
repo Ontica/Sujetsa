@@ -70,8 +70,8 @@ namespace Empiria.Sujetsa.WebApi {
 
     [HttpPost]
     [Route("v4/trade-sujetsa/inventory/orders/update")]
-    public async Task<NoDataModel> UpdateDataUsingETL([FromBody] InventoryOrderQuery query) {
-
+    public async Task<NoDataModel> UpdateDataUsingETL() {
+      ////actualizar datos de sujetsa fb a sql server empiria
       var etlService = new ETLService();
 
       await etlService.ExecuteAll();
