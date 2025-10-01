@@ -43,7 +43,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     }
 
 
-    private FixedList<OrderItemsPurchaseNK> ReadSourceData() {
+    public FixedList<OrderItemsPurchaseNK> ReadSourceData() {
       var sql = "SELECT	O.COMPRA,	O.DET,O.PRODUCTO,O.CLAVE,O.CANTIDAD,O.UNIDAD,O.PRECIO,O.COSTO,O.DESCUENTOS," +
         " O.SUBTOTAL,O.IVA,O.TOTAL,O.BinaryChecksum,O.OldBinaryChecksum" +
         " FROM sources.COMPRADET_TARGET O " +
@@ -59,13 +59,13 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     }
 
 
-    private FixedList<OrderItemsData> Transform(FixedList<OrderItemsPurchaseNK> toTransformData) {
+    public FixedList<OrderItemsData> Transform(FixedList<OrderItemsPurchaseNK> toTransformData) {
       return toTransformData.Select(x => Transform(x))
                             .ToFixedList();
     }
 
 
-    private OrderItemsData Transform(OrderItemsPurchaseNK toTransformData) {
+    public OrderItemsData Transform(OrderItemsPurchaseNK toTransformData) {
       string connectionString = GetEmpiriaConnectionString();
       var dataServices = new TransformerDataServices(connectionString);
       if (toTransformData.OldBinaryChecksum == 0) {
@@ -128,14 +128,14 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     }
     
 
-    private void WriteTargetData(FixedList<OrderItemsData> transformedData) {
+    public void WriteTargetData(FixedList<OrderItemsData> transformedData) {
       foreach (var item in transformedData) {
         WriteTargetData(item);
       }
     }
 
 
-    private void WriteTargetData(OrderItemsData o) {
+    public void WriteTargetData(OrderItemsData o) {
         var op = DataOperation.Parse("write_OMS_Order_Item", o.Order_Item_Id,  o.Order_Item_UID,  o.Order_Item_Type_Id,  o.Order_Item_Order_Id,
         o.Order_Item_Product_Id,  o.Order_Item_Description,  o.Order_Item_Product_Unit_Id,  o.Order_Item_Product_Qty,  o.Order_Item_Unit_Price,
         o.Order_Item_Discount,  o.Order_Item_Currency_Id,  o.Order_Item_Related_Item_Id,  o.Order_Item_Requisition_Item_Id,  o.Order_Item_Requested_By_Id,

@@ -11,6 +11,7 @@
 using Empiria.Data;
 using Empiria.Json;
 using Empiria.Trade.Integration.ETL.Data;
+using Empiria.Trade.Integration.ETL.Transformers;
 using Newtonsoft.Json;
 
 namespace Empiria.Trade.Integration.ETL.Transformers {
@@ -32,7 +33,20 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
       FixedList<OrderData> transformedData = Transform(sourceData);
 
-      WriteTargetData(transformedData);
+       int result = WriteTargetData(transformedData);
+      if (result == 1) {
+        // si fue exitoso el guardado de orders, guardar items
+        var orderItemsPurchaseTransformer = new OrderItemsPurchaseTransformer(_connectionString);
+        FixedList<OrderItemsPurchaseNK> sourceDataItems = orderItemsPurchaseTransformer.ReadSourceData();
+
+        FixedList<OrderItemsData> transformedDataItems = orderItemsPurchaseTransformer.Transform(sourceDataItems);
+
+        orderItemsPurchaseTransformer.WriteTargetData(transformedDataItems);
+
+      } else {
+        Assertion.EnsureFailed("Error al guardar Order Purchase");
+      }
+
     }
 
 
@@ -82,7 +96,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Requested_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
           Order_Responsible_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
           Order_Beneficary_Id = dataServices.GetWareHouseIdFromCommonStorage(toTransformData.Almacen),
-          Order_Provider_Id  = dataServices.GetPartyIdFromParties(toTransformData.Proveedor),
+          Order_Provider_Id = dataServices.GetPartyIdFromParties(toTransformData.Proveedor),
           Order_Budget_Id = -1,
           Order_Requisition_Id = -1,
           Order_Contract_Id = -1,
@@ -97,8 +111,8 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Ext_Data = JsonConvert.SerializeObject(new { Name = "Compra" }),
           Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Factura, toTransformData.Compra, toTransformData.TipoCompra, toTransformData.Almacen),
           Order_Location_Id = dataServices.GetWareHouseIdFromCommonStorage(toTransformData.Almacen),
-          Order_Posted_By_Id  = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
-          Order_Posting_Time  = toTransformData.Captura,
+          Order_Posted_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
+          Order_Posting_Time = toTransformData.Captura,
           Order_Status = dataServices.ReturnStatusForOrdersStatus(toTransformData.Cancelada)
         };
       } else {
@@ -135,25 +149,28 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         };
       }
     }
-    
 
-    private void WriteTargetData(FixedList<OrderData> transformedData) {
-      foreach (var item in transformedData) {
-        WriteTargetData(item);
+
+    private int WriteTargetData(FixedList<OrderData> transformedData) {
+      try {
+        foreach (var item in transformedData) {
+          WriteTargetData(item);
+        }
+        return 1; // éxito
+      } catch {
+        return 0; // fallo
       }
     }
-      
-    
+
     private void WriteTargetData(OrderData o) {
-        var op = DataOperation.Parse("write_OMS_Order", o.Order_Id, o.Order_UID, o.Order_Type_Id, o.Order_Category_Id, o.Order_No
-       ,o.Order_Description, o.Order_Identificators, o.Order_Tags, o.Order_Requested_By_Id, o.Order_Responsible_Id, o.Order_Beneficary_Id
-       ,o.Order_Provider_Id, o.Order_Budget_Id, o.Order_Requisition_Id, o.Order_Contract_Id, o.Order_Project_Id, o.Order_Currency_Id
-       ,o.Order_Source_Id, o.Order_Priority, o.Order_Authorization_Time, o.Order_Authorized_By_Id, o.Order_Closing_Time, o.Order_Closed_By_Id
-       ,o.Order_Ext_Data, o.Order_Keywords, o.Order_Location_Id, o.Order_Posted_By_Id, o.Order_Posting_Time, o.Order_Status);
+      var op = DataOperation.Parse("write_OMS_Order", o.Order_Id, o.Order_UID, o.Order_Type_Id, o.Order_Category_Id, o.Order_No
+     , o.Order_Description, o.Order_Identificators, o.Order_Tags, o.Order_Requested_By_Id, o.Order_Responsible_Id, o.Order_Beneficary_Id
+     , o.Order_Provider_Id, o.Order_Budget_Id, o.Order_Requisition_Id, o.Order_Contract_Id, o.Order_Project_Id, o.Order_Currency_Id
+     , o.Order_Source_Id, o.Order_Priority, o.Order_Authorization_Time, o.Order_Authorized_By_Id, o.Order_Closing_Time, o.Order_Closed_By_Id
+     , o.Order_Ext_Data, o.Order_Keywords, o.Order_Location_Id, o.Order_Posted_By_Id, o.Order_Posting_Time, o.Order_Status);
 
       DataWriter.Execute(op);
     }
-
 
     #region Helpers
 

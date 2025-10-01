@@ -13,7 +13,7 @@ using System;
 namespace Empiria.Trade.Integration.ETL.Transformers {
 
   /// <summary>A row in OrderItems(Remision) NK table.</summary>
-  internal class OrderItemsRemNK {
+  public class OrderItemsRemNK {
 
     [DataField("REML")]
     internal string Reml {

@@ -32,7 +32,19 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
       FixedList<OrderData> transformedData = Transform(sourceData);
 
-      WriteTargetData(transformedData);
+      int result = WriteTargetData(transformedData);
+      if (result == 1) {
+        // si fue exitoso el guardado de orders, guardar items
+        var orderItemsRemTransformer = new OrderItemsRemTransformer(_connectionString);
+        FixedList<OrderItemsRemNK> sourceDataItems = orderItemsRemTransformer.ReadSourceData();
+
+        FixedList<OrderItemsData> transformedDataItems = orderItemsRemTransformer.Transform(sourceDataItems);
+
+        orderItemsRemTransformer.WriteTargetData(transformedDataItems);
+                
+      } else {
+        Assertion.EnsureFailed("Error al guardar Order Rem");
+      }
     }
 
 
@@ -129,13 +141,18 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     }
     
 
-    private void WriteTargetData(FixedList<OrderData> transformedData) {
-      foreach (var item in transformedData) {
-        WriteTargetData(item);
+    private int WriteTargetData(FixedList<OrderData> transformedData) {
+      try {
+        foreach (var item in transformedData) {
+          WriteTargetData(item);
+        }
+        return 1; // éxito
+      } catch {
+        return 0; // fallo
       }
     }
-      
-    
+
+
     private void WriteTargetData(OrderData o) {
         var op = DataOperation.Parse("write_OMS_Order", o.Order_Id, o.Order_UID, o.Order_Type_Id, o.Order_Category_Id, o.Order_No
        ,o.Order_Description, o.Order_Identificators, o.Order_Tags, o.Order_Requested_By_Id, o.Order_Responsible_Id, o.Order_Beneficary_Id
@@ -145,7 +162,6 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
       DataWriter.Execute(op);
     }
-
 
     #region Helpers
 

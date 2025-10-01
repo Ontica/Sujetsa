@@ -43,7 +43,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     }
 
 
-    private FixedList<OrderItemsRemNK> ReadSourceData() {
+    public FixedList<OrderItemsRemNK> ReadSourceData() {
       var sql = "SELECT O.* " +
         " FROM sources.REMLDET_TARGET O " +
         " JOIN sources.REML_TARGET V  ON V.REML = O.REML AND V.FECHA >= '2025-01-01' " +
@@ -58,13 +58,13 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     }
 
 
-    private FixedList<OrderItemsData> Transform(FixedList<OrderItemsRemNK> toTransformData) {
+    public FixedList<OrderItemsData> Transform(FixedList<OrderItemsRemNK> toTransformData) {
       return toTransformData.Select(x => Transform(x))
                             .ToFixedList();
     }
 
 
-    private OrderItemsData Transform(OrderItemsRemNK toTransformData) {
+    public OrderItemsData Transform(OrderItemsRemNK toTransformData) {
       string connectionString = GetEmpiriaConnectionString();
       var dataServices = new TransformerDataServices(connectionString);
       if (toTransformData.OldBinaryChecksum == 0) {
@@ -127,14 +127,14 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     }
     
 
-    private void WriteTargetData(FixedList<OrderItemsData> transformedData) {
+    public void WriteTargetData(FixedList<OrderItemsData> transformedData) {
       foreach (var item in transformedData) {
         WriteTargetData(item);
       }
     }
 
 
-    private void WriteTargetData(OrderItemsData o) {
+    public void WriteTargetData(OrderItemsData o) {
         var op = DataOperation.Parse("write_OMS_Order_Item", o.Order_Item_Id,  o.Order_Item_UID,  o.Order_Item_Type_Id,  o.Order_Item_Order_Id,
         o.Order_Item_Product_Id,  o.Order_Item_Description,  o.Order_Item_Product_Unit_Id,  o.Order_Item_Product_Qty,  o.Order_Item_Unit_Price,
         o.Order_Item_Discount,  o.Order_Item_Currency_Id,  o.Order_Item_Related_Item_Id,  o.Order_Item_Requisition_Item_Id,  o.Order_Item_Requested_By_Id,
