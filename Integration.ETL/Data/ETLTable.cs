@@ -13,12 +13,13 @@ namespace Empiria.Trade.Integration.ETL.Data {
   /// <summary>Describes an ETL source table.</summary>
   internal class ETLTable {
 
-    public ETLTable(string sourceTable, string fullSourceTableName) {
+    public ETLTable(string sourceTable, string fullSourceTableName, string fullTargetTableName) {
       Assertion.Require(sourceTable, nameof(sourceTable));
       Assertion.Require(fullSourceTableName, nameof(fullSourceTableName));
 
       SourceTableName = sourceTable;
       FullSourceTableName = fullSourceTableName;
+      FullTargetTableName = fullTargetTableName;
     }
 
     public string SourceTableName {
@@ -26,6 +27,10 @@ namespace Empiria.Trade.Integration.ETL.Data {
     }
 
     public string FullSourceTableName {
+      get;
+    }
+
+    public string FullTargetTableName {
       get;
     }
 

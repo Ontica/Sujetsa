@@ -113,7 +113,7 @@ namespace Empiria.Trade.Integration.ETL.Data {
 
 
     internal FixedList<ETLTable> GetTablesList() {
-      var commandString = "SELECT SourceTable, FullSourceTableName " +
+      var commandString = "SELECT SourceTable, FullSourceTableName, FullTargetTableName " +
                           "FROM sources.OMS_Intermediate_Tables_List " +
                           "WHERE Active = 'T'";
 
@@ -129,7 +129,8 @@ namespace Empiria.Trade.Integration.ETL.Data {
 
           return dataTable.Select()
                           .Select(row => new ETLTable((string) row["SourceTable"],
-                                                      (string) row["FullSourceTableName"]))
+                                                      (string) row["FullSourceTableName"],
+                                                      (string) row["FullTargetTableName"]))
                           .ToFixedList();
         }
       }
@@ -158,8 +159,10 @@ namespace Empiria.Trade.Integration.ETL.Data {
         using (SqlBulkCopy bulkCopy = new SqlBulkCopy(dbConnection)) {
           bulkCopy.BulkCopyTimeout = 300; 
           bulkCopy.DestinationTableName = destinationTableName;
+          EmpiriaLog.Info("(Sujetsa ETL) Starting data transfer to SQL Server table: "+destinationTableName);
           bulkCopy.BatchSize = dataTable.Rows.Count;
           bulkCopy.WriteToServer(dataTable);
+          EmpiriaLog.Info("(Sujetsa ETL) Data transfer completed to SQL Server table: " + destinationTableName + " transferred records: "+ RowCounter(destinationTableName));
         }
       }
     }

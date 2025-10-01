@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 using Empiria.Json;
 
@@ -43,48 +44,95 @@ namespace Empiria.Trade.Integration.ETL {
       foreach (var table in tablesToConvert) {
         outputDataServices.TruncateTable(table.FullSourceTableName);
         string query = GetQueryForTable(table.SourceTableName);
+        EmpiriaLog.Info("(Sujetsa ETL) Starting data extraction from NK Firebird table: " + table.SourceTableName);
         var newDataToStore = inputDataServices.GetDataTable(query);
+        EmpiriaLog.Info("(Sujetsa ETL) Data extraction completed from NK Firebird table: " + table.SourceTableName + " extracted records: " + newDataToStore.Rows.Count);
         outputDataServices.StoreDataTable(newDataToStore, table.FullSourceTableName);
       }
-
+      EmpiriaLog.Info("(Sujetsa ETL) Starting Execute Merge Stored Procedure");
       outputDataServices.ExecuteMergeStoredProcedure();
+      EmpiriaLog.Info("(Sujetsa ETL) Completed Execute Merge Stored Procedure");
+
+      foreach (var table in tablesToConvert) {
+        EmpiriaLog.Info("(Sujetsa ETL) Records Count after merge in table: " + table.FullTargetTableName + " total records: " + outputDataServices.RowCounter(table.FullTargetTableName));
+      }
       // outputDataServices.ExecuteFillCommonStorageStoredProcedure();
     }
 
 
     public async Task ExecuteAll() {
-      //quitar exception de  no implementado
-      //await Task.FromException(new NotImplementedException());
       //paso 1 Should_Execute (FB --> SQLServer).
       await Task.Run(() => {
+        EmpiriaLog.Info("(Sujetsa ETL) Starting ETL Extraction...");
         Execute();
-      //paso 2 Should_Execute_All_Transformers_In_Sequence(todos los de abajo).
-      var productTransformer = new ProductTransformer(_outputSourceEmpiriaConnectionString);
-      productTransformer.Execute();
+        EmpiriaLog.Info("(Sujetsa ETL) Starting ETL Extraction finished...");
 
-      var orderInvoiceTransformer = new OrderInvoiceTransformer(_outputSourceEmpiriaConnectionString);
-      orderInvoiceTransformer.Execute();
+        //paso 2 Should_Execute_All_Transformers_In_Sequence(todos los de abajo)
+        EmpiriaLog.Info("(Sujetsa ETL) Starting ETL Transformers execution...");
 
-      var orderCreditNoteTransformer = new OrderCreditNoteTransformer(_outputSourceEmpiriaConnectionString);
-      orderCreditNoteTransformer.Execute();
+        EmpiriaLog.Info("(Sujetsa ETL) Starting Product Transformer execution...");
+        var productTransformer = new ProductTransformer(_outputSourceEmpiriaConnectionString);
+        productTransformer.Execute();
+        EmpiriaLog.Info("(Sujetsa ETL) Product Transformer execution finished.");
 
-      var orderPurchaseTransformer = new OrderPurchaseTransformer(_outputSourceEmpiriaConnectionString);
-      orderPurchaseTransformer.Execute();
+        /*
+        var orderInvoiceTransformer = new OrderInvoiceTransformer(_outputSourceEmpiriaConnectionString);
+        orderInvoiceTransformer.Execute();
+        */
+        EmpiriaLog.Info("(Sujetsa ETL) Starting Order Invoice and Items Transformer execution...");
+        var orderInvoice_and_ItemsTransformer = new OrderInvoiceTransformer(_outputSourceEmpiriaConnectionString);
+        orderInvoice_and_ItemsTransformer.Execute();
+        EmpiriaLog.Info("(Sujetsa ETL) Order Invoice and Items Transformer execution finished.");
+        /*
+        var orderItemsInvoiceTransformer = new OrderItemsInvoiceTransformer(_outputSourceEmpiriaConnectionString);
+        orderItemsInvoiceTransformer.Execute();
+        */
 
-      var orderRemTransformer = new OrderRemTransformer(_outputSourceEmpiriaConnectionString);
-      orderRemTransformer.Execute();
+        /*
+        var orderCreditNoteTransformer = new OrderCreditNoteTransformer(_outputSourceEmpiriaConnectionString);
+        orderCreditNoteTransformer.Execute();
+        */
+        EmpiriaLog.Info("(Sujetsa ETL) Starting Order Credit Note and Items Transformer execution...");
+        var orderCreditNote_and_ItemsTransformer = new OrderCreditNoteTransformer(_outputSourceEmpiriaConnectionString);
+        orderCreditNote_and_ItemsTransformer.Execute();
+        EmpiriaLog.Info("(Sujetsa ETL) Order Credit Note and Items Transformer execution finished.");
+        /*
+        var orderItemsCreditNoteTransformer = new OrderItemsCreditNoteTransformer(_outputSourceEmpiriaConnectionString);
+        orderItemsCreditNoteTransformer.Execute();
+        */
 
-      var orderItemsCreditNoteTransformer = new OrderItemsCreditNoteTransformer(_outputSourceEmpiriaConnectionString);
-      orderItemsCreditNoteTransformer.Execute();
+        /*  
+        var orderPurchaseTransformer = new OrderPurchaseTransformer(_outputSourceEmpiriaConnectionString);
+        orderPurchaseTransformer.Execute();
+        */
+        EmpiriaLog.Info("(Sujetsa ETL) Starting Order Purchase and Items Transformer execution...");
+        var orderPurchaseTransformer_and_ItemsTransformer = new OrderPurchaseTransformer(_outputSourceEmpiriaConnectionString);
+        orderPurchaseTransformer_and_ItemsTransformer.Execute();
+        EmpiriaLog.Info("(Sujetsa ETL) Order Purchase and Items Transformer execution finished.");
+        /*
+        var orderItemsPurchaseTransformer = new OrderItemsPurchaseTransformer(_outputSourceEmpiriaConnectionString);
+        orderItemsPurchaseTransformer.Execute();
+        */
 
-      var orderItemsPurchaseTransformer = new OrderItemsPurchaseTransformer(_outputSourceEmpiriaConnectionString);
-      orderItemsPurchaseTransformer.Execute();
+        /*
+        var orderRemTransformer = new OrderRemTransformer(_outputSourceEmpiriaConnectionString);
+        orderRemTransformer.Execute();
+        */
+        EmpiriaLog.Info("(Sujetsa ETL) Starting Order Rem and Items Transformer execution...");
+        var orderRemTransformer_and_ItemsTransformer = new OrderRemTransformer(_outputSourceEmpiriaConnectionString);
+        orderRemTransformer_and_ItemsTransformer.Execute();
+        EmpiriaLog.Info("(Sujetsa ETL) Order Rem and Items Transformer execution finished.");
+        /*
+        var orderItemsRemTransformer = new OrderItemsRemTransformer(_outputSourceEmpiriaConnectionString);
+        orderItemsRemTransformer.Execute();     
+        */
+        var connectionString = GetNKConnectionString();
 
-      var orderItemsRemTransformer = new OrderItemsRemTransformer(_outputSourceEmpiriaConnectionString);
-      orderItemsRemTransformer.Execute();
+        var outputDataServices = new SqlServerDataServices(connectionString);
 
-      var orderItemsInvoiceTransformer = new OrderItemsInvoiceTransformer(_outputSourceEmpiriaConnectionString);
-      orderItemsInvoiceTransformer.Execute();
+        outputDataServices.ExecuteUpdateOrderItemsStatusStoredProcedure();
+
+        EmpiriaLog.Info("(Sujetsa ETL) ETL Transformers execution finished.");
       });
     }
 
@@ -92,7 +140,7 @@ namespace Empiria.Trade.Integration.ETL {
     public void ExecuteReverseETL(string order_no) {
       var inputDataServices = new SqlServerDataServices(_outputSourceEmpiriaConnectionString);
       var outputDataServices = new FirebirdDataServices(_inputSourceConnectionString);
-
+      EmpiriaLog.Info("(Sujetsa ETL) Starting Reverse ETL Extraction...");
       const string sourceTable = "[dbo].[VW_Inventory_Return] WHERE ESTATUS_PARTIDA = 'C' AND INV_NO =  ";
       const string destinationTable = "INV_SUJ";
 
@@ -101,6 +149,8 @@ namespace Empiria.Trade.Integration.ETL {
       var dataToTransfer = inputDataServices.GetDataTable(query);
 
       outputDataServices.BulkInsertToFirebird(dataToTransfer, destinationTable);
+
+      EmpiriaLog.Info("(Sujetsa ETL) Reverse ETL Extraction Finished.");
     }
 
 
@@ -135,6 +185,11 @@ namespace Empiria.Trade.Integration.ETL {
       return queries.TryGetValue(tableName, out string query) ? query : $"SELECT * FROM {tableName}";
     }
 
+    static private string GetNKConnectionString() {
+      var config = ConfigurationData.Get<JsonObject>("Connection.Strings");
+
+      return config.Get<string>("sqlServerConnection");
+    }
     #endregion Helpers
 
   }  // class ETLService
