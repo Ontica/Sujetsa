@@ -72,6 +72,19 @@ namespace Empiria.Tests.Trade.Integration {
 
 
     [Fact]
+    public void Should_Get_Empiria_Tables_List() {
+      string connectionString = GetConnectionString();
+
+      var dataServices = new SqlServerDataServices(connectionString);
+
+      FixedList<ETLEmpiriaTable> sut = dataServices.GetEmpiriaTablesList();
+
+      Assert.NotNull(sut);
+      Assert.NotEmpty(sut);
+    }
+
+
+    [Fact]
     public void Should_Get_Tables_List() {
       string connectionString = GetConnectionString();
 
@@ -116,9 +129,9 @@ namespace Empiria.Tests.Trade.Integration {
 
     [Fact]
     public void Should_Return_Valid_Row_Count() {
-      string tableName = "NKsujetsaFB.sources.LINEA";
+      string tableName = "OMS_Order_Items where Order_Item_Type_Id != 4059";
 
-      string connectionString = GetConnectionString();
+      string connectionString = GetEmpiriaConnectionString();
 
       var sut = new SqlServerDataServices(connectionString);
 
@@ -180,6 +193,13 @@ namespace Empiria.Tests.Trade.Integration {
       var config = ConfigurationData.Get<JsonObject>("Connection.Strings");
 
       return config.Get<string>("sqlServerConnection");
+    }
+
+
+    static private string GetEmpiriaConnectionString() {
+      var config = ConfigurationData.Get<JsonObject>("Connection.Strings");
+
+      return config.Get<string>("empiriaSqlServerConnection");
     }
 
     #endregion Helpers

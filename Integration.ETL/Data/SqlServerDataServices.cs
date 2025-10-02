@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -111,6 +112,29 @@ namespace Empiria.Trade.Integration.ETL.Data {
       }
     }
 
+    internal FixedList<ETLEmpiriaTable> GetEmpiriaTablesList() {
+      var commandString = "SELECT Distinct(Tipo) " +
+                          "FROM sources.OMS_Intermediate_Tables_List " +
+                          "WHERE Active = 'T' " +
+                          "AND Tipo NOT IN('', ' ') " +
+                          "ORDER BY tipo DESC ";
+
+      using (SqlConnection dbConnection = OpenConnection()) {
+
+        using (SqlCommand cmd = new SqlCommand(commandString, dbConnection)) {
+
+          var dataReader = cmd.ExecuteReader();
+
+          var dataTable = new DataTable();
+
+          dataTable.Load(dataReader);
+
+          return dataTable.Select()
+                          .Select(row => new ETLEmpiriaTable((string) row["Tipo"]))
+                          .ToFixedList();
+        }
+      }
+    }
 
     internal FixedList<ETLTable> GetTablesList() {
       var commandString = "SELECT SourceTable, FullSourceTableName, FullTargetTableName " +

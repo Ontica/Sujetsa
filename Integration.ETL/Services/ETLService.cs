@@ -38,6 +38,7 @@ namespace Empiria.Trade.Integration.ETL {
     public void Execute() {
       var inputDataServices = new FirebirdDataServices(_inputSourceConnectionString);
       var outputDataServices = new SqlServerDataServices(_outputSourceConnectionString);
+      var outputEmpiriaDataServices = new SqlServerDataServices(_outputSourceEmpiriaConnectionString);
 
       var tablesToConvert = outputDataServices.GetTablesList();
 
@@ -127,10 +128,17 @@ namespace Empiria.Trade.Integration.ETL {
         orderItemsRemTransformer.Execute();     
         */
         var connectionString = GetNKConnectionString();
-
         var outputDataServices = new SqlServerDataServices(connectionString);
-
         outputDataServices.ExecuteUpdateOrderItemsStatusStoredProcedure();
+
+        //contar products orders e items transformados en Empiria
+        var tablesToCount = outputDataServices.GetEmpiriaTablesList();
+
+        var outputEmpiriaDataServices = new SqlServerDataServices(_outputSourceEmpiriaConnectionString);
+
+        foreach (var table in tablesToCount) {  
+          EmpiriaLog.Info("(Sujetsa ETL) Data transformation completed to Empiria table: " + table.Tipo + " Total records: " + outputEmpiriaDataServices.RowCounter(table.Tipo)); 
+        }
 
         EmpiriaLog.Info("(Sujetsa ETL) ETL Transformers execution finished.");
       });
