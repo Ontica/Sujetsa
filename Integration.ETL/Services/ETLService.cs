@@ -66,7 +66,7 @@ namespace Empiria.Trade.Integration.ETL {
       await Task.Run(() => {
         EmpiriaLog.Info("(Sujetsa ETL) Starting ETL Extraction...");
         Execute();
-        EmpiriaLog.Info("(Sujetsa ETL) Starting ETL Extraction finished...");
+        EmpiriaLog.Info("(Sujetsa ETL) ETL Extraction finished...");
 
         //paso 2 Should_Execute_All_Transformers_In_Sequence(todos los de abajo)
         EmpiriaLog.Info("(Sujetsa ETL) Starting ETL Transformers execution...");
@@ -172,13 +172,14 @@ namespace Empiria.Trade.Integration.ETL {
         { "ICMOV", $"SELECT * FROM {tableName} WHERE {baseDateFilter}" },
         { "FACTURA", $"SELECT * FROM {tableName} WHERE {baseDateFilter}" },
         { "REML", $"SELECT * FROM {tableName} WHERE {baseDateFilter}" },
+        { "DEVOLUCION", $"SELECT * FROM {tableName} WHERE {baseDateFilter}" },
         { "COMPRA", $"SELECT * FROM {tableName} WHERE {baseDateFilter}" },
         { "NOTACREDITO", $"SELECT * FROM {tableName} WHERE {baseDateFilter} AND TIPO = 'D'" },
         { "PRODUCTOALMACENLOC", $@"SELECT 
             (PRODUCTO || '' || ALMACEN || '' || COALESCE(RACK, '') || '' || FECHAMOV) AS DB_KEY,
             PRODUCTO, ALMACEN, RACK, NIVEL, INDICE, FECHA, RACKANT, NIVELANT, INDICEANT, FECHAANT,
             COMPRA, FECHAMOV, USUARIO 
-            FROM {tableName} WHERE FECHAMOV >= '2025-01-01' ORDER BY FECHAMOV" },
+            FROM {tableName} " },
         { "OVUBICACIONCONSECUTIVO", $"SELECT * FROM {tableName} WHERE INI_SURTIO >= '2025-01-01'" },
         { "PRODUCTOALMACEN", $"SELECT PA.* FROM {tableName} PA JOIN ALMACEN A ON PA.ALMACEN = A.ALMACEN" },
         { "OVDET", $"SELECT OT.* FROM {tableName} OT JOIN OV O ON O.OV = OT.OV AND {baseDateFilter}" },
