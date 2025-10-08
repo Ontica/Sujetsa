@@ -8,9 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Threading.Tasks;
 using Empiria.Json;
 
@@ -62,13 +60,12 @@ namespace Empiria.Trade.Integration.ETL {
 
 
     public async Task ExecuteAll() {
-      //paso 1 Should_Execute (FB --> SQLServer).
+
       await Task.Run(() => {
         EmpiriaLog.Info("(Sujetsa ETL) Starting ETL Extraction...");
         Execute();
         EmpiriaLog.Info("(Sujetsa ETL) ETL Extraction finished...");
 
-        //paso 2 Should_Execute_All_Transformers_In_Sequence(todos los de abajo)
         EmpiriaLog.Info("(Sujetsa ETL) Starting ETL Transformers execution...");
 
         EmpiriaLog.Info("(Sujetsa ETL) Starting Product Transformer execution...");
@@ -76,62 +73,41 @@ namespace Empiria.Trade.Integration.ETL {
         productTransformer.Execute();
         EmpiriaLog.Info("(Sujetsa ETL) Product Transformer execution finished.");
 
-        /*
-        var orderInvoiceTransformer = new OrderInvoiceTransformer(_outputSourceEmpiriaConnectionString);
-        orderInvoiceTransformer.Execute();
-        */
         EmpiriaLog.Info("(Sujetsa ETL) Starting Order Invoice and Items Transformer execution...");
         var orderInvoice_and_ItemsTransformer = new OrderInvoiceTransformer(_outputSourceEmpiriaConnectionString);
         orderInvoice_and_ItemsTransformer.Execute();
         EmpiriaLog.Info("(Sujetsa ETL) Order Invoice and Items Transformer execution finished.");
-        /*
-        var orderItemsInvoiceTransformer = new OrderItemsInvoiceTransformer(_outputSourceEmpiriaConnectionString);
-        orderItemsInvoiceTransformer.Execute();
-        */
-
-        /*
-        var orderCreditNoteTransformer = new OrderCreditNoteTransformer(_outputSourceEmpiriaConnectionString);
-        orderCreditNoteTransformer.Execute();
-        */
+        
         EmpiriaLog.Info("(Sujetsa ETL) Starting Order Credit Note and Items Transformer execution...");
         var orderCreditNote_and_ItemsTransformer = new OrderCreditNoteTransformer(_outputSourceEmpiriaConnectionString);
         orderCreditNote_and_ItemsTransformer.Execute();
         EmpiriaLog.Info("(Sujetsa ETL) Order Credit Note and Items Transformer execution finished.");
-        /*
-        var orderItemsCreditNoteTransformer = new OrderItemsCreditNoteTransformer(_outputSourceEmpiriaConnectionString);
-        orderItemsCreditNoteTransformer.Execute();
-        */
-
-        /*  
-        var orderPurchaseTransformer = new OrderPurchaseTransformer(_outputSourceEmpiriaConnectionString);
-        orderPurchaseTransformer.Execute();
-        */
+        
         EmpiriaLog.Info("(Sujetsa ETL) Starting Order Purchase and Items Transformer execution...");
         var orderPurchaseTransformer_and_ItemsTransformer = new OrderPurchaseTransformer(_outputSourceEmpiriaConnectionString);
         orderPurchaseTransformer_and_ItemsTransformer.Execute();
         EmpiriaLog.Info("(Sujetsa ETL) Order Purchase and Items Transformer execution finished.");
-        /*
-        var orderItemsPurchaseTransformer = new OrderItemsPurchaseTransformer(_outputSourceEmpiriaConnectionString);
-        orderItemsPurchaseTransformer.Execute();
-        */
-
-        /*
-        var orderRemTransformer = new OrderRemTransformer(_outputSourceEmpiriaConnectionString);
-        orderRemTransformer.Execute();
-        */
+      
         EmpiriaLog.Info("(Sujetsa ETL) Starting Order Rem and Items Transformer execution...");
         var orderRemTransformer_and_ItemsTransformer = new OrderRemTransformer(_outputSourceEmpiriaConnectionString);
         orderRemTransformer_and_ItemsTransformer.Execute();
         EmpiriaLog.Info("(Sujetsa ETL) Order Rem and Items Transformer execution finished.");
-        /*
-        var orderItemsRemTransformer = new OrderItemsRemTransformer(_outputSourceEmpiriaConnectionString);
-        orderItemsRemTransformer.Execute();     
-        */
+        
         var connectionString = GetNKConnectionString();
         var outputDataServices = new SqlServerDataServices(connectionString);
         outputDataServices.ExecuteUpdateOrderItemsStatusStoredProcedure();
+        ////ov,ovdet deolucion, devoluciondet
+        /*EmpiriaLog.Info("(Sujetsa ETL) Starting Order OV and Items Transformer execution...");
+        var orderTransformer_and_ItemsTransformer = new OrderTransformer(_outputSourceEmpiriaConnectionString);
+        orderTransformer_and_ItemsTransformer.Execute();
+        EmpiriaLog.Info("(Sujetsa ETL) Order OV and Items Transformer execution finished.");
 
-        //contar products orders e items transformados en Empiria
+        EmpiriaLog.Info("(Sujetsa ETL) Starting Devolucion Rem and Items Transformer execution...");
+        var orderReturnTransformer_and_ItemsTransformer = new OrderReturnTransformer(_outputSourceEmpiriaConnectionString);
+        orderReturnTransformer_and_ItemsTransformer.Execute();
+        EmpiriaLog.Info("(Sujetsa ETL) Order Devolucion and Items Transformer execution finished.");
+        */
+       
         var tablesToCount = outputDataServices.GetEmpiriaTablesList();
 
         var outputEmpiriaDataServices = new SqlServerDataServices(_outputSourceEmpiriaConnectionString);

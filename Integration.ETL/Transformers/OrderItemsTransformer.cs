@@ -37,7 +37,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     }
 
 
-    private FixedList<OrderItemsNK> ReadSourceData() {
+    public FixedList<OrderItemsNK> ReadSourceData() {
       var sql = "SELECT O.OV,O.Producto,O.Unidad,O.Referencia,O.Cantidad,O.Precio,O.Descuento,O.Det,O.Almacen,O.OldBinaryChecksum,O.BinaryChecksum "+
           "FROM sources.OVDET_TARGET O " +
           "JOIN sources.OV_TARGET V  ON V.OV = O.OV AND V.FECHA >= '2025-01-01' " +
@@ -52,13 +52,13 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     }
 
 
-    private FixedList<OrderItemsData> Transform(FixedList<OrderItemsNK> toTransformData) {
+    public FixedList<OrderItemsData> Transform(FixedList<OrderItemsNK> toTransformData) {
       return toTransformData.Select(x => Transform(x))
                             .ToFixedList();
     }
 
 
-    private OrderItemsData Transform(OrderItemsNK toTransformData) {
+    public OrderItemsData Transform(OrderItemsNK toTransformData) {
       string connectionString = GetEmpiriaConnectionString();
       var dataServices = new TransformerDataServices(connectionString);
       if (toTransformData.OldBinaryChecksum == 0) {
@@ -87,7 +87,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Item_Position = toTransformData.Det,
           Order_Item_Posted_By_Id = dataServices.GetPostedUserIdFromOMSOrders(toTransformData.OV),
           Order_Item_Posting_Time = dataServices.GetPostedDateFromOMSOrders(toTransformData.OV), 
-          Order_Item_Status = Convert.ToChar(dataServices.GetOrderItemStatusFromOMSOrders(toTransformData.OV))/////(char) 'A' /////PENDIENTE ir por status a mos orders
+          Order_Item_Status = Convert.ToChar(dataServices.GetOrderItemStatusFromOMSOrders(toTransformData.OV))
         };
       } else {
         return new OrderItemsData {
@@ -115,20 +115,20 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Item_Position = toTransformData.Det,
           Order_Item_Posted_By_Id = dataServices.GetPostedUserIdFromOMSOrders(toTransformData.OV),
           Order_Item_Posting_Time = dataServices.GetPostingDateFromOMSOrders(toTransformData.OV),
-          Order_Item_Status = Convert.ToChar(dataServices.GetOrderItemStatusFromOMSOrders(toTransformData.OV))/////(char) 'A' /////PENDIENTE ir por status a mos orders
+          Order_Item_Status = Convert.ToChar(dataServices.GetOrderItemStatusFromOMSOrders(toTransformData.OV))
         };
       }
     }
     
 
-    private void WriteTargetData(FixedList<OrderItemsData> transformedData) {
+    public void WriteTargetData(FixedList<OrderItemsData> transformedData) {
       foreach (var item in transformedData) {
         WriteTargetData(item);
       }
     }
 
 
-    private void WriteTargetData(OrderItemsData o) {
+    public void WriteTargetData(OrderItemsData o) {
         var op = DataOperation.Parse("write_OMS_Order_Item", o.Order_Item_Id,  o.Order_Item_UID,  o.Order_Item_Type_Id,  o.Order_Item_Order_Id,
         o.Order_Item_Product_Id,  o.Order_Item_Description,  o.Order_Item_Product_Unit_Id,  o.Order_Item_Product_Qty,  o.Order_Item_Unit_Price,
         o.Order_Item_Discount,  o.Order_Item_Currency_Id,  o.Order_Item_Related_Item_Id,  o.Order_Item_Requisition_Item_Id,  o.Order_Item_Requested_By_Id,

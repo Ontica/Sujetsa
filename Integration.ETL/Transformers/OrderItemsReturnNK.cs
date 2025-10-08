@@ -8,12 +8,11 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
 
 namespace Empiria.Trade.Integration.ETL.Transformers {
 
   /// <summary>A row in OrderItems(DevolucionDet) NK table.</summary>
-  internal class OrderItemsReturnNK {
+  public class OrderItemsReturnNK {
 
     [DataField("DEVOLUCION")]
     internal string Devolucion {

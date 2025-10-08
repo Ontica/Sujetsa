@@ -32,7 +32,18 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
       FixedList<OrderData> transformedData = Transform(sourceData);
 
-      WriteTargetData(transformedData);
+      int result = WriteTargetData(transformedData);
+      if (result == 1) {
+        // si fue exitoso el guardado de orders, guardar items
+        var orderItemsReturnTransformer = new OrderItemsReturnTransformer(_connectionString);
+        FixedList<OrderItemsReturnNK> sourceDataItems = orderItemsReturnTransformer.ReadSourceData();
+
+        FixedList<OrderItemsData> transformedDataItems = orderItemsReturnTransformer.Transform(sourceDataItems);
+
+        orderItemsReturnTransformer.WriteTargetData(transformedDataItems);
+      } else {
+        Assertion.EnsureFailed("Error al guardar Order Return");
+      }
     }
 
 
@@ -68,7 +79,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         return new OrderData {
           Order_Id = dataServices.GetNextId("OMS_Orders"),
           Order_UID = System.Guid.NewGuid().ToString(),
-          Order_Type_Id = 4007,
+          Order_Type_Id = 4009,
           Order_Category_Id = -1,
           Order_No = toTransformData.Devolucion,
           Order_Description = toTransformData.Referencia,
@@ -92,15 +103,16 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Ext_Data = JsonConvert.SerializeObject(new { Name = "Devolucion" }),
           Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Factura, toTransformData.Devolucion, toTransformData.Factura, toTransformData.Almacen, toTransformData.ICMOV, toTransformData.NotaCredito, toTransformData.Tipo_NC),
           Order_Location_Id = dataServices.GetWareHouseIdFromCommonStorage(toTransformData.Almacen),
+          Order_Related_Order_Id = -1,
           Order_Posted_By_Id  = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
           Order_Posting_Time  = toTransformData.FechaCaptura,
-          Order_Status = 'Y'//////toTransformData.Estatus///////////////////
+          Order_Status = dataServices.ReturnStatusForOrdersStatus(toTransformData.Cancelada)
         };
       } else {
         return new OrderData {
           Order_Id = dataServices.GetOrderIdFromOMSOrders(toTransformData.Factura),
           Order_UID = dataServices.GetOrderUIDFromOMSOrders(toTransformData.Factura),
-          Order_Type_Id = 4007,
+          Order_Type_Id = 4009,
           Order_Category_Id = -1,
           Order_No = toTransformData.Devolucion,
           Order_Description = toTransformData.Referencia,
@@ -124,27 +136,33 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Ext_Data = JsonConvert.SerializeObject(new { Name = "Devolucion" }),
           Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Factura, toTransformData.Devolucion, toTransformData.Factura, toTransformData.Almacen, toTransformData.ICMOV, toTransformData.NotaCredito),
           Order_Location_Id = dataServices.GetWareHouseIdFromCommonStorage(toTransformData.Almacen),
+          Order_Related_Order_Id = -1,
           Order_Posted_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario),
           Order_Posting_Time = toTransformData.FechaCaptura,
-          Order_Status = 'Y'//////toTransformData.Estatus///////////////////
+          Order_Status = dataServices.ReturnStatusForOrdersStatus(toTransformData.Cancelada)
         };
       }
     }
     
 
-    private void WriteTargetData(FixedList<OrderData> transformedData) {
-      foreach (var item in transformedData) {
-        WriteTargetData(item);
+   private int WriteTargetData(FixedList<OrderData> transformedData) {
+      try {
+        foreach (var item in transformedData) {
+          WriteTargetData(item);
+        }
+        return 1; // éxito
+      } catch {
+        return 0; // fallo
       }
     }
-      
-    
+
+
     private void WriteTargetData(OrderData o) {
         var op = DataOperation.Parse("write_OMS_Order", o.Order_Id, o.Order_UID, o.Order_Type_Id, o.Order_Category_Id, o.Order_No
        ,o.Order_Description, o.Order_Identificators, o.Order_Tags, o.Order_Requested_By_Id, o.Order_Responsible_Id, o.Order_Beneficary_Id
        ,o.Order_Provider_Id, o.Order_Budget_Id, o.Order_Requisition_Id, o.Order_Contract_Id, o.Order_Project_Id, o.Order_Currency_Id
        ,o.Order_Source_Id, o.Order_Priority, o.Order_Authorization_Time, o.Order_Authorized_By_Id, o.Order_Closing_Time, o.Order_Closed_By_Id
-       ,o.Order_Ext_Data, o.Order_Keywords, o.Order_Location_Id, o.Order_Posted_By_Id, o.Order_Posting_Time, o.Order_Status);
+       ,o.Order_Ext_Data, o.Order_Keywords, o.Order_Location_Id, o.Order_Related_Order_Id, o.Order_Posted_By_Id, o.Order_Posting_Time, o.Order_Status);
 
       DataWriter.Execute(op);
     }

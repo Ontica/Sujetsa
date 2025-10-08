@@ -33,7 +33,18 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
       FixedList<OrderData> transformedData = Transform(sourceData);
 
-      WriteTargetData(transformedData);
+      int result = WriteTargetData(transformedData);
+      if (result == 1) {
+        // si fue exitoso el guardado de orders, guardar items
+        var orderItemsTransformer = new OrderItemsTransformer(_connectionString);
+        FixedList<OrderItemsNK> sourceDataItems = orderItemsTransformer.ReadSourceData();
+
+        FixedList<OrderItemsData> transformedDataItems = orderItemsTransformer.Transform(sourceDataItems);
+
+        orderItemsTransformer.WriteTargetData(transformedDataItems);
+      } else {
+        Assertion.EnsureFailed("Error al guardar Order Venta");
+      }
     }
 
     private FixedList<OrderNK> ReadSourceData() {
@@ -90,9 +101,10 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Ext_Data = JsonConvert.SerializeObject(new { Name = "OV" }),
           Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.OV, toTransformData.Cliente, toTransformData.Almacen, toTransformData.Moneda),
           Order_Location_Id = dataServices.GetWareHouseIdFromCommonStorage(toTransformData.Almacen),
+          Order_Related_Order_Id = -1,
           Order_Posted_By_Id  = dataServices.GetPartyIdFromParties(toTransformData.Usr_Captura),
           Order_Posting_Time  = toTransformData.Fecha,
-          Order_Status = Convert.ToChar(toTransformData.Estatus)
+          Order_Status = dataServices.ReturnStatusForOrdersStatus(toTransformData.Cancelado)
         };
       } else {
         return new OrderData {
@@ -122,26 +134,32 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Ext_Data = JsonConvert.SerializeObject(new { Name = "OV" }),
           Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.OV, toTransformData.Cliente, toTransformData.Almacen, toTransformData.Moneda),
           Order_Location_Id = dataServices.GetWareHouseIdFromCommonStorage(toTransformData.Almacen),
+          Order_Related_Order_Id = -1,
           Order_Posted_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usr_Captura),
           Order_Posting_Time = toTransformData.Fecha,
-          Order_Status = Convert.ToChar(toTransformData.Estatus)
+          Order_Status = dataServices.ReturnStatusForOrdersStatus(toTransformData.Cancelado)
         };
       }
     }
     
 
-    private void WriteTargetData(FixedList<OrderData> transformedData) {
-      foreach (var item in transformedData) {
-        WriteTargetData(item);
+   private int WriteTargetData(FixedList<OrderData> transformedData) {
+      try {
+        foreach (var item in transformedData) {
+          WriteTargetData(item);
+        }
+        return 1; // éxito
+      } catch {
+        return 0; // fallo
       }
     }
-        
+
     private void WriteTargetData(OrderData o) {
         var op = DataOperation.Parse("write_OMS_Order", o.Order_Id, o.Order_UID, o.Order_Type_Id, o.Order_Category_Id, o.Order_No
        ,o.Order_Description, o.Order_Identificators, o.Order_Tags, o.Order_Requested_By_Id, o.Order_Responsible_Id, o.Order_Beneficary_Id
        ,o.Order_Provider_Id, o.Order_Budget_Id, o.Order_Requisition_Id, o.Order_Contract_Id, o.Order_Project_Id, o.Order_Currency_Id
        ,o.Order_Source_Id, o.Order_Priority, o.Order_Authorization_Time, o.Order_Authorized_By_Id, o.Order_Closing_Time, o.Order_Closed_By_Id
-       ,o.Order_Ext_Data, o.Order_Keywords, o.Order_Location_Id, o.Order_Posted_By_Id, o.Order_Posting_Time, o.Order_Status);
+       ,o.Order_Ext_Data, o.Order_Keywords, o.Order_Location_Id, o.Order_Related_Order_Id, o.Order_Posted_By_Id, o.Order_Posting_Time, o.Order_Status);
 
       DataWriter.Execute(op);
     }
