@@ -431,7 +431,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       } else if (first3AreLetters) {
         return 154;
       } else {
-        return -1;
+        return 153;
       }
     }
 

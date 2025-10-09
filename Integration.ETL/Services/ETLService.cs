@@ -73,6 +73,19 @@ namespace Empiria.Trade.Integration.ETL {
         productTransformer.Execute();
         EmpiriaLog.Info("(Sujetsa ETL) Product Transformer execution finished.");
 
+        //Party, Contact solo se cargan una vez al principio.
+        /*
+        EmpiriaLog.Info("(Sujetsa ETL) Starting Party Transformer execution...");
+        var partyTransformer = new PartyTransformer(_outputSourceEmpiriaConnectionString);
+        partyTransformer.Execute();
+        EmpiriaLog.Info("(Sujetsa ETL) Party Transformer execution finished.");
+        
+        EmpiriaLog.Info("(Sujetsa ETL) Starting Contact Transformer execution...");
+        var contactTransformer = new ContactTransformer(_outputSourceEmpiriaConnectionString);
+        contactTransformer.Execute();
+        EmpiriaLog.Info("(Sujetsa ETL) Contact Transformer execution finished.");
+        */
+
         EmpiriaLog.Info("(Sujetsa ETL) Starting Order Invoice and Items Transformer execution...");
         var orderInvoice_and_ItemsTransformer = new OrderInvoiceTransformer(_outputSourceEmpiriaConnectionString);
         orderInvoice_and_ItemsTransformer.Execute();
@@ -96,7 +109,8 @@ namespace Empiria.Trade.Integration.ETL {
         var connectionString = GetNKConnectionString();
         var outputDataServices = new SqlServerDataServices(connectionString);
         outputDataServices.ExecuteUpdateOrderItemsStatusStoredProcedure();
-        ////ov,ovdet deolucion, devoluciondet
+        
+        ////ov,ovdet deolucion, devoluciondet para el incio de inventarios
         /*EmpiriaLog.Info("(Sujetsa ETL) Starting Order OV and Items Transformer execution...");
         var orderTransformer_and_ItemsTransformer = new OrderTransformer(_outputSourceEmpiriaConnectionString);
         orderTransformer_and_ItemsTransformer.Execute();
