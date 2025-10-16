@@ -126,10 +126,10 @@ namespace Empiria.Tests.Trade.Integration {
     public void Should_Get_Party_Id_From_Parties() {
       string connectionString = GetEmpiriaConnectionString();
 
-      string cliente = "Administrador";
+      string identificator = "ETIQUETAS";
 
       var dataServices = new TransformerDataServices(connectionString);
-      var sut = dataServices.GetPartyIdFromParties(cliente);
+      var sut = dataServices.GetPartyIdFromParties(identificator, "User");
 
       Assert.True(sut > 0);
       Assert.Equal(1, sut);

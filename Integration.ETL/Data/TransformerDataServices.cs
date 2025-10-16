@@ -204,14 +204,15 @@ namespace Empiria.Trade.Integration.ETL.Data {
       }
     }
 
-    internal int GetPartyIdFromParties(string cliente) {
-      if (string.IsNullOrEmpty(cliente)) {
+    internal int GetPartyIdFromParties(string identificator, string role) {
+      if (string.IsNullOrEmpty(identificator)) {
          return -1;
       }
-      Assertion.Require(cliente, nameof(cliente));
+      Assertion.Require(identificator, nameof(identificator));
+      Assertion.Require(role, nameof(role));
       using (SqlConnection dbConnection = OpenConnection()) {
 
-        using (SqlCommand cmd = new SqlCommand($"SELECT Party_Id FROM DBO.Parties WHERE Party_Identificators = '{cliente}'", dbConnection)) {
+        using (SqlCommand cmd = new SqlCommand($"SELECT Party_Id FROM DBO.Parties WHERE Party_Identificators = '{identificator}' and Party_Roles ='{role}'", dbConnection)) {
           var result = cmd.ExecuteScalar();
 
           if (result == DBNull.Value || result == null) {
