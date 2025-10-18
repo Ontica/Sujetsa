@@ -8,7 +8,10 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System.Web.Http;
-
+using Empiria.Inventory.Adapters;
+using Empiria.Inventory.UseCases;
+using Empiria.Storage;
+using Empiria.Sujetsa.Reporting;
 using Empiria.WebApi;
 
 namespace Empiria.Sujetsa.WebApi {
@@ -18,14 +21,33 @@ namespace Empiria.Sujetsa.WebApi {
 
 
     [HttpGet]
-    [Route("v4/trade-sujetsa/test")]
-    public SingleObjectModel GetProductsCount() {
+    [Route("v4/trade-sujetsa/test/export")]
+    public SingleObjectModel Export() {
 
-      var message = "Esto es una prueba";
+      var message = "Esto es una prueba de exportar";
 
       return new SingleObjectModel(this.Request, message);
     }
 
+
+    [HttpGet]
+    [Route("v8/order-management/inventory-orders/export-entries-report/{orderUID:guid}")]
+    public SingleObjectModel ExportInventoryEntriesReport([FromUri] string orderUID) {
+
+
+      using (var usecases = InventoryEntryUseCases.UseCaseInteractor()) {
+
+        FixedList<InventoryEntryReportDto> reportentries = usecases.GetInventoryEntryReport(orderUID);
+
+        FileDto report;
+
+        using (var reporting = InventoryEntryReportingService.ServiceInteractor()) {
+          report = reporting.ExportInventoryEntryReportToExcel(reportentries);
+        }
+
+        return new SingleObjectModel(this.Request, report);
+      }
+    }
 
 
   } // class ReportingController
