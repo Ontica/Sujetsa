@@ -81,7 +81,7 @@ namespace Empiria.Sujetsa.WebApi {
 
 
     [HttpGet]
-    [Route("v8/order-management/inventory-orders/export-entries-report/{orderUID:guid}")]
+    [Route("v8/order-management/inventory-orders/{orderUID}/export-entries-report")]
     public SingleObjectModel ExportInventoryEntriesReport([FromUri] string orderUID) {
 
 
