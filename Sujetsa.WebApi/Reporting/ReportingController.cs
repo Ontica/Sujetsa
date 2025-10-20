@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Reporting Management                       Component : Web Api                                 *
 *  Assembly : Empiria.Sujetsa.Reporting.dll              Pattern   : Controller                              *
-*  Type     : ReportingController                        License   : Please read LICENSE.txt file            *
+*  Type     : SujetsaReportingController                 License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Query web API used to retrieve inventory reportings.                                           *
 *                                                                                                            *
@@ -17,22 +17,11 @@ using Empiria.WebApi;
 namespace Empiria.Sujetsa.WebApi {
 
   /// <summary>Query web API used to retrieve inventory reportings.</summary>
-  public class ReportingController : WebApiController {
-
-
-    [HttpGet]
-    [Route("v4/trade-sujetsa/test/export")]
-    public SingleObjectModel Export() {
-
-      var message = "Esto es una prueba de exportar";
-
-      return new SingleObjectModel(this.Request, message);
-    }
-
+  public class SujetsaReportingController : WebApiController {
 
     [HttpGet]
-    [Route("v8/order-management/inventory-orders/export-entries-report/{orderUID:guid}")]
-    public SingleObjectModel ExportInventoryEntriesReport([FromUri] string orderUID) {
+    [Route("v8/order-management/inventory-orders/{orderUID}/items/export-report")]
+    public SingleObjectModel ExportInventoryItemsReport([FromUri] string orderUID) {
 
 
       using (var usecases = InventoryEntryUseCases.UseCaseInteractor()) {
@@ -50,6 +39,6 @@ namespace Empiria.Sujetsa.WebApi {
     }
 
 
-  } // class ReportingController
+  } // class SujetsaReportingController
 
 } // namespace Empiria.Sujetsa.WebApi

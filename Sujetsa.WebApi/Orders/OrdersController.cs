@@ -11,8 +11,6 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Empiria.Inventory.Adapters;
 using Empiria.Inventory.UseCases;
-using Empiria.Storage;
-using Empiria.Sujetsa.Reporting;
 using Empiria.Trade.Integration.ETL;
 using Empiria.WebApi;
 
@@ -79,25 +77,6 @@ namespace Empiria.Sujetsa.WebApi {
       return new NoDataModel(base.Request);
     }
 
-
-    [HttpGet]
-    [Route("v8/order-management/inventory-orders/{orderUID}/items/export-report")]
-    public SingleObjectModel ExportInventoryEntriesReport([FromUri] string orderUID) {
-
-
-      using (var usecases = InventoryEntryUseCases.UseCaseInteractor()) {
-
-        FixedList<InventoryEntryReportDto> reportentries = usecases.GetInventoryEntryReport(orderUID);
-
-        FileDto report;
-
-        using (var reporting = InventoryEntryReportingService.ServiceInteractor()) {
-          report = reporting.ExportInventoryEntryReportToExcel(reportentries);
-        }
-
-        return new SingleObjectModel(this.Request, report);
-      }
-    }
 
   } // class ManageDataController
 
