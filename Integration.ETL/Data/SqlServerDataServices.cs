@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -41,12 +40,24 @@ namespace Empiria.Trade.Integration.ETL.Data {
       }
     }
 
-
     internal void ExecuteUpdateOrderItemsStatusStoredProcedure() {
 
       using (SqlConnection dbConnection = OpenConnection()) {
 
         using (SqlCommand cmd = new SqlCommand("sources.OMS_Update_Order_Items_Status", dbConnection)) {
+          cmd.CommandType = CommandType.StoredProcedure;
+          cmd.CommandTimeout = 300;
+
+          cmd.ExecuteNonQuery();
+        }
+      }
+    }
+
+    internal void ExecuteUpdatePartyStatusStoredProcedure() {
+
+      using (SqlConnection dbConnection = OpenConnection()) {
+
+        using (SqlCommand cmd = new SqlCommand("sources.Update_Party_Status", dbConnection)) {
           cmd.CommandType = CommandType.StoredProcedure;
           cmd.CommandTimeout = 300;
 

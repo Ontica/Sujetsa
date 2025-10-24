@@ -126,27 +126,37 @@ namespace Empiria.Tests.Trade.Integration {
     public void Should_Get_Party_Id_From_Parties() {
       string connectionString = GetEmpiriaConnectionString();
 
-      string identificator = "ETIQUETAS";
-
+      string identificator = "01082-S";
+  
       var dataServices = new TransformerDataServices(connectionString);
-      var sut = dataServices.GetPartyIdFromParties(identificator, "User");
+      var sut = dataServices.GetPartyIdFromParties(identificator, "Client");
 
       Assert.True(sut > 0);
-      Assert.Equal(1, sut);
+      Assert.Equal(100500, sut);
     }
 
+    [Fact]
+    public void Should_Get_Role_From_Parties() {
+      string connectionString = GetEmpiriaConnectionString();
+
+      var dataServices = new TransformerDataServices(connectionString);
+      var sut = dataServices.GetRoleFromParties("00005");
+
+      Assert.Equal("Supplier", sut);
+    }
+    
 
     [Fact]
     public void Should_Get_Party_UID_From_Parties() {
       string connectionString = GetEmpiriaConnectionString();
 
-      string cliente = "Administrador";
+      string identificator = "01211";
 
       var dataServices = new TransformerDataServices(connectionString);
-      var sut = dataServices.GetPartyUIDFromParties(cliente);
+      var sut = dataServices.GetPartyUIDFromParties(identificator, "Supplier");
 
       Assert.NotNull(sut);
-      Assert.Equal("d5dc4e55-b935-4459-8fa5-22ce95f65f56", sut);
+      Assert.Equal("eba79631-3084-43ba-96ee-6f571381bb19", sut);
     }
 
 

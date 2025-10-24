@@ -24,7 +24,7 @@ namespace Empiria.Tests.Trade.Integration {
 
     [Fact]
     public void Should_Get_DataTable() {
-      string query = "Select * from Linea";
+      string query = "Select * from VENDEDOR";
       string connectionString = GetConnectionString();
 
       var dataServices = new FirebirdDataServices(connectionString);

@@ -212,11 +212,21 @@ namespace Empiria.Trade.Integration.ETL.Data {
       Assertion.Require(role, nameof(role));
       using (SqlConnection dbConnection = OpenConnection()) {
 
-        using (SqlCommand cmd = new SqlCommand($"SELECT Party_Id FROM DBO.Parties WHERE Party_Identificators = '{identificator}' and Party_Roles ='{role}'", dbConnection)) {
+        using (SqlCommand cmd = new SqlCommand($"SELECT Party_Id FROM DBO.Parties WHERE Party_Identificators = '{identificator}' and Party_Roles = '{role}' ", dbConnection)) {
           var result = cmd.ExecuteScalar();
-
+                
           if (result == DBNull.Value || result == null) {
-            return -1;
+            //
+            using (SqlCommand cmdw = new SqlCommand($"SELECT Party_Id FROM DBO.Parties WHERE Party_Identificators = '{identificator}' and (Party_Roles = 'Warehouseman' OR Party_Roles = 'Inventory-manager')", dbConnection)) {
+              var resultw = cmdw.ExecuteScalar();
+              
+              if (resultw == DBNull.Value || resultw == null) {
+                return -1;
+              }
+
+              return (int) resultw;
+            }
+            //
           }
 
           return (int) result;
@@ -224,12 +234,42 @@ namespace Empiria.Trade.Integration.ETL.Data {
       }
     }
 
-
-    internal string GetPartyUIDFromParties(string cliente) {
-      Assertion.Require(cliente, nameof(cliente));
+    internal string GetPartyUIDFromParties(string identificator, string role) {
+      if (string.IsNullOrEmpty(identificator)) {
+        //
+      }
+      Assertion.Require(identificator, nameof(identificator));
+      Assertion.Require(role, nameof(role));
       using (SqlConnection dbConnection = OpenConnection()) {
 
-        using (SqlCommand cmd = new SqlCommand($"SELECT Party_UID FROM DBO.Parties WHERE Party_Identificators = '{cliente}'", dbConnection)) {
+        using (SqlCommand cmd = new SqlCommand($"SELECT Party_UID FROM DBO.Parties WHERE Party_Identificators = '{identificator}' and Party_Roles = '{role}' ", dbConnection)) {
+          var result = cmd.ExecuteScalar();
+
+          if (result == DBNull.Value || result == null) {
+            //
+            using (SqlCommand cmdw = new SqlCommand($"SELECT Party_UID FROM DBO.Parties WHERE Party_Identificators = '{identificator}' and (Party_Roles = 'Warehouseman' OR Party_Roles = 'Inventory-manager')", dbConnection)) {
+              var resultw = cmdw.ExecuteScalar();
+
+              if (resultw == DBNull.Value || resultw == null) {
+                //
+              }
+
+              return resultw.ToString();
+            }
+            //
+          }
+
+          return result.ToString();
+        }
+      }
+    }
+   
+
+    internal string GetRoleFromParties(string usr) {
+      Assertion.Require(usr, nameof(usr));
+      using (SqlConnection dbConnection = OpenConnection()) {
+
+        using (SqlCommand cmd = new SqlCommand($"SELECT Party_Roles FROM DBO.Parties WHERE Party_Identificators = '{usr}'", dbConnection)) {
           var result = cmd.ExecuteScalar();
 
           return result.ToString();
@@ -237,7 +277,6 @@ namespace Empiria.Trade.Integration.ETL.Data {
       }
     }
 
-    
 
     internal DateTime GetPostedDateFromOMSOrders(string orden) {
       Assertion.Require(orden, nameof(orden));
@@ -250,6 +289,7 @@ namespace Empiria.Trade.Integration.ETL.Data {
         }
       }
     }
+
 
     internal int GetPostedUserIdFromOMSOrders(string orden) {
       Assertion.Require(orden, nameof(orden));
@@ -301,6 +341,7 @@ namespace Empiria.Trade.Integration.ETL.Data {
         }
       }
     }
+
 
     internal FixedList<T> ReadData<T>(string sql) {
       Assertion.Require(sql, nameof(sql));
@@ -365,7 +406,7 @@ namespace Empiria.Trade.Integration.ETL.Data {
         case "S":
           return 'A';
         default:
-          return 'S';
+          return 'A';//S
       }
     }
 
@@ -381,6 +422,7 @@ namespace Empiria.Trade.Integration.ETL.Data {
       }
     }
 
+
     internal int RowCounter(string tableName) {
       Assertion.Require(tableName, nameof(tableName));
 
@@ -392,6 +434,7 @@ namespace Empiria.Trade.Integration.ETL.Data {
         }
       }
     }
+
 
     internal int GetWareHouseIdFromCommonStorage(string almacen) {
       if (string.IsNullOrEmpty(almacen)) {

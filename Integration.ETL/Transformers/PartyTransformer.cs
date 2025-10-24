@@ -55,12 +55,6 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
       WriteTargetData(transformedSupplierData);
 
-
-      FixedList<PartyData> transformedUsersDataForPartyContactIdUpdate = TransformUsersForPartyContactIdUpdate(sourceUsersData);
-
-      WriteTargetData(transformedUsersDataForPartyContactIdUpdate);
-
-
       FixedList<PartyData> transformedSalespersonDataForPartyContactIdUpdate = TransformSalespersonForPartyContactIdUpdate(sourceSalespersonData);
 
       WriteTargetData(transformedSalespersonDataForPartyContactIdUpdate);
@@ -150,12 +144,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
                             .ToFixedList();
     }
 
-    private FixedList<PartyData> TransformUsersForPartyContactIdUpdate(FixedList<PartyUsersNK> toTransformData) {
-      return toTransformData.Select(x => TransformUsersForPartyContactIdUpdate(x))
-                            .ToFixedList();
-    }
-
-
+  
     private FixedList<PartyData> TransformSalespersonForPartyContactIdUpdate(FixedList<PartySalespersonNK> toTransformData) {
       return toTransformData.Select(x => TransformSalespersonForPartyContactIdUpdate(x))
                             .ToFixedList();
@@ -169,7 +158,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         return new PartyData {
           Party_Id = dataServices.GetNextId("Parties"),
           Party_UID = System.Guid.NewGuid().ToString(),
-          Party_Type_Id = (int) ReturnIdForPartyCode(toTransformData.RFC),//////153 o 154  de types puede ser con el RFC, si comienza con 4 letras es mpoesona, con 3 es moral
+          Party_Type_Id = (int) ReturnIdForPartyCode(toTransformData.RFC),
           Party_Code = toTransformData.Cliente,
           Party_Name =  toTransformData.Nombre,
           Party_Identificators = toTransformData.Cliente,
@@ -192,7 +181,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       } else {
         return new PartyData {
           Party_Id = dataServices.GetPartyIdFromParties(toTransformData.Cliente, "Client"),
-          Party_UID = dataServices.GetPartyUIDFromParties(toTransformData.Cliente),
+          Party_UID = dataServices.GetPartyUIDFromParties(toTransformData.Cliente, "Client"),
           Party_Type_Id = (int) ReturnIdForPartyCode(toTransformData.RFC),
           Party_Code = toTransformData.Cliente,
           Party_Name = toTransformData.Nombre,
@@ -244,12 +233,12 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       } else {
         return new PartyData {
           Party_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario, "User"),
-          Party_UID = dataServices.GetPartyUIDFromParties(toTransformData.Usuario),
+          Party_UID = dataServices.GetPartyUIDFromParties(toTransformData.Usuario, "User"),
           Party_Type_Id = 153,
           Party_Code = toTransformData.Usuario,
           Party_Name = toTransformData.Nombre,
           Party_Identificators = toTransformData.Usuario,
-          Party_Roles = "User",
+          Party_Roles = dataServices.GetRoleFromParties(toTransformData.Usuario),
           Party_Tags = toTransformData.Usuario,
           Party_Ext_Data = "",
           Party_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Usuario, toTransformData.Nombre, toTransformData.Perfil),
@@ -293,7 +282,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       } else {
         return new PartyData {
           Party_Id = dataServices.GetPartyIdFromParties(toTransformData.Vendedor, "Salesperson"),
-          Party_UID = dataServices.GetPartyUIDFromParties(toTransformData.Vendedor),
+          Party_UID = dataServices.GetPartyUIDFromParties(toTransformData.Vendedor, "Salesperson"),
           Party_Type_Id = 153,
           Party_Code = toTransformData.Vendedor,
           Party_Name = toTransformData.Nombre,
@@ -342,7 +331,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       } else {
         return new PartyData {
           Party_Id = dataServices.GetPartyIdFromParties(toTransformData.Proveedor, "Supplier"),
-          Party_UID = dataServices.GetPartyUIDFromParties(toTransformData.Proveedor),
+          Party_UID = dataServices.GetPartyUIDFromParties(toTransformData.Proveedor, "Supplier"),
           Party_Type_Id = (int) ReturnIdForPartyCode(toTransformData.RFC),
           Party_Code = toTransformData.Proveedor,
           Party_Name = toTransformData.Nombre_Comercial,
@@ -369,7 +358,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       var dataServices = new TransformerDataServices(connectionString);
       return new PartyData {
         Party_Id = dataServices.GetPartyIdFromParties(toTransformData.Vendedor, "Salesperson"),
-        Party_UID = dataServices.GetPartyUIDFromParties(toTransformData.Vendedor),
+        Party_UID = dataServices.GetPartyUIDFromParties(toTransformData.Vendedor, "Salesperson"),
         Party_Type_Id = 153,
         Party_Code = toTransformData.Vendedor,
         Party_Name = toTransformData.Nombre,
@@ -387,32 +376,6 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         Party_Status = dataServices.ReturnStatusForPartyStatus(toTransformData.Activo).ToString(),
         Party_Contact_Id = dataServices.GetPartyIdFromParties(toTransformData.Vendedor, "Salesperson")
       };
-    }
-
-
-    private PartyData TransformUsersForPartyContactIdUpdate(PartyUsersNK toTransformData) {
-      string connectionString = GetEmpiriaConnectionString();
-      var dataServices = new TransformerDataServices(connectionString);
-        return new PartyData {
-          Party_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario, "User"),
-          Party_UID = dataServices.GetPartyUIDFromParties(toTransformData.Usuario),
-          Party_Type_Id = 153,
-          Party_Code = toTransformData.Usuario,
-          Party_Name = toTransformData.Nombre,
-          Party_Identificators = toTransformData.Usuario,
-          Party_Roles = "User",
-          Party_Tags = toTransformData.Usuario,
-          Party_Ext_Data = "",
-          Party_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Usuario, toTransformData.Nombre, toTransformData.Perfil),
-          Party_Historic_Id = -1,
-          Party_Start_Date = ExecutionServer.DateMinValue,
-          Party_End_Date = ExecutionServer.DateMaxValue,
-          Party_Parent_Id = -1,
-          Party_Posted_By_Id = -1,
-          Party_Posting_Time = ExecutionServer.DateMinValue,
-          Party_Status = "A",
-          Party_Contact_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario, "User")
-        };
     }
 
 
@@ -440,6 +403,8 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         WriteTargetData(item);
       }
     }
+
+
     private void WriteTargetData(PartyData o) {
           var op = DataOperation.Parse("write_Party", o.Party_Id, o.Party_UID, o.Party_Type_Id, o.Party_Code, o.Party_Name, o.Party_Identificators,
           o.Party_Roles, o.Party_Tags, o.Party_Ext_Data, o.Party_Keywords, o.Party_Historic_Id, o.Party_Start_Date, o.Party_End_Date, 
