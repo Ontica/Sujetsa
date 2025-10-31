@@ -2,17 +2,18 @@
 *                                                                                                            *
 *  Module   : Trade Integration ETL Services               Component : Services Layer                        *
 *  Assembly : Empiria.Trade.Integration.ETL                Pattern   : Service provider                      *
-*  Type     : OrderTransformerItems                           License   : Please read LICENSE.txt file       *
+*  Type     : OrderItemsTransformer                        License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Transforms a OrderItem(OVDet) from NK to Empiria Trade.                                        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Empiria.Data;
 using Empiria.Json;
 using Empiria.Trade.Integration.ETL.Data;
-using Newtonsoft.Json;
 
 namespace Empiria.Trade.Integration.ETL.Transformers {
 
@@ -20,141 +21,200 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
   public class OrderItemsTransformer {
 
     private readonly string _connectionString;
+    private readonly string _empiriaConnectionString;
+    private readonly string _nkConnectionString;
 
     internal OrderItemsTransformer(string connectionString) {
       Assertion.Require(connectionString, nameof(connectionString));
-
       _connectionString = connectionString;
+      _empiriaConnectionString = GetEmpiriaConnectionString();
+      _nkConnectionString = GetNKConnectionString();
     }
 
     public void Execute() {
-
-      FixedList<OrderItemsNK> sourceData = ReadSourceData();
-
-      FixedList<OrderItemsData> transformedData = Transform(sourceData);
-
+      var sourceData = ReadSourceData();
+      var transformedData = Transform(sourceData);
       WriteTargetData(transformedData);
     }
 
-
     public FixedList<OrderItemsNK> ReadSourceData() {
-      var sql = "SELECT O.OV,O.Producto,O.Unidad,O.Referencia,O.Cantidad,O.Precio,O.Descuento,O.Det,O.Almacen,O.OldBinaryChecksum,O.BinaryChecksum "+
-          "FROM sources.OVDET_TARGET O " +
-          "JOIN sources.OV_TARGET V  ON V.OV = O.OV AND V.FECHA >= '2025-01-01' " +
-          "AND(O.OldBinaryChecksum != O.BinaryChecksum " +
-          "OR O.OldBinaryChecksum = 0)";
+      const string sql = @"
+        SELECT O.OV, O.Producto, O.Unidad, O.Referencia, O.Cantidad, O.Precio, 
+               O.Descuento, O.Det, O.Almacen, O.OldBinaryChecksum, O.BinaryChecksum
+        FROM sources.OVDET_TARGET O
+        INNER JOIN sources.OV_TARGET V ON V.OV = O.OV
+        WHERE V.FECHA >= '2025-01-01'
+          AND (O.OldBinaryChecksum != O.BinaryChecksum OR O.OldBinaryChecksum = 0)";
 
-      var connectionString = GetNKConnectionString();
-
-      var inputDataService = new TransformerDataServices(connectionString);
-
+      var inputDataService = new TransformerDataServices(_nkConnectionString);
       return inputDataService.ReadData<OrderItemsNK>(sql);
     }
 
-
     public FixedList<OrderItemsData> Transform(FixedList<OrderItemsNK> toTransformData) {
-      return toTransformData.Select(x => Transform(x))
+      if (toTransformData.Count == 0) {
+        return new FixedList<OrderItemsData>();
+      }
+
+      var dataServices = new TransformerDataServices(_empiriaConnectionString);
+
+      // Pre-cargar datos en lotes 
+      var ovs = toTransformData.Select(x => x.OV).Distinct().ToList();
+      var productos = toTransformData.Select(x => x.Producto).Distinct().ToList();
+      var unidades = toTransformData.Select(x => x.Unidad).Distinct().ToList();
+      var almacenes = toTransformData.Select(x => x.Almacen).Distinct().ToList();
+
+      var orderCache = PreloadOrderData(dataServices, ovs);
+      var productCache = PreloadProductData(dataServices, productos);
+      var unitCache = PreloadUnitData(dataServices, unidades);
+      var warehouseCache = PreloadWarehouseData(dataServices, almacenes);
+
+      return toTransformData.Select(x => Transform(x, dataServices, orderCache, productCache, unitCache, warehouseCache))
                             .ToFixedList();
     }
 
-
-    public OrderItemsData Transform(OrderItemsNK toTransformData) {
-      string connectionString = GetEmpiriaConnectionString();
-      var dataServices = new TransformerDataServices(connectionString);
-      if (toTransformData.OldBinaryChecksum == 0) {
-        return new OrderItemsData {
-          Order_Item_Id = dataServices.GetNextId("OMS_Order_Items"),
-          Order_Item_UID = System.Guid.NewGuid().ToString(),
-          Order_Item_Type_Id = 4060,
-          Order_Item_Order_Id = dataServices.GetOrderIdFromOMSOrders(toTransformData.OV),
-          Order_Item_Product_Id = dataServices.GetProductIdFromOMSProducts(toTransformData.Producto), 
-          Order_Item_Description = Empiria.EmpiriaString.BuildKeywords(toTransformData.Producto, toTransformData.Unidad,  toTransformData.Referencia),
-          Order_Item_Product_Unit_Id = (int) dataServices.ReturnIdForProductBaseUnitId(toTransformData.Unidad),
-          Order_Item_Product_Qty = toTransformData.Cantidad,
-          Order_Item_Unit_Price = toTransformData.Precio,
-          Order_Item_Discount = toTransformData.Descuento,
-          Order_Item_Currency_Id = 600,
-          Order_Item_Related_Item_Id = -1,
-          Order_Item_Requisition_Item_Id = toTransformData.Det,
-          Order_Item_Requested_By_Id = dataServices.GetRequestedUserIdFromOMSOrders(toTransformData.OV),
-          Order_Item_Budget_Account_Id = -1,
-          Order_Item_Project_Id = -1,
-          Order_Item_Provider_Id = (int) dataServices.GetWareHouseIdFromCommonStorage(toTransformData.Almacen),
-          Order_Item_Per_Each_Item_Id = -1,
-          Order_Item_Ext_Data = JsonConvert.SerializeObject(new { Name = "OV" }),
-          Order_Item_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.OV, toTransformData.Producto),
-          Order_Item_Location_Id = -1,
-          Order_Item_Position = toTransformData.Det,
-          Order_Item_Posted_By_Id = dataServices.GetPostedUserIdFromOMSOrders(toTransformData.OV),
-          Order_Item_Posting_Time = dataServices.GetPostedDateFromOMSOrders(toTransformData.OV), 
-          Order_Item_Status = Convert.ToChar(dataServices.GetOrderItemStatusFromOMSOrders(toTransformData.OV))
-        };
-      } else {
-        return new OrderItemsData {
-          Order_Item_Id = dataServices.GetOrderIdFromOMSOrderItems(dataServices.GetOrderIdFromOMSOrders(toTransformData.OV), toTransformData.Det),
-          Order_Item_UID = dataServices.GetOrderUIDFromOMSOrderItems(dataServices.GetOrderIdFromOMSOrders(toTransformData.OV), toTransformData.Det),
-          Order_Item_Type_Id = 4060, 
-          Order_Item_Order_Id = dataServices.GetOrderIdFromOMSOrders(toTransformData.OV),
-          Order_Item_Product_Id = dataServices.GetProductIdFromOMSProducts(toTransformData.Producto), 
-          Order_Item_Description = Empiria.EmpiriaString.BuildKeywords(toTransformData.Producto, toTransformData.Unidad,  toTransformData.Referencia),
-          Order_Item_Product_Unit_Id = (int) dataServices.ReturnIdForProductBaseUnitId(toTransformData.Unidad),
-          Order_Item_Product_Qty = toTransformData.Cantidad,
-          Order_Item_Unit_Price = toTransformData.Precio,
-          Order_Item_Discount = toTransformData.Descuento,
-          Order_Item_Currency_Id = 600,
-          Order_Item_Related_Item_Id = -1,
-          Order_Item_Requisition_Item_Id = toTransformData.Det,
-          Order_Item_Requested_By_Id = dataServices.GetRequestedUserIdFromOMSOrders(toTransformData.OV),
-          Order_Item_Budget_Account_Id = -1,
-          Order_Item_Project_Id = -1,
-          Order_Item_Provider_Id = (int) dataServices.GetWareHouseIdFromCommonStorage(toTransformData.Almacen),
-          Order_Item_Per_Each_Item_Id = -1,
-          Order_Item_Ext_Data = JsonConvert.SerializeObject(new { Name = "OV" }),
-          Order_Item_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.OV, toTransformData.Producto),
-          Order_Item_Location_Id = -1,
-          Order_Item_Position = toTransformData.Det,
-          Order_Item_Posted_By_Id = dataServices.GetPostedUserIdFromOMSOrders(toTransformData.OV),
-          Order_Item_Posting_Time = dataServices.GetPostingDateFromOMSOrders(toTransformData.OV),
-          Order_Item_Status = Convert.ToChar(dataServices.GetOrderItemStatusFromOMSOrders(toTransformData.OV))
+    private Dictionary<string, OrderCacheData> PreloadOrderData(TransformerDataServices dataServices, List<string> ovs) {
+      var cache = new Dictionary<string, OrderCacheData>();
+      foreach (var ov in ovs) {
+        cache[ov] = new OrderCacheData {
+          OrderId = dataServices.GetOrderIdFromOMSOrders(ov),
+          RequestedUserId = dataServices.GetRequestedUserIdFromOMSOrders(ov),
+          PostedUserId = dataServices.GetPostedUserIdFromOMSOrders(ov),
+          PostingTime = dataServices.GetPostedDateFromOMSOrders(ov),
+          Status = dataServices.GetOrderItemStatusFromOMSOrders(ov)
         };
       }
+      return cache;
     }
-    
+
+    private Dictionary<string, int> PreloadProductData(TransformerDataServices dataServices, List<string> productos) {
+      var cache = new Dictionary<string, int>();
+      foreach (var producto in productos) {
+        cache[producto] = dataServices.GetProductIdFromOMSProducts(producto);
+      }
+      return cache;
+    }
+
+    private Dictionary<string, int> PreloadUnitData(TransformerDataServices dataServices, List<string> unidades) {
+      var cache = new Dictionary<string, int>();
+      foreach (var unidad in unidades) {
+        cache[unidad] = (int) dataServices.ReturnIdForProductBaseUnitId(unidad);
+      }
+      return cache;
+    }
+
+    private Dictionary<string, int> PreloadWarehouseData(TransformerDataServices dataServices, List<string> almacenes) {
+      var cache = new Dictionary<string, int>();
+      foreach (var almacen in almacenes) {
+        cache[almacen] = (int) dataServices.GetWareHouseIdFromCommonStorage(almacen);
+      }
+      return cache;
+    }
+
+    private OrderItemsData Transform(OrderItemsNK source,
+                                     TransformerDataServices dataServices,
+                                     Dictionary<string, OrderCacheData> orderCache,
+                                     Dictionary<string, int> productCache,
+                                     Dictionary<string, int> unitCache,
+                                     Dictionary<string, int> warehouseCache) {
+
+      var orderData = orderCache[source.OV];
+      var description = EmpiriaString.BuildKeywords(source.Producto, source.Unidad, source.Referencia);
+      var keywords = EmpiriaString.BuildKeywords(source.OV, source.Producto);
+      var isNewItem = source.OldBinaryChecksum == 0;
+
+      // JSON constante pre-serializado
+      const string extData = "{\"Name\":\"OV\"}";
+
+      return new OrderItemsData {
+        Order_Item_Id = isNewItem
+          ? dataServices.GetNextId("OMS_Order_Items")
+          : dataServices.GetOrderIdFromOMSOrderItems(orderData.OrderId, source.Det),
+        Order_Item_UID = isNewItem
+          ? Guid.NewGuid().ToString()
+          : dataServices.GetOrderUIDFromOMSOrderItems(orderData.OrderId, source.Det),
+        Order_Item_Type_Id = 4060,
+        Order_Item_Order_Id = orderData.OrderId,
+        Order_Item_Product_Id = productCache[source.Producto],
+        Order_Item_Description = description,
+        Order_Item_Product_Unit_Id = unitCache[source.Unidad],
+        Order_Item_Product_Qty = source.Cantidad,
+        Order_Item_Unit_Price = source.Precio,
+        Order_Item_Discount = source.Descuento,
+        Order_Item_Currency_Id = 600,
+        Order_Item_Related_Item_Id = -1,
+        Order_Item_Requisition_Item_Id = source.Det,
+        Order_Item_Requested_By_Id = orderData.RequestedUserId,
+        Order_Item_Budget_Account_Id = -1,
+        Order_Item_Project_Id = -1,
+        Order_Item_Provider_Id = warehouseCache[source.Almacen],
+        Order_Item_Per_Each_Item_Id = -1,
+        Order_Item_Ext_Data = extData,
+        Order_Item_Keywords = keywords,
+        Order_Item_Location_Id = -1,
+        Order_Item_Position = source.Det,
+        Order_Item_Posted_By_Id = orderData.PostedUserId,
+        Order_Item_Posting_Time = orderData.PostingTime,
+        Order_Item_Status = Convert.ToChar(orderData.Status)
+      };
+    }
 
     public void WriteTargetData(FixedList<OrderItemsData> transformedData) {
+      if (transformedData.Count == 0)
+        return;
+
       foreach (var item in transformedData) {
         WriteTargetData(item);
       }
     }
 
-
-    public void WriteTargetData(OrderItemsData o) {
-        var op = DataOperation.Parse("write_OMS_Order_Item", o.Order_Item_Id,  o.Order_Item_UID,  o.Order_Item_Type_Id,  o.Order_Item_Order_Id,
-        o.Order_Item_Product_Id,  o.Order_Item_Description,  o.Order_Item_Product_Unit_Id,  o.Order_Item_Product_Qty,  o.Order_Item_Unit_Price,
-        o.Order_Item_Discount,  o.Order_Item_Currency_Id,  o.Order_Item_Related_Item_Id,  o.Order_Item_Requisition_Item_Id,  o.Order_Item_Requested_By_Id,
-        o.Order_Item_Budget_Account_Id,  o.Order_Item_Project_Id,  o.Order_Item_Provider_Id,  o.Order_Item_Per_Each_Item_Id,  o.Order_Item_Ext_Data,
-        o.Order_Item_Keywords, o.Order_Item_Location_Id, o.Order_Item_Position,  o.Order_Item_Posted_By_Id,  o.Order_Item_Posting_Time,  o.Order_Item_Status);
+    private void WriteTargetData(OrderItemsData o) {
+      var op = DataOperation.Parse("write_OMS_Order_Item",
+        o.Order_Item_Id, o.Order_Item_UID, o.Order_Item_Type_Id, o.Order_Item_Order_Id,
+        o.Order_Item_Product_Id, o.Order_Item_Description, o.Order_Item_Product_Unit_Id,
+        o.Order_Item_Product_Qty, o.Order_Item_Unit_Price, o.Order_Item_Discount,
+        o.Order_Item_Currency_Id, o.Order_Item_Related_Item_Id, o.Order_Item_Requisition_Item_Id,
+        o.Order_Item_Requested_By_Id, o.Order_Item_Budget_Account_Id, o.Order_Item_Project_Id,
+        o.Order_Item_Provider_Id, o.Order_Item_Per_Each_Item_Id, o.Order_Item_Ext_Data,
+        o.Order_Item_Keywords, o.Order_Item_Location_Id, o.Order_Item_Position,
+        o.Order_Item_Posted_By_Id, o.Order_Item_Posting_Time, o.Order_Item_Status);
 
       DataWriter.Execute(op);
     }
 
-
     #region Helpers
 
-    static private string GetEmpiriaConnectionString() {
+    private static string GetEmpiriaConnectionString() {
       var config = ConfigurationData.Get<JsonObject>("Connection.Strings");
-
       return config.Get<string>("empiriaSqlServerConnection");
     }
 
-    static private string GetNKConnectionString() {
+    private static string GetNKConnectionString() {
       var config = ConfigurationData.Get<JsonObject>("Connection.Strings");
-
       return config.Get<string>("sqlServerConnection");
     }
- 
-    #endregion Helpers
 
-  }  // class OrderItemsTransformer
-  } // namespace Empiria.Trade.Integration.ETL.Transformers
+    #endregion
 
+    #region Cache Classes
+
+    private class OrderCacheData {
+      public int OrderId {
+        get; set;
+      }
+      public int RequestedUserId {
+        get; set;
+      }
+      public int PostedUserId {
+        get; set;
+      }
+      public DateTime PostingTime {
+        get; set;
+      }
+      public string Status {
+        get; set;
+      }
+    }
+
+    #endregion
+  }
+}
