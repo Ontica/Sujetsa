@@ -216,16 +216,16 @@ namespace Empiria.Tests.Trade.Integration {
     }
 
 
-    [Fact]
+    [Fact] 
     public void Should_Get_Order_Item_Status_From_OMSOrders() {
       string connectionString = GetEmpiriaConnectionString();
 
-      string factura = "A0069214";
+      string factura = "OV00146675";
 
       var dataServices = new TransformerDataServices(connectionString);
       var sut = dataServices.GetOrderItemStatusFromOMSOrders(factura);
-
-      Assert.Equal("Y", sut);
+       
+      Assert.Equal("A", sut);
     }
 
 

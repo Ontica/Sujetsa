@@ -14,14 +14,9 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
   /// <summary>Represents a Sales Order in Empiria Trade OMS_Orders database table.</summary>
   internal class OrderData {
-    
-    [DataField("Order_Related_Order_Id")]
-    internal int Order_Related_Order_Id {
-      get; set;
-    }
-
-    [DataField("Order_Location_Id")]
-    internal int Order_Location_Id {
+   
+   [DataField("Order_Warehouse_Id")]
+    internal int Order_Warehouse_Id {
       get; set;
     }
 
@@ -84,11 +79,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     internal int Order_Provider_Id {
       get; set;
     }
-    [DataField("Order_Budget_Id")]
-    internal int Order_Budget_Id {
-      get; set;
-    }
-
+   
     [DataField("Order_Requisition_Id")]
     internal int Order_Requisition_Id {
       get; set;
@@ -161,6 +152,92 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     internal char Order_Status {
       get; set;
     }
+
+    [DataField("Order_Justification")]
+    internal string Order_Justification {
+      get; set;
+    }
+    
+    [DataField("Order_Parent_Id")]
+    internal int Order_Parent_Id {
+      get; set;
+    }
+
+    [DataField("Order_Budget_Type_Id")]
+    internal int Order_Budget_Type_Id {
+      get; set;
+    }
+
+    [DataField("Order_Base_Budget_Id")] 
+    internal int Order_Base_Budget_Id {
+      get; set;
+    }
+
+    [DataField("Order_Delivery_Place_Id")]
+    internal int Order_Delivery_Place_Id {
+      get; set;
+    }
+
+    [DataField("Order_Geo_Origin_Id")]
+    internal int Order_Geo_Origin_Id {
+      get; set;
+    }
+
+    [DataField("Order_Conditions_Ext_Data")]
+    internal string Order_Conditions_Ext_Data {
+      get; set;
+    }
+
+    [DataField("Order_Specification_Ext_Data")]
+    internal string Order_Specification_Ext_Data {
+      get; set;
+    }
+
+    [DataField("Order_Delivery_Ext_Data")]
+    internal string Order_Delivery_Ext_Data {
+      get; set;
+    }
+    
+    [DataField("Order_Name")]
+    internal string Order_Name {
+      get; set;
+    }
+    
+    [DataField("Order_Observations")]
+    internal string Order_Observations {
+      get; set;
+    }
+
+    [DataField("Order_Requested_Time")]
+    internal DateTime Order_Requested_Time {
+      get; set;
+    }
+
+    [DataField("Order_Required_Time")]
+    internal DateTime Order_Required_Time {
+      get; set;
+    }
+
+    [DataField("Order_Recorded_By_Id")]
+    internal int Order_Recorded_By_Id {
+      get; set;
+    }
+
+    [DataField("Order_Start_Date")]
+    internal DateTime Order_Start_Date {
+      get; set;
+    }
+
+    [DataField("Order_End_Date")]
+    internal DateTime Order_End_Date {
+      get; set;
+    }
+
+    [DataField("Order_Applied_By_Id")]
+    internal int Order_Applied_By_Id {
+      get; set;
+    }
+
 
   }  // class OrderData
 

@@ -101,7 +101,8 @@ namespace Empiria.Trade.Integration.ETL {
         EmpiriaLog.Info("(Sujetsa ETL) Order Rem and Items Transformer execution finished.");
 
         ////ov,ovdet devolucion, devoluciondet para el incio de inventarios
-        /*EmpiriaLog.Info("(Sujetsa ETL) Starting Order OV and Items Transformer execution...");
+        /*
+        EmpiriaLog.Info("(Sujetsa ETL) Starting Order OV and Items Transformer execution...");
         var orderTransformer_and_ItemsTransformer = new OrderTransformer(_outputSourceEmpiriaConnectionString);
         orderTransformer_and_ItemsTransformer.Execute();
         EmpiriaLog.Info("(Sujetsa ETL) Order OV and Items Transformer execution finished.");

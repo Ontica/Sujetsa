@@ -163,7 +163,7 @@ namespace Empiria.Trade.Integration.ETL.Data {
       }
     }
 
-
+    /*
     internal string GetOrderItemStatusFromOMSOrders(string orden) {
       Assertion.Require(orden, nameof(orden));
       using (SqlConnection dbConnection = OpenConnection()) {
@@ -173,6 +173,30 @@ namespace Empiria.Trade.Integration.ETL.Data {
 
           return result.ToString();
         }
+      }
+    }*/
+    internal string GetOrderItemStatusFromOMSOrders(string orden) {
+      Assertion.Require(orden, nameof(orden));
+
+      using (SqlConnection dbConnection = OpenConnection())
+      using (SqlCommand cmd = new SqlCommand(
+          "SELECT Order_Status FROM dbo.OMS_Orders WHERE Order_No = @orderNo",
+          dbConnection)) {
+        cmd.Parameters.AddWithValue("@orderNo", orden);
+
+        var result = cmd.ExecuteScalar();
+
+        // Si viene NULL, vacío o espacio → regresa A
+        if (result == null || result == DBNull.Value)
+          return "A";
+
+        string val = result.ToString().Trim();
+
+        if (string.IsNullOrWhiteSpace(val))
+          return "A";
+
+        // Solo el primer carácter (A o X)
+        return val.Substring(0, 1);
       }
     }
 
