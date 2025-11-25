@@ -39,13 +39,14 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     }
 
     public FixedList<OrderItemsInvoiceNK> ReadSourceData() {
-      const string sql = @"
-        SELECT O.Factura, O.Producto, O.Clave, O.Unidad, O.Cantidad, 
-               O.Precio, O.Descuento, O.Det, O.OldBinaryChecksum, O.BinaryChecksum
-        FROM sources.FACTURADET_TARGET O
-        INNER JOIN sources.FACTURA_TARGET V ON V.Factura = O.Factura 
-        WHERE V.FECHA >= '2025-01-01'
-          AND (O.OldBinaryChecksum != O.BinaryChecksum OR O.OldBinaryChecksum = 0)";
+      const string sql = @"SELECT O.Factura, O.Producto, O.Clave, O.Unidad, O.Cantidad, 
+           O.Precio, O.Descuento, O.Det, O.OldBinaryChecksum, O.BinaryChecksum,
+		       OV.LISTAPRECIOS
+           FROM sources.FACTURADET_TARGET O
+           INNER JOIN sources.FACTURA_TARGET V ON V.Factura = O.Factura 
+		       INNER JOIN sources.OV_TARGET OV ON OV.OV = V.OV 
+           WHERE V.FECHA >= '2025-01-01'
+           AND (O.OldBinaryChecksum != O.BinaryChecksum OR O.OldBinaryChecksum = 0)";
 
       var inputDataService = new TransformerDataServices(_nkConnectionString);
       return inputDataService.ReadData<OrderItemsInvoiceNK>(sql);
@@ -122,26 +123,51 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           : dataServices.GetOrderUIDFromOMSOrderItems(orderData.OrderId, source.Det),
         Order_Item_Type_Id = 4060,
         Order_Item_Order_Id = orderData.OrderId,
+        Order_Item_Requisition_Id = -1,
+        Order_Item_Contract_Id = -1,
+        Order_Item_Requisition_Item_Id = -1,
+        Order_Item_Contract_Item_Id = -1,
+        Order_Item_Related_Item_Id = -1,
+        Order_Item_SKU_Id = -1,
         Order_Item_Product_Id = productCache[source.Producto],
+        Order_Item_Product_Code = "",
+        Order_Item_Product_Name = "",
         Order_Item_Description = keywords,
+        Order_Item_Justification = "", 
         Order_Item_Product_Unit_Id = unitCache[source.Unidad],
-        Order_Item_Product_Qty = source.Cantidad,
+        Order_Item_Requested_Qty =-1,
+        Order_Item_Min_Qty = -1,
+        Order_Item_Max_Qty = -1,
+        Order_Item_Qty = source.Cantidad,
+        Order_Item_Start_Date = ExecutionServer.DateMinValue,
+        Order_Item_End_Date = ExecutionServer.DateMaxValue,
+        Order_Item_Currency_Id = 600,
         Order_Item_Unit_Price = source.Precio,
         Order_Item_Discount = source.Descuento,
-        Order_Item_Currency_Id = 600,
-        Order_Item_Related_Item_Id = -1,
-        Order_Item_Requisition_Item_Id = -1,
-        Order_Item_Requested_By_Id = orderData.RequestedUserId,
-        Order_Item_Budget_Account_Id = -1,
+        Order_Item_Price_Id = source.LISTAPRECIOS,
         Order_Item_Project_Id = -1,
-        Order_Item_Provider_Id = (int) orderData.ProviderId,
-        Order_Item_Per_Each_Item_Id = -1,
-        Order_Item_Ext_Data = JsonConvert.SerializeObject(new { Name = "Factura" }),
-        Order_Item_Keywords = keywords,
+        Order_Item_Budget_Id =-1,
+        Order_Item_Budget_Account_Id = -1,
+        Order_Item_Budget_Entry_Id =-1,
+        Order_Item_Geo_Origin_Id = -1,
         Order_Item_Location_Id = -1,
+        Order_Item_Config_Ext_Data = "",
+        Order_Item_Conditions_Ext_Data = "",
+        Order_Item_Spec_Ext_Data = "",
+        Order_Item_Ext_Data = JsonConvert.SerializeObject(new {Name = "Factura"}),
+        Order_Item_Keywords = keywords,
+        Order_Item_Requested_By_Id = orderData.RequestedUserId,
+        Order_Item_Requested_Time = ExecutionServer.DateMinValue,
+        Order_Item_Required_Time = ExecutionServer.DateMaxValue,
+        Order_Item_Responsible_Id = -1,
+        Order_Item_Beneficiary_Id = -1,
+        Order_Item_Provider_Id = (int) orderData.ProviderId,
+        Order_Item_Received_By_Id = -1,
+        Order_Item_Closing_Time = ExecutionServer.DateMaxValue,
+        Order_Item_Closed_By_Id = -1,
         Order_Item_Position = source.Det,
-        Order_Item_Posted_By_Id = orderData.PostedUserId,
         Order_Item_Posting_Time = orderData.PostingTime,
+        Order_Item_Posted_By_Id = orderData.PostedUserId,
         Order_Item_Status = Convert.ToChar(orderData.Status)
       };
     }
@@ -157,15 +183,15 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     }
 
     private void WriteTargetData(OrderItemsData o) {
-      var op = DataOperation.Parse("write_OMS_Order_Item",
-        o.Order_Item_Id, o.Order_Item_UID, o.Order_Item_Type_Id, o.Order_Item_Order_Id,
-        o.Order_Item_Product_Id, o.Order_Item_Description, o.Order_Item_Product_Unit_Id,
-        o.Order_Item_Product_Qty, o.Order_Item_Unit_Price, o.Order_Item_Discount,
-        o.Order_Item_Currency_Id, o.Order_Item_Related_Item_Id, o.Order_Item_Requisition_Item_Id,
-        o.Order_Item_Requested_By_Id, o.Order_Item_Budget_Account_Id, o.Order_Item_Project_Id,
-        o.Order_Item_Provider_Id, o.Order_Item_Per_Each_Item_Id, o.Order_Item_Ext_Data,
-        o.Order_Item_Keywords, o.Order_Item_Location_Id, o.Order_Item_Position,
-        o.Order_Item_Posted_By_Id, o.Order_Item_Posting_Time, o.Order_Item_Status);
+      var op = DataOperation.Parse("write_OMS_Order_Item", o.Order_Item_Id, o.Order_Item_UID, o.Order_Item_Type_Id, o.Order_Item_Order_Id, o.Order_Item_Requisition_Id, o.Order_Item_Contract_Id,
+  o.Order_Item_Requisition_Item_Id, o.Order_Item_Contract_Item_Id, o.Order_Item_Related_Item_Id, o.Order_Item_SKU_Id, o.Order_Item_Product_Id,
+  o.Order_Item_Product_Code, o.Order_Item_Product_Name, o.Order_Item_Description, o.Order_Item_Justification, o.Order_Item_Product_Unit_Id,
+  o.Order_Item_Requested_Qty, o.Order_Item_Min_Qty, o.Order_Item_Max_Qty, o.Order_Item_Qty, o.Order_Item_Start_Date, o.Order_Item_End_Date,
+  o.Order_Item_Currency_Id, o.Order_Item_Unit_Price, o.Order_Item_Discount, o.Order_Item_Price_Id, o.Order_Item_Project_Id, o.Order_Item_Budget_Id,
+  o.Order_Item_Budget_Account_Id, o.Order_Item_Budget_Entry_Id, o.Order_Item_Geo_Origin_Id, o.Order_Item_Location_Id, o.Order_Item_Config_Ext_Data,
+  o.Order_Item_Conditions_Ext_Data, o.Order_Item_Spec_Ext_Data, o.Order_Item_Ext_Data, o.Order_Item_Keywords, o.Order_Item_Requested_By_Id, o.Order_Item_Requested_Time,
+  o.Order_Item_Required_Time, o.Order_Item_Responsible_Id, o.Order_Item_Beneficiary_Id, o.Order_Item_Provider_Id, o.Order_Item_Received_By_Id,
+  o.Order_Item_Closing_Time, o.Order_Item_Closed_By_Id, o.Order_Item_Position, o.Order_Item_Posting_Time, o.Order_Item_Posted_By_Id, o.Order_Item_Status);
 
       DataWriter.Execute(op);
     }

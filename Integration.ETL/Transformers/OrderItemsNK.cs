@@ -70,6 +70,11 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       get; set;
     }
 
+    [DataField("LISTAPRECIOS")]
+    internal int LISTAPRECIOS {
+      get; set;
+    }
+
   }  // class OrderItemsNK
 
 }  // namespace Empiria.Trade.Integration.ETL.Transformers
