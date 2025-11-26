@@ -73,7 +73,7 @@ namespace Empiria.Trade.Integration.ETL {
         productTransformer.Execute();
         EmpiriaLog.Info("(Sujetsa ETL) Product Transformer execution finished.");
 
-               
+               /*
         EmpiriaLog.Info("(Sujetsa ETL) Starting Party Transformer execution...");
         var partyTransformer = new PartyTransformer(_outputSourceEmpiriaConnectionString);
         partyTransformer.Execute();
@@ -99,7 +99,7 @@ namespace Empiria.Trade.Integration.ETL {
         var orderRemTransformer_and_ItemsTransformer = new OrderRemTransformer(_outputSourceEmpiriaConnectionString);
         orderRemTransformer_and_ItemsTransformer.Execute();
         EmpiriaLog.Info("(Sujetsa ETL) Order Rem and Items Transformer execution finished.");
-
+          */
         ////ov,ovdet devolucion, devoluciondet para el incio de inventarios
         /*
         EmpiriaLog.Info("(Sujetsa ETL) Starting Order OV and Items Transformer execution...");
@@ -115,8 +115,8 @@ namespace Empiria.Trade.Integration.ETL {
 
         var connectionString = GetNKConnectionString();
         var outputDataServices = new SqlServerDataServices(connectionString);
-        outputDataServices.ExecuteUpdateOrderItemsStatusStoredProcedure();
-        outputDataServices.ExecuteUpdatePartyStatusStoredProcedure();
+        //outputDataServices.ExecuteUpdateOrderItemsStatusStoredProcedure();
+        //outputDataServices.ExecuteUpdatePartyStatusStoredProcedure();
 
         var tablesToCount = outputDataServices.GetEmpiriaTablesList();
 
