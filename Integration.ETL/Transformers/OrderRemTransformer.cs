@@ -77,7 +77,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         return new OrderData {
           Order_Id = dataServices.GetNextId("OMS_Orders"),
           Order_UID = System.Guid.NewGuid().ToString(),
-          Order_Type_Id = 4011,
+          Order_Type_Id = 4012,//4011,
           Order_Category_Id = -1,
           Order_Requisition_Id = -1,
           Order_Contract_Id = -1,
@@ -123,7 +123,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         return new OrderData {
           Order_Id = dataServices.GetOrderIdFromOMSOrders(toTransformData.Reml),
           Order_UID = dataServices.GetOrderUIDFromOMSOrders(toTransformData.Reml),
-          Order_Type_Id = 4011,
+          Order_Type_Id = 4012,//4011,
           Order_Category_Id = -1,
           Order_Requisition_Id = -1,
           Order_Contract_Id = -1,
