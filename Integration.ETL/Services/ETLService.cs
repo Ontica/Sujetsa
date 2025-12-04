@@ -78,8 +78,14 @@ namespace Empiria.Trade.Integration.ETL {
         var partyTransformer = new PartyTransformer(_outputSourceEmpiriaConnectionString);
         partyTransformer.Execute();
         EmpiriaLog.Info("(Sujetsa ETL) Party Transformer execution finished.");
-        
-    
+
+
+        EmpiriaLog.Info("(Sujetsa ETL) Starting Contact Transformer execution...");
+        var contactTransformer = new ContactTransformer(_outputSourceEmpiriaConnectionString);
+        contactTransformer.Execute();
+        EmpiriaLog.Info("(Sujetsa ETL) Contact Transformer execution finished.");
+
+
         EmpiriaLog.Info("(Sujetsa ETL) Starting Order Invoice and Items Transformer execution...");
         var orderInvoice_and_ItemsTransformer = new OrderInvoiceTransformer(_outputSourceEmpiriaConnectionString);
         orderInvoice_and_ItemsTransformer.Execute();
