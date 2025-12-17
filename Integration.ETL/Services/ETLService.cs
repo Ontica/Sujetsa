@@ -157,7 +157,7 @@ namespace Empiria.Trade.Integration.ETL {
     #region Helpers
 
     private string GetQueryForTable(string tableName) {
-      var baseDateFilter = "FECHA >= '2025-01-01'";
+      var baseDateFilter = "FECHA >= '2025-12-01'";
 
       var queries = new Dictionary<string, string> {
         { "OV", $"SELECT * FROM {tableName} WHERE {baseDateFilter}" },
