@@ -45,7 +45,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
            FROM sources.FACTURADET_TARGET O
            INNER JOIN sources.FACTURA_TARGET V ON V.Factura = O.Factura 
 		       INNER JOIN sources.OV_TARGET OV ON OV.OV = V.OV 
-           WHERE V.FECHA >= '2025-01-01'
+           WHERE V.FECHA >= '2025-12-01'
            AND (O.OldBinaryChecksum != O.BinaryChecksum OR O.OldBinaryChecksum = 0)";
 
       var inputDataService = new TransformerDataServices(_nkConnectionString);

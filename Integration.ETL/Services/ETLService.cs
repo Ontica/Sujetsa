@@ -10,6 +10,7 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Empiria.Commands;
 using Empiria.Json;
 
 using Empiria.Trade.Integration.ETL.Data;
@@ -66,6 +67,14 @@ namespace Empiria.Trade.Integration.ETL {
         Execute();
         EmpiriaLog.Info("(Sujetsa ETL) ETL Extraction finished...");
 
+        //Llenar Common Storage - Carga inicial de datos
+        //Cargas diarias posteriores solo agregar nuevos
+        var connectionEmpiriaString = GetEmpiriaConnectionString();
+        var outEmpiriaDataServices = new SqlServerDataServices(connectionEmpiriaString);
+        //Common Storage -Carga inicial
+        outEmpiriaDataServices.ExecuteFillCommonStorageStoredProcedure();
+
+
         EmpiriaLog.Info("(Sujetsa ETL) Starting ETL Transformers execution...");
 
         EmpiriaLog.Info("(Sujetsa ETL) Starting Product Transformer execution...");
@@ -113,7 +122,7 @@ namespace Empiria.Trade.Integration.ETL {
         orderTransformer_and_ItemsTransformer.Execute();
         EmpiriaLog.Info("(Sujetsa ETL) Order OV and Items Transformer execution finished.");
 
-        EmpiriaLog.Info("(Sujetsa ETL) Starting Devolucion Rem and Items Transformer execution...");
+        EmpiriaLog.Info("(Sujetsa ETL) Starting Devolucion  and Items Transformer execution...");
         var orderReturnTransformer_and_ItemsTransformer = new OrderReturnTransformer(_outputSourceEmpiriaConnectionString);
         orderReturnTransformer_and_ItemsTransformer.Execute();
         EmpiriaLog.Info("(Sujetsa ETL) Order Devolucion and Items Transformer execution finished.");
@@ -190,6 +199,13 @@ namespace Empiria.Trade.Integration.ETL {
       var config = ConfigurationData.Get<JsonObject>("Connection.Strings");
 
       return config.Get<string>("sqlServerConnection");
+    }
+
+
+    static private string GetEmpiriaConnectionString() {
+      var config = ConfigurationData.Get<JsonObject>("Connection.Strings");
+
+      return config.Get<string>("empiriaSqlServerConnection");
     }
     #endregion Helpers
 

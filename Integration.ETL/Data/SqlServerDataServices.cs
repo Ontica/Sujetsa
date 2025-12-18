@@ -31,7 +31,7 @@ namespace Empiria.Trade.Integration.ETL.Data {
 
       using (SqlConnection dbConnection = OpenConnection()) {
 
-        using (SqlCommand cmd = new SqlCommand("sources.OMS_Fill_Common_Storage", dbConnection)) {
+        using (SqlCommand cmd = new SqlCommand("dbo.OMS_Fill_Common_Storage", dbConnection)) {
           cmd.CommandType = CommandType.StoredProcedure;
           cmd.CommandTimeout = 300;
 

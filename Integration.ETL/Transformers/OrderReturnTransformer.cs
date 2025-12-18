@@ -53,7 +53,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
                 " ,O.Folio,O.Serie,O.Usuario_Cancelo,O.Fecha_Cancelo,O.MD,O.Moneda,O.Aplicar_Cargofactura,O.PCS, O.Tipo_NC " +
                 " ,O.Vendedor,O.Telemarketer,O.SAT_Formapago,O.Terminada,O.BinaryChecksum,O.OldBinaryChecksum " +
                 " FROM sources.DEVOLUCION_TARGET O " +
-                " Where O.Fecha >= '2025-01-01' And(O.Oldbinarychecksum != O.Binarychecksum " +
+                " Where O.Fecha >= '2025-12-01' And(O.Oldbinarychecksum != O.Binarychecksum " +
                 " Or O.Oldbinarychecksum = 0 Or O.Oldbinarychecksum IS NULL) ";
 
       var connectionString = GetNKConnectionString();

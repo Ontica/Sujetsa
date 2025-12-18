@@ -42,7 +42,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         SELECT O.*
         FROM sources.REMLDET_TARGET O
         INNER JOIN sources.REML_TARGET V ON V.REML = O.REML 
-        WHERE V.FECHA >= '2025-01-01'
+        WHERE V.FECHA >= '2025-12-01'
           AND (O.OldBinaryChecksum != O.BinaryChecksum OR O.OldBinaryChecksum = 0)";
 
       var inputDataService = new TransformerDataServices(_nkConnectionString);

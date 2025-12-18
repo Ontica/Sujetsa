@@ -60,7 +60,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         " O.Sinc,	 O.Utilizar_Fv_Fija,	 O.Fv_Fija,	 O.CFDP,	 O.TipoCompra," +
         "	 O.R_IVA_PCT,	 O.Serie,	 O.Contador,	 O.Binarychecksum,	 O.Oldbinarychecksum" +
         "  FROM sources.COMPRA_TARGET O " +
-        "Where O.Fecha >= '2025-01-01' And(O.Oldbinarychecksum != O.Binarychecksum " +
+        "Where O.Fecha >= '2025-12-01' And(O.Oldbinarychecksum != O.Binarychecksum " +
         "Or O.Oldbinarychecksum = 0 " +
         "Or O.Oldbinarychecksum IS NULL)";
 

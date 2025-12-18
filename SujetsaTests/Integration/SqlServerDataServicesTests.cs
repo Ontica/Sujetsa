@@ -54,7 +54,7 @@ namespace Empiria.Tests.Trade.Integration {
     [Fact]
     public void Should_Execute_Fill_Common_Storage_Stored_Procedure() {
 
-      string connectionString = GetConnectionString();
+      string connectionString = GetEmpiriaConnectionString();
 
       var sut = new SqlServerDataServices(connectionString);
 
@@ -62,7 +62,7 @@ namespace Empiria.Tests.Trade.Integration {
 
       Assert.NotNull(sut);
 
-      string fullTableName = "[sujetsa].DBO.[Common_Storage]";
+      string fullTableName = "[sujetsatest].dbo.[Common_Storage]";
 
       int rowCount = sut.RowCounter(fullTableName);
 

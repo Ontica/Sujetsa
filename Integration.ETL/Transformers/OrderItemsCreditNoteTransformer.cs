@@ -44,7 +44,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
                O.BinaryChecksum, O.OldBinaryChecksum
         FROM sources.NOTACREDITODET_TARGET O
         INNER JOIN sources.NOTACREDITO_TARGET V ON V.NOTACREDITO = O.NOTACREDITO
-        WHERE V.FECHA >= '2025-01-01'
+        WHERE V.FECHA >= '2025-12-01'
           AND V.TIPO = 'D'
           AND (O.OldBinaryChecksum != O.BinaryChecksum OR O.OldBinaryChecksum = 0)";
 

@@ -50,7 +50,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
     private FixedList<OrderRemNK> ReadSourceData() {
       var sql = "SELECT O.* FROM sources.REML_TARGET O " +
-        "Where O.Fecha >= '2025-01-01' And(O.Oldbinarychecksum != O.Binarychecksum " +
+        "Where O.Fecha >= '2025-12-01' And(O.Oldbinarychecksum != O.Binarychecksum " +
         "Or O.Oldbinarychecksum = 0 " +
         "Or O.Oldbinarychecksum IS NULL)";
 
