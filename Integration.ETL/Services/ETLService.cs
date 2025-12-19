@@ -69,10 +69,10 @@ namespace Empiria.Trade.Integration.ETL {
 
         //Llenar Common Storage - Carga inicial de datos
         //Cargas diarias posteriores solo agregar nuevos
-        var connectionEmpiriaString = GetEmpiriaConnectionString();
-        var outEmpiriaDataServices = new SqlServerDataServices(connectionEmpiriaString);
+        ////var connectionEmpiriaString = GetEmpiriaConnectionString();
+        ////var outEmpiriaDataServices = new SqlServerDataServices(connectionEmpiriaString);
         //Common Storage -Carga inicial
-        outEmpiriaDataServices.ExecuteFillCommonStorageStoredProcedure();
+        ////outEmpiriaDataServices.ExecuteFillCommonStorageStoredProcedure();
 
 
         EmpiriaLog.Info("(Sujetsa ETL) Starting ETL Transformers execution...");
