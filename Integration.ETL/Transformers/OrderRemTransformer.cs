@@ -75,7 +75,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       var dataServicesNK = new TransformerDataServices(connectionStringNK);
       if (toTransformData.OldBinaryChecksum == 0) {
         return new OrderData {
-          Order_Id = DbRule.GetNextId("OMS_Orders"),
+          Order_Id = IdGenerator.GetNextId("OMS_Orders"),
           Order_UID = System.Guid.NewGuid().ToString(),
           Order_Type_Id = 4012,//4011,
           Order_Category_Id = -1,

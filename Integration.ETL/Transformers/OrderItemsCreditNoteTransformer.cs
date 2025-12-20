@@ -118,7 +118,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
       return new OrderItemsData {
         Order_Item_Id = isNewItem
-          ? DbRule.GetNextId("OMS_Order_Items")
+          ? IdGenerator.GetNextId("OMS_Order_Items")
           : dataServices.GetOrderIdFromOMSOrderItems(orderData.OrderId, source.Det),
         Order_Item_UID = isNewItem
           ? Guid.NewGuid().ToString()

@@ -158,7 +158,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
       return new ProductData {
         Product_Id = isNewProduct
-          ? DbRule.GetNextId("OMS_Products")
+          ? IdGenerator.GetNextId("OMS_Products")
           : existingProduct.ProductId,
         Product_UID = isNewProduct
           ? Guid.NewGuid().ToString()

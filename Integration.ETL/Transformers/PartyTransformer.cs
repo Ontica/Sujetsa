@@ -167,7 +167,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       var dataServices = new TransformerDataServices(connectionString);
       if (toTransformData.OldBinaryChecksum == 0) {
         return new PartyData {
-          Party_Id = DbRule.GetNextId("Parties"),
+          Party_Id = IdGenerator.GetNextId("Parties"),
           Party_UID = System.Guid.NewGuid().ToString(),
           Party_Type_Id = (int) ReturnIdForPartyCode(toTransformData.RFC),
           Party_Code = toTransformData.Cliente,
@@ -222,7 +222,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       var dataServices = new TransformerDataServices(connectionString);
       if (toTransformData.OldBinaryChecksum == 0) {
         return new PartyData {
-          Party_Id = DbRule.GetNextId("Parties"),
+          Party_Id = IdGenerator.GetNextId("Parties"),
           Party_UID = System.Guid.NewGuid().ToString(),
           Party_Type_Id = 153,
           Party_Code = toTransformData.Usuario,
@@ -271,7 +271,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       var dataServices = new TransformerDataServices(connectionString);
       if (toTransformData.OldBinaryChecksum == 0) {
         return new PartyData {
-          Party_Id = DbRule.GetNextId("Parties"),
+          Party_Id = IdGenerator.GetNextId("Parties"),
           Party_UID = System.Guid.NewGuid().ToString(),
           Party_Type_Id = 153,
           Party_Code = toTransformData.Vendedor,
@@ -320,7 +320,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       var dataServices = new TransformerDataServices(connectionString);
       if (toTransformData.OldBinaryChecksum == 0) {
         return new PartyData {
-          Party_Id = DbRule.GetNextId("Parties"),
+          Party_Id = IdGenerator.GetNextId("Parties"),
           Party_UID = System.Guid.NewGuid().ToString(),
           Party_Type_Id = (int) ReturnIdForPartyCode(toTransformData.RFC),
           Party_Code = toTransformData.Proveedor,
