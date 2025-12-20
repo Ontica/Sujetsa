@@ -47,7 +47,7 @@ namespace Empiria.Trade.Integration.ETL.Data {
       }
     }
 
-    
+
     internal DateTime GetPostingDateFromOMSOrders(string ov) {
       Assertion.Require(ov, nameof(ov));
       using (SqlConnection dbConnection = OpenConnection()) {
@@ -97,11 +97,6 @@ namespace Empiria.Trade.Integration.ETL.Data {
           return Convert.ToInt32(result);
         }
       }
-    }
-
-
-    public int GetNextId(string tableName) {
-      return DataWriter.CreateId(tableName);
     }
 
 
@@ -230,7 +225,7 @@ namespace Empiria.Trade.Integration.ETL.Data {
 
     internal int GetPartyIdFromParties(string identificator, string role) {
       if (string.IsNullOrEmpty(identificator)) {
-         return -1;
+        return -1;
       }
       Assertion.Require(identificator, nameof(identificator));
       Assertion.Require(role, nameof(role));
@@ -238,12 +233,12 @@ namespace Empiria.Trade.Integration.ETL.Data {
 
         using (SqlCommand cmd = new SqlCommand($"SELECT Party_Id FROM DBO.Parties WHERE Party_Identificators = '{identificator}' and Party_Roles = '{role}' ", dbConnection)) {
           var result = cmd.ExecuteScalar();
-                
+
           if (result == DBNull.Value || result == null) {
             //
             using (SqlCommand cmdw = new SqlCommand($"SELECT Party_Id FROM DBO.Parties WHERE Party_Identificators = '{identificator}' and (Party_Roles = 'Warehouseman' OR Party_Roles = 'Inventory-manager')", dbConnection)) {
               var resultw = cmdw.ExecuteScalar();
-              
+
               if (resultw == DBNull.Value || resultw == null) {
                 return -1;
               }
@@ -287,7 +282,7 @@ namespace Empiria.Trade.Integration.ETL.Data {
         }
       }
     }
-   
+
 
     internal string GetRoleFromParties(string usr) {
       Assertion.Require(usr, nameof(usr));
@@ -333,9 +328,9 @@ namespace Empiria.Trade.Integration.ETL.Data {
       using (SqlConnection dbConnection = OpenConnection()) {
 
         using (SqlCommand cmd = new SqlCommand($"SELECT Product_Id FROM DBO.OMS_Products WHERE Product_Name = '{producto}'", dbConnection)) {
-          var result = cmd.ExecuteScalar(); 
+          var result = cmd.ExecuteScalar();
 
-            return (int) result;
+          return (int) result;
         }
       }
     }
@@ -369,7 +364,7 @@ namespace Empiria.Trade.Integration.ETL.Data {
 
     internal FixedList<T> ReadData<T>(string sql) {
       Assertion.Require(sql, nameof(sql));
-      
+
       var dataSource = new DataSource("TransformerDataServices", _connectionString, DataTechnology.SqlServer);
       var op = DataOperation.Parse(dataSource, sql);
 
@@ -422,7 +417,7 @@ namespace Empiria.Trade.Integration.ETL.Data {
       }
     }
 
-    
+
     internal char ReturnStatusForPartyStatus(string activo) {
       switch (activo) {
         case "N":

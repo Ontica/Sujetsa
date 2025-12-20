@@ -116,7 +116,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
       return new OrderItemsData {
         Order_Item_Id = isNewItem
-          ? dataServices.GetNextId("OMS_Order_Items")
+          ? DbRule.GetNextId("OMS_Order_Items")
           : dataServices.GetOrderIdFromOMSOrderItems(orderData.OrderId, source.Det),
         Order_Item_UID = isNewItem
           ? Guid.NewGuid().ToString()
@@ -164,10 +164,10 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         Order_Item_Provider_Id = (int) orderData.ProviderId,
         Order_Item_Received_By_Id = -1,
         Order_Item_Closing_Time = ExecutionServer.DateMaxValue,
-        Order_Item_Closed_By_Id = -1,                
+        Order_Item_Closed_By_Id = -1,
         Order_Item_Position = source.Det,
         Order_Item_Posting_Time = orderData.PostingTime,
-        Order_Item_Posted_By_Id = orderData.PostedUserId,       
+        Order_Item_Posted_By_Id = orderData.PostedUserId,
         Order_Item_Status = Convert.ToChar(orderData.Status)
       };
     }

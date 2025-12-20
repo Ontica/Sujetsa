@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
 using Empiria.Data;
 using Empiria.Json;
 using Empiria.Trade.Integration.ETL.Data;
@@ -75,7 +74,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       var dataServicesNK = new TransformerDataServices(connectionStringNK);
       if (toTransformData.OldBinaryChecksum == 0) {
         return new OrderData {
-          Order_Id = dataServices.GetNextId("OMS_Orders"),
+          Order_Id = DbRule.GetNextId("OMS_Orders"),
           Order_UID = System.Guid.NewGuid().ToString(),
           Order_Type_Id = 4012,//4011,
           Order_Category_Id = -1,
@@ -84,7 +83,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Parent_Id = -1,
           Order_No = toTransformData.OV,
           Order_Name = "",
-          Order_Description = Empiria.EmpiriaString.BuildKeywords(toTransformData.Orden , dataServices.ReturnOldDescriptionForPriority(toTransformData.Prioridad)),
+          Order_Description = Empiria.EmpiriaString.BuildKeywords(toTransformData.Orden, dataServices.ReturnOldDescriptionForPriority(toTransformData.Prioridad)),
           Order_Observations = "",
           Order_Justification = "",
           Order_Identificators = toTransformData.OV,
@@ -109,7 +108,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Conditions_Ext_Data = "",
           Order_Specification_Ext_Data = "",
           Order_Delivery_Ext_Data = "",
-          Order_Ext_Data = JsonConvert.SerializeObject(new {Name = "OV"}),
+          Order_Ext_Data = JsonConvert.SerializeObject(new { Name = "OV" }),
           Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.OV, toTransformData.Cliente, toTransformData.Almacen, toTransformData.Moneda),
           Order_Authorization_Time = ExecutionServer.DateMinValue,
           Order_Authorized_By_Id = -1,
@@ -118,7 +117,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Posting_Time = toTransformData.Fecha,
           Order_Posted_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usr_Captura, "User"),
           Order_Status = dataServices.ReturnStatusForOrdersStatus(toTransformData.Cancelado)
-         };
+        };
       } else {
         return new OrderData {
           Order_Id = dataServices.GetOrderIdFromOMSOrders(toTransformData.OV),
@@ -167,9 +166,9 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         };
       }
     }
-    
 
-   private int WriteTargetData(FixedList<OrderData> transformedData) {
+
+    private int WriteTargetData(FixedList<OrderData> transformedData) {
       try {
         foreach (var item in transformedData) {
           WriteTargetData(item);
@@ -181,14 +180,14 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     }
 
     private void WriteTargetData(OrderData o) {
-        var op = DataOperation.Parse("write_OMS_Order", o.Order_Id, o.Order_UID, o.Order_Type_Id, o.Order_Category_Id, o.Order_Requisition_Id,
-         o.Order_Contract_Id, o.Order_Parent_Id, o.Order_No, o.Order_Name, o.Order_Description, o.Order_Observations,
-         o.Order_Justification, o.Order_Identificators, o.Order_Tags, o.Order_Start_Date, o.Order_End_Date, o.Order_Requested_By_Id,
-         o.Order_Requested_Time, o.Order_Required_Time, o.Order_Responsible_Id, o.Order_Beneficary_Id, o.Order_Provider_Id,
-         o.Order_Warehouse_Id, o.Order_Delivery_Place_Id, o.Order_Project_Id, o.Order_Geo_Origin_Id, o.Order_Currency_Id,
-         o.Order_Budget_Type_Id, o.Order_Base_Budget_Id, o.Order_Source_Id, o.Order_Priority, o.Order_Conditions_Ext_Data,
-         o.Order_Specification_Ext_Data, o.Order_Delivery_Ext_Data, o.Order_Ext_Data, o.Order_Keywords, o.Order_Authorization_Time,
-         o.Order_Authorized_By_Id, o.Order_Closing_Time, o.Order_Closed_By_Id, o.Order_Posting_Time, o.Order_Posted_By_Id, o.Order_Status);
+      var op = DataOperation.Parse("write_OMS_Order", o.Order_Id, o.Order_UID, o.Order_Type_Id, o.Order_Category_Id, o.Order_Requisition_Id,
+       o.Order_Contract_Id, o.Order_Parent_Id, o.Order_No, o.Order_Name, o.Order_Description, o.Order_Observations,
+       o.Order_Justification, o.Order_Identificators, o.Order_Tags, o.Order_Start_Date, o.Order_End_Date, o.Order_Requested_By_Id,
+       o.Order_Requested_Time, o.Order_Required_Time, o.Order_Responsible_Id, o.Order_Beneficary_Id, o.Order_Provider_Id,
+       o.Order_Warehouse_Id, o.Order_Delivery_Place_Id, o.Order_Project_Id, o.Order_Geo_Origin_Id, o.Order_Currency_Id,
+       o.Order_Budget_Type_Id, o.Order_Base_Budget_Id, o.Order_Source_Id, o.Order_Priority, o.Order_Conditions_Ext_Data,
+       o.Order_Specification_Ext_Data, o.Order_Delivery_Ext_Data, o.Order_Ext_Data, o.Order_Keywords, o.Order_Authorization_Time,
+       o.Order_Authorized_By_Id, o.Order_Closing_Time, o.Order_Closed_By_Id, o.Order_Posting_Time, o.Order_Posted_By_Id, o.Order_Status);
 
       DataWriter.Execute(op);
     }
@@ -207,7 +206,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
       return config.Get<string>("sqlServerConnection");
     }
- 
+
     #endregion Helpers
 
   }  // class OrderTransformer

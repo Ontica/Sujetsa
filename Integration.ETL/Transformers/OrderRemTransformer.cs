@@ -41,7 +41,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         FixedList<OrderItemsData> transformedDataItems = orderItemsRemTransformer.Transform(sourceDataItems);
 
         orderItemsRemTransformer.WriteTargetData(transformedDataItems);
-                
+
       } else {
         Assertion.EnsureFailed("Error al guardar Order Rem");
       }
@@ -75,7 +75,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       var dataServicesNK = new TransformerDataServices(connectionStringNK);
       if (toTransformData.OldBinaryChecksum == 0) {
         return new OrderData {
-          Order_Id = dataServices.GetNextId("OMS_Orders"),
+          Order_Id = DbRule.GetNextId("OMS_Orders"),
           Order_UID = System.Guid.NewGuid().ToString(),
           Order_Type_Id = 4012,//4011,
           Order_Category_Id = -1,
@@ -109,7 +109,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Conditions_Ext_Data = "",
           Order_Specification_Ext_Data = "",
           Order_Delivery_Ext_Data = "",
-          Order_Ext_Data = JsonConvert.SerializeObject(new {Name = "Remision"}),
+          Order_Ext_Data = JsonConvert.SerializeObject(new { Name = "Remision" }),
           Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Reml, toTransformData.Almacen, toTransformData.Cliente, toTransformData.Icmov),
           Order_Authorization_Time = toTransformData.Fecha_Aplicado,
           Order_Authorized_By_Id = -1,
@@ -118,7 +118,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Posting_Time = toTransformData.Fecha,
           Order_Posted_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario, "User"),
           Order_Status = dataServices.ReturnStatusForOrdersStatus(toTransformData.Cancelado)
-          };
+        };
       } else {
         return new OrderData {
           Order_Id = dataServices.GetOrderIdFromOMSOrders(toTransformData.Reml),
@@ -167,7 +167,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         };
       }
     }
-    
+
 
     private int WriteTargetData(FixedList<OrderData> transformedData) {
       try {
@@ -182,14 +182,14 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
 
     private void WriteTargetData(OrderData o) {
-        var op = DataOperation.Parse("write_OMS_Order", o.Order_Id, o.Order_UID, o.Order_Type_Id, o.Order_Category_Id, o.Order_Requisition_Id,
-         o.Order_Contract_Id, o.Order_Parent_Id, o.Order_No, o.Order_Name, o.Order_Description, o.Order_Observations,
-         o.Order_Justification, o.Order_Identificators, o.Order_Tags, o.Order_Start_Date, o.Order_End_Date, o.Order_Requested_By_Id,
-         o.Order_Requested_Time, o.Order_Required_Time, o.Order_Responsible_Id, o.Order_Beneficary_Id, o.Order_Provider_Id,
-         o.Order_Warehouse_Id, o.Order_Delivery_Place_Id, o.Order_Project_Id, o.Order_Geo_Origin_Id, o.Order_Currency_Id,
-         o.Order_Budget_Type_Id, o.Order_Base_Budget_Id, o.Order_Source_Id, o.Order_Priority, o.Order_Conditions_Ext_Data,
-         o.Order_Specification_Ext_Data, o.Order_Delivery_Ext_Data, o.Order_Ext_Data, o.Order_Keywords, o.Order_Authorization_Time,
-         o.Order_Authorized_By_Id, o.Order_Closing_Time, o.Order_Closed_By_Id, o.Order_Posting_Time, o.Order_Posted_By_Id, o.Order_Status);
+      var op = DataOperation.Parse("write_OMS_Order", o.Order_Id, o.Order_UID, o.Order_Type_Id, o.Order_Category_Id, o.Order_Requisition_Id,
+       o.Order_Contract_Id, o.Order_Parent_Id, o.Order_No, o.Order_Name, o.Order_Description, o.Order_Observations,
+       o.Order_Justification, o.Order_Identificators, o.Order_Tags, o.Order_Start_Date, o.Order_End_Date, o.Order_Requested_By_Id,
+       o.Order_Requested_Time, o.Order_Required_Time, o.Order_Responsible_Id, o.Order_Beneficary_Id, o.Order_Provider_Id,
+       o.Order_Warehouse_Id, o.Order_Delivery_Place_Id, o.Order_Project_Id, o.Order_Geo_Origin_Id, o.Order_Currency_Id,
+       o.Order_Budget_Type_Id, o.Order_Base_Budget_Id, o.Order_Source_Id, o.Order_Priority, o.Order_Conditions_Ext_Data,
+       o.Order_Specification_Ext_Data, o.Order_Delivery_Ext_Data, o.Order_Ext_Data, o.Order_Keywords, o.Order_Authorization_Time,
+       o.Order_Authorized_By_Id, o.Order_Closing_Time, o.Order_Closed_By_Id, o.Order_Posting_Time, o.Order_Posted_By_Id, o.Order_Status);
 
       DataWriter.Execute(op);
     }

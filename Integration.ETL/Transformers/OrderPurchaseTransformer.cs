@@ -11,7 +11,6 @@
 using Empiria.Data;
 using Empiria.Json;
 using Empiria.Trade.Integration.ETL.Data;
-using Empiria.Trade.Integration.ETL.Transformers;
 using Newtonsoft.Json;
 
 namespace Empiria.Trade.Integration.ETL.Transformers {
@@ -33,7 +32,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
       FixedList<OrderData> transformedData = Transform(sourceData);
 
-       int result = WriteTargetData(transformedData);
+      int result = WriteTargetData(transformedData);
       if (result == 1) {
         // si fue exitoso el guardado de orders, guardar items
         var orderItemsPurchaseTransformer = new OrderItemsPurchaseTransformer(_connectionString);
@@ -85,7 +84,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       var dataServicesNK = new TransformerDataServices(connectionStringNK);
       if (toTransformData.OldBinaryChecksum == 0) {
         return new OrderData {
-          Order_Id = dataServices.GetNextId("OMS_Orders"),
+          Order_Id = DbRule.GetNextId("OMS_Orders"),
           Order_UID = System.Guid.NewGuid().ToString(),
           Order_Type_Id = 4006,//4005,
           Order_Category_Id = -1,
@@ -119,7 +118,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Conditions_Ext_Data = "",
           Order_Specification_Ext_Data = "",
           Order_Delivery_Ext_Data = "",
-          Order_Ext_Data = JsonConvert.SerializeObject(new {Name = "Compra"}),
+          Order_Ext_Data = JsonConvert.SerializeObject(new { Name = "Compra" }),
           Order_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Factura, toTransformData.Compra, toTransformData.TipoCompra, toTransformData.Almacen),
           Order_Authorization_Time = toTransformData.Fecha,
           Order_Authorized_By_Id = -1,
@@ -128,7 +127,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Posting_Time = toTransformData.Captura,
           Order_Posted_By_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario, "User"),
           Order_Status = dataServices.ReturnStatusForOrdersStatus(toTransformData.Cancelada)
-         };
+        };
       } else {
         return new OrderData {
           Order_Id = dataServices.GetOrderIdFromOMSOrders(toTransformData.Compra),

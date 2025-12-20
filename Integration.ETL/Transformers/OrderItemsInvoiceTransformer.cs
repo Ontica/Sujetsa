@@ -117,7 +117,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
       return new OrderItemsData {
         Order_Item_Id = isNewItem
-          ? dataServices.GetNextId("OMS_Order_Items")
+          ? DbRule.GetNextId("OMS_Order_Items")
           : dataServices.GetOrderIdFromOMSOrderItems(orderData.OrderId, source.Det),
         Order_Item_UID = isNewItem
           ? Guid.NewGuid().ToString()
@@ -134,9 +134,9 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         Order_Item_Product_Code = "",
         Order_Item_Product_Name = "",
         Order_Item_Description = keywords,
-        Order_Item_Justification = "", 
+        Order_Item_Justification = "",
         Order_Item_Product_Unit_Id = unitCache[source.Unidad],
-        Order_Item_Requested_Qty =-1,
+        Order_Item_Requested_Qty = -1,
         Order_Item_Min_Qty = -1,
         Order_Item_Max_Qty = -1,
         Order_Item_Qty = source.Cantidad,
@@ -147,15 +147,15 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         Order_Item_Discount = source.Descuento,
         Order_Item_Price_Id = source.LISTAPRECIOS,
         Order_Item_Project_Id = -1,
-        Order_Item_Budget_Id =-1,
+        Order_Item_Budget_Id = -1,
         Order_Item_Budget_Account_Id = -1,
-        Order_Item_Budget_Entry_Id =-1,
+        Order_Item_Budget_Entry_Id = -1,
         Order_Item_Geo_Origin_Id = -1,
         Order_Item_Location_Id = -1,
         Order_Item_Config_Ext_Data = "",
         Order_Item_Conditions_Ext_Data = "",
         Order_Item_Spec_Ext_Data = "",
-        Order_Item_Ext_Data = JsonConvert.SerializeObject(new {Name = "Factura"}),
+        Order_Item_Ext_Data = JsonConvert.SerializeObject(new { Name = "Factura" }),
         Order_Item_Keywords = keywords,
         Order_Item_Requested_By_Id = orderData.RequestedUserId,
         Order_Item_Requested_Time = ExecutionServer.DateMinValue,
