@@ -49,7 +49,7 @@ namespace Empiria.Trade.Integration.ETL.Data {
 
 
       [DataField("IDFIELDNAME")]
-      private int IDFIELDNAME {
+      private string IDFIELDNAME {
         get; set;
       }
 

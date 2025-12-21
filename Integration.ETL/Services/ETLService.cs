@@ -88,28 +88,31 @@ namespace Empiria.Trade.Integration.ETL {
         partyTransformer.Execute();
         EmpiriaLog.Info("(Sujetsa ETL) Party Transformer execution finished.");
 
-
-        EmpiriaLog.Info("(Sujetsa ETL) Starting Contact Transformer execution...");
-        var contactTransformer = new ContactTransformer(_outputSourceEmpiriaConnectionString);
-        contactTransformer.Execute();
-        EmpiriaLog.Info("(Sujetsa ETL) Contact Transformer execution finished.");
-
+        /*Acorde a lo platicado con JM no va
+        //EmpiriaLog.Info("(Sujetsa ETL) Starting Contact Transformer execution...");
+        //var contactTransformer = new ContactTransformer(_outputSourceEmpiriaConnectionString);
+        //contactTransformer.Execute();
+        //EmpiriaLog.Info("(Sujetsa ETL) Contact Transformer execution finished.");
+        */
 
         EmpiriaLog.Info("(Sujetsa ETL) Starting Order Invoice and Items Transformer execution...");
         var orderInvoice_and_ItemsTransformer = new OrderInvoiceTransformer(_outputSourceEmpiriaConnectionString);
         orderInvoice_and_ItemsTransformer.Execute();
         EmpiriaLog.Info("(Sujetsa ETL) Order Invoice and Items Transformer execution finished.");
         
+
         EmpiriaLog.Info("(Sujetsa ETL) Starting Order Credit Note and Items Transformer execution...");
         var orderCreditNote_and_ItemsTransformer = new OrderCreditNoteTransformer(_outputSourceEmpiriaConnectionString);
         orderCreditNote_and_ItemsTransformer.Execute();
         EmpiriaLog.Info("(Sujetsa ETL) Order Credit Note and Items Transformer execution finished.");
         
+
         EmpiriaLog.Info("(Sujetsa ETL) Starting Order Purchase and Items Transformer execution...");
         var orderPurchaseTransformer_and_ItemsTransformer = new OrderPurchaseTransformer(_outputSourceEmpiriaConnectionString);
         orderPurchaseTransformer_and_ItemsTransformer.Execute();
         EmpiriaLog.Info("(Sujetsa ETL) Order Purchase and Items Transformer execution finished.");
-      
+        
+
         EmpiriaLog.Info("(Sujetsa ETL) Starting Order Rem and Items Transformer execution...");
         var orderRemTransformer_and_ItemsTransformer = new OrderRemTransformer(_outputSourceEmpiriaConnectionString);
         orderRemTransformer_and_ItemsTransformer.Execute();

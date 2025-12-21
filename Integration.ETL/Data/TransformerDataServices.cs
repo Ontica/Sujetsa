@@ -231,12 +231,12 @@ namespace Empiria.Trade.Integration.ETL.Data {
       Assertion.Require(role, nameof(role));
       using (SqlConnection dbConnection = OpenConnection()) {
 
-        using (SqlCommand cmd = new SqlCommand($"SELECT Party_Id FROM DBO.Parties WHERE Party_Identificators = '{identificator}' and Party_Roles = '{role}' ", dbConnection)) {
+        using (SqlCommand cmd = new SqlCommand($"SELECT Party_Id FROM DBO.Parties WHERE Party_Identificators = '{identificator}' and Party_Roles = '{role}' AND Party_Id < -1 ", dbConnection)) {
           var result = cmd.ExecuteScalar();
 
           if (result == DBNull.Value || result == null) {
             //
-            using (SqlCommand cmdw = new SqlCommand($"SELECT Party_Id FROM DBO.Parties WHERE Party_Identificators = '{identificator}' and (Party_Roles = 'Warehouseman' OR Party_Roles = 'Inventory-manager')", dbConnection)) {
+            using (SqlCommand cmdw = new SqlCommand($"SELECT Party_Id FROM DBO.Parties WHERE Party_Identificators = '{identificator}' and (Party_Roles = 'Warehouseman' OR Party_Roles = 'Inventory-manager') AND Party_Id < -1 ", dbConnection)) {
               var resultw = cmdw.ExecuteScalar();
 
               if (resultw == DBNull.Value || resultw == null) {
