@@ -146,6 +146,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         Order_Item_Currency_Id = 600,
         Order_Item_Unit_Price = source.Precio,
         Order_Item_Discount = 0,
+        Order_Item_Penalty_Discount = 0,
         Order_Item_Price_Id = -1,
         Order_Item_Project_Id = -1,
         Order_Item_Budget_Id = -1,

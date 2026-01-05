@@ -49,7 +49,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     internal decimal Descuento {
       get; set;
     }
-
+       
     [DataField("ALMACEN")]
     internal string Almacen {
       get; set;

@@ -66,6 +66,11 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       get; set;
     }
 
+    [DataField("Order_Item_Penalty_Discount")]
+    internal decimal Order_Item_Penalty_Discount {
+      get; set;
+    }
+
     [DataField("Order_Item_Currency_Id")]
     internal int Order_Item_Currency_Id {
       get; set;
