@@ -58,9 +58,6 @@
     <WarningsAsErrors />
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Reporting\Core\Empiria.Sujetsa.Reporting.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
@@ -68,8 +65,8 @@
     <ProjectReference Include="..\..\security\Security.Management.WebApi\Empiria.Security.Management.WebApi.csproj" />
     <ProjectReference Include="..\..\trade\WebApi\Empiria.Trade.WebApi.csproj" />
     <ProjectReference Include="..\Integration.ETL\Empiria.Trade.Integration.ETL.csproj" />
-    <ProjectReference Include="..\..\operations.management\Integration\WebApi\Empiria.Operations.Integration.WebApi.csproj" />
     <ProjectReference Include="..\..\operations.management\Inventory\WebApi\Empiria.Inventory.WebApi.csproj" />
+    <ProjectReference Include="..\Reporting\Core\Empiria.Sujetsa.Reporting.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="empiria.config.json">
