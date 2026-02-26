@@ -72,7 +72,7 @@ namespace Empiria.Trade.Integration.ETL {
         ////var outEmpiriaDataServices = new SqlServerDataServices(connectionEmpiriaString);
         //Common Storage -Carga inicial
         ////outEmpiriaDataServices.ExecuteFillCommonStorageStoredProcedure();
-
+        
 
         EmpiriaLog.Info("(Sujetsa ETL) Starting ETL Transformers execution...");
 
@@ -87,12 +87,6 @@ namespace Empiria.Trade.Integration.ETL {
         partyTransformer.Execute();
         EmpiriaLog.Info("(Sujetsa ETL) Party Transformer execution finished.");
 
-        /*Acorde a lo platicado con JM no va
-        //EmpiriaLog.Info("(Sujetsa ETL) Starting Contact Transformer execution...");
-        //var contactTransformer = new ContactTransformer(_outputSourceEmpiriaConnectionString);
-        //contactTransformer.Execute();
-        //EmpiriaLog.Info("(Sujetsa ETL) Contact Transformer execution finished.");
-        */
 
         EmpiriaLog.Info("(Sujetsa ETL) Starting Order Invoice and Items Transformer execution...");
         var orderInvoice_and_ItemsTransformer = new OrderInvoiceTransformer(_outputSourceEmpiriaConnectionString);

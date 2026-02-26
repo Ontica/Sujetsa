@@ -31,26 +31,7 @@ namespace Empiria.Tests.Trade.Integration {
       Assert.NotNull(service);
     }
 
-
-    [Fact]
-    public void Should_Contact_Transformer_Execute() {
-
-
-      string tableName = "DBO.Contacts";
-
-      string connectionString = GetEmpiriaConnectionString();
-
-      var contactTransformer = new ContactTransformer(connectionString);
-
-      contactTransformer.Execute();
-
-      var sut = new TransformerDataServices(connectionString);
-
-      int rowCount = sut.RowCounter(tableName);
-
-      Assert.True(rowCount > 0);
-    }
-
+       
     /*
      * ov
     [Fact]
