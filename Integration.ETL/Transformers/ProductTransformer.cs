@@ -43,9 +43,12 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
     private FixedList<ProductNK> ReadSourceData() {
       const string sql = @"
-        SELECT PT.PRODUCTO, PT.DESCRIPCION, PT.GRUPO, PT.SUBGRUPO, PT.UNIDAD,
-               PT.ALTA, PT.BAJA, PT.EMPAQUE, PT.COSTO_BASE, 
-               PT.BinaryChecksum, PT.OldBinaryChecksum
+        SELECT PT.PRODUCTO, PT.DESCRIPCION, 
+        ISNULL(nullif(ltrim(rtrim(PT.GRUPO)),''),'-1') as GRUPO,
+        ISNULL(nullif(ltrim(rtrim(PT.SUBGRUPO)),''),'-1') as SUBGRUPO,
+        PT.UNIDAD,
+        PT.ALTA, PT.BAJA, PT.EMPAQUE, PT.COSTO_BASE, 
+        PT.BinaryChecksum, PT.OldBinaryChecksum
         FROM sources.PRODUCTO_TARGET PT
         WHERE PT.OldBinaryChecksum != PT.BinaryChecksum 
            OR PT.OldBinaryChecksum = 0 
