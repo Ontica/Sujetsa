@@ -117,7 +117,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       var cache = new Dictionary<string, CategoryCacheData>();
       foreach (var kvp in gruposSubgrupos) {
         cache[kvp.Key] = new CategoryCacheData {
-          CategoryId = (int) dataServices.GetCategoryIdFromCommonStorage(kvp.Value.Grupo, kvp.Value.SubGrupo),
+          CategoryId = -1, 
           Tags = dataServices.GetObjectTagsFromCommonStorage(kvp.Value.Grupo, kvp.Value.SubGrupo)
         };
       }

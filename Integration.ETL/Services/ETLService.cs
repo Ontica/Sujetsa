@@ -110,19 +110,7 @@ namespace Empiria.Trade.Integration.ETL {
         var orderRemTransformer_and_ItemsTransformer = new OrderRemTransformer(_outputSourceEmpiriaConnectionString);
         orderRemTransformer_and_ItemsTransformer.Execute();
         EmpiriaLog.Info("(Sujetsa ETL) Order Rem and Items Transformer execution finished.");
-          
-        ////ov,ovdet devolucion, devoluciondet para el incio de inventarios
-        /*
-        EmpiriaLog.Info("(Sujetsa ETL) Starting Order OV and Items Transformer execution...");
-        var orderTransformer_and_ItemsTransformer = new OrderTransformer(_outputSourceEmpiriaConnectionString);
-        orderTransformer_and_ItemsTransformer.Execute();
-        EmpiriaLog.Info("(Sujetsa ETL) Order OV and Items Transformer execution finished.");
-
-        EmpiriaLog.Info("(Sujetsa ETL) Starting Devolucion  and Items Transformer execution...");
-        var orderReturnTransformer_and_ItemsTransformer = new OrderReturnTransformer(_outputSourceEmpiriaConnectionString);
-        orderReturnTransformer_and_ItemsTransformer.Execute();
-        EmpiriaLog.Info("(Sujetsa ETL) Order Devolucion and Items Transformer execution finished.");
-        */
+     
 
         var connectionString = GetNKConnectionString();
         var outputDataServices = new SqlServerDataServices(connectionString);

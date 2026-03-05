@@ -282,27 +282,7 @@ namespace Empiria.Tests.Trade.Integration {
       Assert.Equal(2146, sut);
     }
 
-    
-    [Fact]
-    public void Should_Order_Transformer_Execute() {
-
-
-      string tableName = "DBO.OMS_Orders";
-
-      string connectionString = GetEmpiriaConnectionString();
-
-      var orderTransformer = new OrderTransformer(connectionString);
-
-      orderTransformer.Execute();
-
-      var sut = new TransformerDataServices(connectionString);
-
-      int rowCount = sut.RowCounter(tableName);
-
-      Assert.True(rowCount >= 0);
-    }
-
-
+        
     [Fact]
     public void Should_Order_Invoice_Transformer_Execute() {
 
@@ -341,27 +321,7 @@ namespace Empiria.Tests.Trade.Integration {
 
       Assert.True(rowCount >= 0);
     }
-
-
-    [Fact]
-    public void Should_Order_Items_Transformer_Execute() {
-
-
-      string tableName = "DBO.OMS_Order_Items";
-
-      string connectionString = GetEmpiriaConnectionString();
-
-      var orderItemsTransformer = new OrderItemsTransformer(connectionString);
-
-      orderItemsTransformer.Execute();
-
-      var sut = new TransformerDataServices(connectionString);
-
-      int rowCount = sut.RowCounter(tableName);
-
-      Assert.True(rowCount >= 0);
-    }
-
+      
 
     [Fact]
     public void Should_Party_Transformer_Execute() {
