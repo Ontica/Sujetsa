@@ -55,7 +55,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
       WriteTargetData(transformedSupplierData);
 
-
+      /*
       FixedList<PartyData> transformedSalespersonDataForPartyContactIdUpdate = TransformSalespersonForPartyContactIdUpdate(sourceSalespersonData);
 
       WriteTargetData(transformedSalespersonDataForPartyContactIdUpdate);
@@ -64,6 +64,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       FixedList<PartyData> transformedUsersDataForPartyContactIdUpdate = TransformUsersForPartyContactIdUpdate(sourceUsersData);
 
       WriteTargetData(transformedUsersDataForPartyContactIdUpdate);
+      */
     }
 
 
@@ -149,7 +150,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
                             .ToFixedList();
     }
 
-
+    /*
     private FixedList<PartyData> TransformSalespersonForPartyContactIdUpdate(FixedList<PartySalespersonNK> toTransformData) {
       return toTransformData.Select(x => TransformSalespersonForPartyContactIdUpdate(x))
                             .ToFixedList();
@@ -160,7 +161,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       return toTransformData.Select(x => TransformUsersForPartyContactIdUpdate(x))
                             .ToFixedList();
     }
-
+    */
 
     private PartyData Transform(PartyNK toTransformData) {
       string connectionString = GetEmpiriaConnectionString();
@@ -363,7 +364,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       }
     }
 
-
+    /*
     private PartyData TransformSalespersonForPartyContactIdUpdate(PartySalespersonNK toTransformData) {
       string connectionString = GetEmpiriaConnectionString();
       var dataServices = new TransformerDataServices(connectionString);
@@ -413,7 +414,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         Party_Contact_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario, "User")
       };
     }
-
+    */
 
     private int ReturnIdForPartyCode(string RFC) {
       bool first3AreLetters = RFC.Length >= 3 &&
