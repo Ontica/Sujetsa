@@ -12,6 +12,7 @@ using System;
 using Empiria.Data;
 using Empiria.Json;
 using Empiria.Trade.Integration.ETL.Data;
+using Newtonsoft.Json;
 
 namespace Empiria.Trade.Integration.ETL.Transformers {
 
@@ -307,7 +308,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Party_Identificators = toTransformData.Proveedor,
           Party_Roles = "Supplier",
           Party_Tags = toTransformData.RFC,
-          Party_Ext_Data = "",
+          Party_Ext_Data = JsonConvert.SerializeObject(new { GRUPOPROVEEDOR = toTransformData.GrupoProveedor }),
           Party_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Proveedor, toTransformData.Nombre, toTransformData.Email1, toTransformData.RFC),
           Party_Historic_Id = -1,
           Party_Start_Date = ExecutionServer.DateMinValue,
@@ -328,7 +329,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Party_Identificators = toTransformData.Proveedor,
           Party_Roles = "Supplier",
           Party_Tags = toTransformData.RFC,
-          Party_Ext_Data = "",
+          Party_Ext_Data = JsonConvert.SerializeObject(new { GRUPOPROVEEDOR = toTransformData.GrupoProveedor }),
           Party_Keywords = Empiria.EmpiriaString.BuildKeywords(toTransformData.Proveedor, toTransformData.Nombre, toTransformData.Email1, toTransformData.RFC),
           Party_Historic_Id = -1,
           Party_Start_Date = ExecutionServer.DateMinValue,
