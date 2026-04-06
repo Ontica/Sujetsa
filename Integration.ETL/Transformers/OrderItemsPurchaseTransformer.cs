@@ -191,12 +191,12 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       o.Order_Item_Requisition_Item_Id, o.Order_Item_Contract_Item_Id, o.Order_Item_Related_Item_Id, o.Order_Item_SKU_Id, o.Order_Item_Product_Id,
       o.Order_Item_Product_Code, o.Order_Item_Product_Name, o.Order_Item_Description, o.Order_Item_Justification, o.Order_Item_Product_Unit_Id,
       o.Order_Item_Requested_Qty, o.Order_Item_Min_Qty, o.Order_Item_Max_Qty, o.Order_Item_Qty, o.Order_Item_Start_Date, o.Order_Item_End_Date,
-      o.Order_Item_Currency_Id, o.Order_Item_Unit_Price, o.Order_Item_Discount, o.Order_Item_Price_Id, o.Order_Item_Project_Id, o.Order_Item_Budget_Id,
+      o.Order_Item_Currency_Id, o.Order_Item_Unit_Price, o.Order_Item_Discount, o.Order_Item_Penalty_Discount, o.Order_Item_Price_Id, o.Order_Item_Project_Id, o.Order_Item_Budget_Id,
       o.Order_Item_Budget_Account_Id, o.Order_Item_Budget_Entry_Id, o.Order_Item_Geo_Origin_Id, o.Order_Item_Location_Id, o.Order_Item_Config_Ext_Data,
       o.Order_Item_Conditions_Ext_Data, o.Order_Item_Spec_Ext_Data, o.Order_Item_Ext_Data, o.Order_Item_Keywords, o.Order_Item_Requested_By_Id, o.Order_Item_Requested_Time,
       o.Order_Item_Required_Time, o.Order_Item_Responsible_Id, o.Order_Item_Beneficiary_Id, o.Order_Item_Provider_Id, o.Order_Item_Received_By_Id,
-      o.Order_Item_Closing_Time, o.Order_Item_Closed_By_Id, o.Order_Item_Position, o.Order_Item_Posting_Time, o.Order_Item_Posted_By_Id, o.Order_Item_Status);
-
+      o.Order_Item_Closing_Time, o.Order_Item_Closed_By_Id, o.Order_Item_Position, o.Order_Item_Posting_Time, o.Order_Item_Posted_By_Id, o.Order_Item_Status
+);
       DataWriter.Execute(op);
     }
 

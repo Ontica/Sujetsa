@@ -129,7 +129,7 @@ namespace Empiria.Tests.Trade.Integration {
 
     [Fact]
     public void Should_Return_Valid_Row_Count() {
-      string tableName = "OMS_Order_Items where Order_Item_Type_Id != 4059";
+      string tableName = "OMS_Order_Items where Order_Item_Type_Id != 5059";
 
       string connectionString = GetEmpiriaConnectionString();
 
@@ -143,7 +143,7 @@ namespace Empiria.Tests.Trade.Integration {
 
     [Fact]
     public void Should_Store_DataTable() {
-      string destinationTableName = "NKsujetsaFB.sources.LINEA";
+      string destinationTableName = "NKsujetsaFB.sources.CAPA";
       DataTable dataTableTest = new DataTable();
 
       dataTableTest.Columns.Add("LINEA", typeof(string));
