@@ -75,11 +75,13 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     private Dictionary<string, OrderCacheData> PreloadOrderData(TransformerDataServices dataServices, List<string> notasCredito) {
       var cache = new Dictionary<string, OrderCacheData>();
       foreach (var notaCredito in notasCredito) {
-        cache[notaCredito] = new OrderCacheData {
+        cache[notaCredito] = new OrderCacheData { 
           OrderId = dataServices.GetOrderIdFromOMSOrders(notaCredito),
           RequestedUserId = dataServices.GetRequestedUserIdFromOMSOrders(notaCredito),
           ProviderId = dataServices.GetOrderItemProviderIdFromOMSOrders(notaCredito),
+          BeneficiaryId = dataServices.GetOrderItemBeneficiaryIdFromOMSOrders(notaCredito),
           PostedUserId = dataServices.GetPostedUserIdFromOMSOrders(notaCredito),
+          ResponsibleId = dataServices.GetOrderItemResponsibleIdFromOMSOrders(notaCredito),
           PostingTime = dataServices.GetPostedDateFromOMSOrders(notaCredito),
           Status = dataServices.GetOrderItemStatusFromOMSOrders(notaCredito)
         };
@@ -162,12 +164,12 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         Order_Item_Requested_By_Id = orderData.RequestedUserId,
         Order_Item_Requested_Time = ExecutionServer.DateMinValue,
         Order_Item_Required_Time = ExecutionServer.DateMaxValue,
-        Order_Item_Responsible_Id = -1,
-        Order_Item_Beneficiary_Id = -1,
+        Order_Item_Responsible_Id = orderData.ResponsibleId,
+        Order_Item_Beneficiary_Id = (int) orderData.BeneficiaryId,
         Order_Item_Provider_Id = (int) orderData.ProviderId,
         Order_Item_Received_By_Id = -1,
         Order_Item_Closing_Time = ExecutionServer.DateMaxValue,
-        Order_Item_Closed_By_Id = -1,
+        Order_Item_Closed_By_Id = orderData.PostedUserId,
         Order_Item_Position = source.Det,
         Order_Item_Posting_Time = orderData.PostingTime,
         Order_Item_Posted_By_Id = orderData.PostedUserId,
@@ -223,6 +225,12 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         get; set;
       }
       public long ProviderId {
+        get; set;
+      }
+      public long BeneficiaryId {
+        get; set;
+      }
+      public int ResponsibleId {
         get; set;
       }
       public int PostedUserId {

@@ -52,7 +52,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     private FixedList<OrderCreditNoteNK> ReadSourceData() {
       var sql = "SELECT O.NOTACREDITO,O.TIPO, O.TIPOPAGO, O.TIPO_NC, O.FECHA, O.CLIENTE,  O.USUARIO, O.OBSERVACIONES," +
         " O.CANCELADA,O.FECHACAPTURA, O.TIPOVENTA,O.FACTURA, O.CONCEPTODESC, O.POLIZA, O.ICMOV, O.CBPAGO,  O.SINC_S, " +
-        " O.SUBCLIENTE, O.MOTIVODEVOLUCION, O.ALMACEN,O.DEVOLUCION, O.USUARIOCANCELO, O.FECHA_CANCELO,O.MD, O.MONEDA," +
+        " O.SUBCLIENTE, O.MOTIVODEVOLUCION, O.ALMACEN, O.DEVOLUCION, O.USUARIOCANCELO, O.FECHA_CANCELO,O.MD, O.MONEDA," +
         " O.SERIE, O.CONTADOR, O.CBTIPO, O.MOTIVODESCUENTO, O.TRANSACCION, O.VENDEDOR, O.TELEMARKETER, O.BinaryChecksum," +
         " O.OldBinaryChecksum FROM sources.NOTACREDITO_TARGET O" +
         " Where O.Fecha >= '2025-12-01' AND O.TIPO = 'D' And(O.Oldbinarychecksum != O.Binarychecksum " +
@@ -81,7 +81,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         return new OrderData {
           Order_Id = IdGenerator.GetNextId("OMS_Orders"),
           Order_UID = System.Guid.NewGuid().ToString(),
-          Order_Type_Id = 5010, //4010,//4009,
+          Order_Type_Id = 5010,
           Order_Category_Id = -1,
           Order_Requisition_Id = -1,
           Order_Contract_Id = -1,
@@ -99,7 +99,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Requested_Time = ExecutionServer.DateMinValue,
           Order_Required_Time = ExecutionServer.DateMaxValue,
           Order_Responsible_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario, "User"),
-          Order_Beneficary_Id = dataServices.GetWareHouseIdFromCommonStorage(toTransformData.Almacen),
+          Order_Beneficary_Id = -100,
           Order_Provider_Id = dataServices.GetPartyIdFromParties(toTransformData.Cliente, "Client"),
           Order_Warehouse_Id = dataServices.GetWareHouseIdFromCommonStorage(toTransformData.Almacen),
           Order_Delivery_Place_Id = -1,
@@ -127,7 +127,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         return new OrderData {
           Order_Id = dataServices.GetOrderIdFromOMSOrders(toTransformData.NotaCredito),
           Order_UID = dataServices.GetOrderUIDFromOMSOrders(toTransformData.NotaCredito),
-          Order_Type_Id = 5010,//4010,//4009,
+          Order_Type_Id = 5010,
           Order_Category_Id = -1,
           Order_Requisition_Id = -1,
           Order_Contract_Id = -1,
@@ -145,7 +145,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           Order_Requested_Time = ExecutionServer.DateMinValue,
           Order_Required_Time = ExecutionServer.DateMaxValue,
           Order_Responsible_Id = dataServices.GetPartyIdFromParties(toTransformData.Usuario, "User"),
-          Order_Beneficary_Id = dataServices.GetWareHouseIdFromCommonStorage(toTransformData.Almacen),
+          Order_Beneficary_Id = -100,
           Order_Provider_Id = dataServices.GetPartyIdFromParties(toTransformData.Cliente, "Client"),
           Order_Warehouse_Id = dataServices.GetWareHouseIdFromCommonStorage(toTransformData.Almacen),
           Order_Delivery_Place_Id = -1,

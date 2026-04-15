@@ -81,7 +81,9 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           OrderId = dataServices.GetOrderIdFromOMSOrders(factura),
           RequestedUserId = dataServices.GetRequestedUserIdFromOMSOrders(factura),
           ProviderId = dataServices.GetOrderItemProviderIdFromOMSOrders(factura),
+          BeneficiaryId = dataServices.GetOrderItemBeneficiaryIdFromOMSOrders(factura),
           PostedUserId = dataServices.GetPostedUserIdFromOMSOrders(factura),
+          ResponsibleId = dataServices.GetOrderItemResponsibleIdFromOMSOrders(factura),
           PostingTime = dataServices.GetPostedDateFromOMSOrders(factura),
           Status = dataServices.GetOrderItemStatusFromOMSOrders(factura)
         };
@@ -122,7 +124,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         Order_Item_UID = isNewItem
           ? Guid.NewGuid().ToString()
           : dataServices.GetOrderUIDFromOMSOrderItems(orderData.OrderId, source.Det),
-        Order_Item_Type_Id = 5060,//4060,
+        Order_Item_Type_Id = 5060,
         Order_Item_Order_Id = orderData.OrderId,
         Order_Item_Requisition_Id = -1,
         Order_Item_Contract_Id = -1,
@@ -161,12 +163,12 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         Order_Item_Requested_By_Id = orderData.RequestedUserId,
         Order_Item_Requested_Time = ExecutionServer.DateMinValue,
         Order_Item_Required_Time = ExecutionServer.DateMaxValue,
-        Order_Item_Responsible_Id = -1,
-        Order_Item_Beneficiary_Id = -1,
+        Order_Item_Responsible_Id = orderData.ResponsibleId,
+        Order_Item_Beneficiary_Id =  (int) orderData.BeneficiaryId, 
         Order_Item_Provider_Id = (int) orderData.ProviderId,
         Order_Item_Received_By_Id = -1,
         Order_Item_Closing_Time = ExecutionServer.DateMaxValue,
-        Order_Item_Closed_By_Id = -1,
+        Order_Item_Closed_By_Id = orderData.PostedUserId,
         Order_Item_Position = source.Det,
         Order_Item_Posting_Time = orderData.PostingTime,
         Order_Item_Posted_By_Id = orderData.PostedUserId,
@@ -223,6 +225,13 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
         get; set;
       }
       public long ProviderId {
+        get; set;
+      }
+      public long BeneficiaryId {
+        get; set;
+      }
+      
+      public int ResponsibleId {
         get; set;
       }
       public int PostedUserId {

@@ -147,6 +147,16 @@ namespace Empiria.Trade.Integration.ETL.Data {
       }
     }
 
+    
+    internal int GetOrderItemBeneficiaryIdFromOMSOrders(string orden) {
+      Assertion.Require(orden, nameof(orden));
+      using (SqlConnection dbConnection = OpenConnection()) {
+        using (SqlCommand cmd = new SqlCommand($"SELECT Order_Beneficary_Id FROM dbo.OMS_Orders WHERE Order_No = '{orden}'", dbConnection)) {
+          var result = cmd.ExecuteScalar();
+          return (int) result;
+        }
+      }
+    }
 
     internal int GetOrderItemProviderIdFromOMSOrders(string orden) {
       Assertion.Require(orden, nameof(orden));
@@ -305,6 +315,19 @@ namespace Empiria.Trade.Integration.ETL.Data {
           var result = cmd.ExecuteScalar();
 
           return Convert.ToDateTime(result);
+        }
+      }
+    }
+
+        
+    internal int GetOrderItemResponsibleIdFromOMSOrders(string orden) {
+      Assertion.Require(orden, nameof(orden));
+      using (SqlConnection dbConnection = OpenConnection()) {
+
+        using (SqlCommand cmd = new SqlCommand($"SELECT Order_Responsible_Id FROM dbo.OMS_Orders WHERE Order_No = '{orden}'", dbConnection)) {
+          var result = cmd.ExecuteScalar();
+
+          return (int) result;
         }
       }
     }
