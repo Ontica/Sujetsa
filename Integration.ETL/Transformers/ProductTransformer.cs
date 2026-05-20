@@ -43,16 +43,34 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
     private FixedList<ProductNK> ReadSourceData() {
       const string sql = @"
-        SELECT PT.PRODUCTO, PT.DESCRIPCION, 
-        ISNULL(nullif(ltrim(rtrim(PT.GRUPO)),''),'-1') as GRUPO,
-        ISNULL(nullif(ltrim(rtrim(PT.SUBGRUPO)),''),'-1') as SUBGRUPO,
-        PT.UNIDAD,
-        PT.ALTA, PT.BAJA, PT.EMPAQUE, PT.COSTO_BASE, 
-        PT.BinaryChecksum, PT.OldBinaryChecksum
-        FROM sources.PRODUCTO_TARGET PT
-        WHERE PT.OldBinaryChecksum != PT.BinaryChecksum 
-           OR PT.OldBinaryChecksum = 0 
-           OR PT.OldBinaryChecksum IS NULL";
+      SELECT PT.PRODUCTO, PT.DESCRIPCION, 
+      ISNULL(NULLIF(LTRIM(RTRIM(PT.GRUPO)), ''), '-1') AS GRUPO,
+      ISNULL(NULLIF(LTRIM(RTRIM(PT.SUBGRUPO)), ''), '-1') AS SUBGRUPO,
+      PT.UNIDAD,  PT.ALTA,     PT.BAJA,     PT.EMPAQUE,     PT.COSTO_BASE,     PT.LINEA,    L.NOMBRE AS LINEA_NOMBRE,
+      PT.MARCA,   M.NOMBRE AS MARCA_NOMBRE, PT.CATEGORIA, PT.SUBCATEGORIA, 
+      PT.COLOR, C.DESCRIPCION AS COLOR_NOMBRE,PT.TALLA, 
+      T.DESCRIPCION AS TALLA_NOMBRE, CAST(PT.PESO AS VARCHAR(20)) AS PESO, PT.MODELO,
+      MO.DESCRIPCION AS MODELO_NOMBRE, PT.SECCION, 
+      S.SECCION AS SECCION_NOMBRE,
+      PT.USR1         AS DIAMETRO,
+      PT.USR2         AS LARGO,
+      PT.BinaryChecksum,   PT.OldBinaryChecksum
+      FROM [sources].[PRODUCTO_TARGET] PT
+      LEFT JOIN [sources].[LINEA_TARGET] L
+      ON PT.LINEA = L.LINEA
+      LEFT JOIN [sources].[MARCA_TARGET] M
+      ON PT.MARCA = M.MARCA
+      LEFT JOIN [sources].[COLOR_TARGET] C
+      ON PT.COLOR = C.COLOR
+      LEFT JOIN [sources].[TALLA_TARGET] T
+      ON PT.TALLA = T.TALLA
+      LEFT JOIN [sources].[MODELO_TARGET] MO
+      ON  PT.MODELO = MO.MODELO 
+      LEFT JOIN [sources].[SECCION_TARGET] S
+      ON  PT.SECCION = S.SECCION 
+      WHERE PT.OldBinaryChecksum != PT.BinaryChecksum 
+      OR PT.OldBinaryChecksum = 0 
+      OR PT.OldBinaryChecksum IS NULL;";
 
       var inputDataService = new TransformerDataServices(_nkConnectionString);
       return inputDataService.ReadData<ProductNK>(sql);
@@ -69,20 +87,11 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       var productos = toTransformData.Select(x => x.Producto).Distinct().ToList();
       var unidades = toTransformData.Select(x => x.UnidadMedida).Distinct().ToList();
 
-      // Crear diccionario de combinaciones únicas Grupo-SubGrupo
-      var gruposSubgruposDict = new Dictionary<string, (string Grupo, string SubGrupo)>();
-      foreach (var item in toTransformData) {
-        string key = $"{item.Grupo}|{item.SubGrupo}";
-        if (!gruposSubgruposDict.ContainsKey(key)) {
-          gruposSubgruposDict[key] = (item.Grupo, item.SubGrupo);
-        }
-      }
 
       var productCache = PreloadProductData(dataServices, productos);
       var unitCache = PreloadUnitData(dataServices, unidades);
-      var categoryCache = PreloadCategoryData(dataServices, gruposSubgruposDict);
-
-      return toTransformData.Select(x => Transform(x, dataServices, productCache, unitCache, categoryCache))
+      
+      return toTransformData.Select(x => Transform(x, dataServices, productCache, unitCache))
                             .ToFixedList();
     }
 
@@ -95,7 +104,7 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
             ProductUID = dataServices.GetProductUIDFromOMSProducts(producto)
           };
         } catch {
-          // El producto no existe aún (nuevo), se creará en Transform
+          // El producto no existe aún (nuevo), se creará 
           cache[producto] = null;
         }
       }
@@ -109,43 +118,43 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       }
       return cache;
     }
-
-    private Dictionary<string, CategoryCacheData> PreloadCategoryData(
-      TransformerDataServices dataServices,
-      Dictionary<string, (string Grupo, string SubGrupo)> gruposSubgrupos) {
-
-      var cache = new Dictionary<string, CategoryCacheData>();
-      foreach (var kvp in gruposSubgrupos) {
-        cache[kvp.Key] = new CategoryCacheData {
-          CategoryId = -1, 
-          Tags = dataServices.GetObjectTagsFromCommonStorage(kvp.Value.Grupo, kvp.Value.SubGrupo)
-        };
-      }
-      return cache;
-    }
-
+    
     private ProductData Transform(ProductNK source,
                                   TransformerDataServices dataServices,
                                   Dictionary<string, ProductCacheData> productCache,
-                                  Dictionary<string, int> unitCache,
-                                  Dictionary<string, CategoryCacheData> categoryCache) {
+                                  Dictionary<string, int> unitCache
+                                  ) {
 
       var isNewProduct = source.OldBinaryChecksum == 0;
       var costoBase = source.CostoBase.ToString();
-      var categoryKey = $"{source.Grupo}|{source.SubGrupo}";
-      var categoryData = categoryCache[categoryKey];
+
 
       // Pre-serializar JSON que se usa múltiples veces
-      var identificators = JsonConvert.SerializeObject(new {
+      var ext_data = JsonConvert.SerializeObject(new {
         source.Grupo,
         source.SubGrupo,
-        Object_Category_Id = source.Grupo,
-        Object_Classification_Id = source.SubGrupo,
-        CostoBase = costoBase
-      });
-
-      var attributes = JsonConvert.SerializeObject(new {
+        CostoBase = costoBase,
         packagingSize = source.Empaque.ToString()
+      });
+      
+      
+      var attributes = JsonConvert.SerializeObject(new {
+        Linea = source.Linea,
+        Linea_Nombre = source.LineaNombre,
+        Marca = source.Marca,
+        Marca_Nombre = source.MarcaNombre,
+        Categoria = source.Categoria,
+        Color = source.Color,
+        Color_Nombre = source.ColorNombre,
+        Talla = source.Talla,
+        Talla_Nombre = source.TallaNombre,
+        Diametro = source.Usr1,
+        Largo = source.Usr2,
+        Peso = source.Peso,
+        Modelo = source.Modelo,
+        Modelo_Nombre = source.ModeloNombre,
+        Seccion = source.Seccion,
+        Seccion_Nombre = source.SeccionNombre
       });
 
       var keywords = EmpiriaString.BuildKeywords(
@@ -167,17 +176,21 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
           ? Guid.NewGuid().ToString()
           : existingProduct.ProductUID,
         Product_Type_Id = 536,
-        Product_Category_Id = categoryData.CategoryId,
+        Product_Category_Id = -1,
+        Base_Product_Id = -1,
+        Vendor_Id = - 100,
         Product_Name = source.Producto,
         Product_Description = source.Descripcion,
         Product_Internal_Code = source.Producto,
-        Product_Identificators = identificators,
+        Product_Identificators = string.Empty, 
         Product_Roles = string.Empty,
-        Product_Tags = categoryData.Tags,
+        Product_Tags = (source.Producto?.Contains('-') == true
+        ? source.Producto.Substring(0, source.Producto.IndexOf('-'))
+        : source.Producto ?? string.Empty).Trim().ToUpper(),
         Product_Attributes = attributes,
         Product_Base_Unit_Id = unitCache[source.UnidadMedida],
         Product_Manager_Id = 1,
-        Product_Ext_Data = identificators,
+        Product_Ext_Data = ext_data,
         Product_Keywords = keywords,
         Product_Start_Date = source.FechaAlta,
         Product_End_Date = ExecutionServer.DateMaxValue,
@@ -201,7 +214,8 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
 
     private void WriteTargetData(ProductData o) {
       var op = DataOperation.Parse("write_OMS_Product",
-        o.Product_Id, o.Product_UID, o.Product_Type_Id, o.Product_Category_Id, o.Product_Name,
+        o.Product_Id, o.Product_UID, o.Product_Type_Id, o.Product_Category_Id,
+        o.Base_Product_Id, o.Vendor_Id , o.Product_Name,
         o.Product_Description, o.Product_Internal_Code, o.Product_Identificators, o.Product_Roles,
         o.Product_Tags, o.Product_Attributes, o.Product_Base_Unit_Id, o.Product_Manager_Id,
         o.Product_Ext_Data, o.Product_Keywords, o.Product_Start_Date, o.Product_End_Date,

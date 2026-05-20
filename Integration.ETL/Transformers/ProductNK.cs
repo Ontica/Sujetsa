@@ -69,7 +69,87 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
     internal int OldBinaryChecksum {
       get; set;
     }
-    
+
+    [DataField("LINEA")]
+    internal string Linea {
+      get; set;
+    }
+
+    [DataField("LINEA_NOMBRE")]
+    internal string LineaNombre {
+      get; set;
+    }
+
+    [DataField("MARCA")]
+    internal string Marca {
+      get; set;
+    }
+
+    [DataField("MARCA_NOMBRE")]
+    internal string MarcaNombre {
+      get; set;
+    }
+
+    [DataField("CATEGORIA")]
+    internal string Categoria {
+      get; set;
+    }
+
+    [DataField("COLOR")]
+    internal string Color {
+      get; set;
+    }
+
+    [DataField("COLOR_NOMBRE")]
+    internal string ColorNombre {
+      get; set;
+    }
+
+    [DataField("TALLA")]
+    internal string Talla {
+      get; set;
+    }
+
+    [DataField("TALLA_NOMBRE")]
+    internal string TallaNombre {
+      get; set;
+    }
+
+    [DataField("DIAMETRO")]
+    internal string Usr1 {
+      get; set;
+    }
+
+    [DataField("LARGO")]
+    internal string Usr2 {
+      get; set;
+    }
+
+    [DataField("PESO")]
+    internal string Peso {
+      get; set;
+    }
+
+    [DataField("MODELO")]
+    internal string Modelo {
+      get; set;
+    }
+
+    [DataField("MODELO_NOMBRE")]
+    internal string ModeloNombre {
+      get; set;
+    }
+
+    [DataField("SECCION")]
+    internal string Seccion {
+      get; set;
+    }
+
+    [DataField("SECCION_NOMBRE")]
+    internal string SeccionNombre {
+      get; set;
+    }
+
   }  // class ProductNK
 
 }  // namespace Empiria.Trade.Integration.ETL.Transformers

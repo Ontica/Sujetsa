@@ -120,6 +120,16 @@ namespace Empiria.Trade.Integration.ETL.Transformers {
       get; set;
     }
 
+    [DataField("Base_Product_Id")]
+    internal int Base_Product_Id {
+      get; set;
+    }
+
+    [DataField("Vendor_Id")]
+    internal int Vendor_Id {
+      get; set;
+    }
+
   }  // class ProductData
 
 }  // namespace Empiria.Trade.Integration.ETL.Transformers
