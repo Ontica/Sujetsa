@@ -15,9 +15,8 @@
     <PackageProjectUrl>https://github.com/Ontica/Empiria.Operations.Management/tree/master/Reporting.Tests</PackageProjectUrl>
     <PackageIconUrl>http://www.ontica.org/logo.ontica.png</PackageIconUrl>
     <PackageTags>
-      administración de las operaciones, requisiciones, proveeduría, suministro, inventarios, almacenes, contratos,
-      administración publica, gobierno electrónico, activo fijo, gastos, Banca de desarrollo, BANOBRAS, México,
-      pruebas unitarias, pruebas integración
+      administración de las operaciones, requisiciones, proveeduría, suministro, ventyas, compras, inventarios, almacenes, contratos,
+      gastos, pruebas unitarias, pruebas integración, México
     </PackageTags>
     <RepositoryUrl>https://github.com/Ontica/Empiria.Operations.Management</RepositoryUrl>
     <RepositoryType>git</RepositoryType>

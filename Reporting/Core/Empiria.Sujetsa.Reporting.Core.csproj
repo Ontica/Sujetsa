@@ -16,8 +16,7 @@
     <PackageProjectUrl>https://github.com/Ontica/Empiria.Operations.Management/tree/master/Reporting</PackageProjectUrl>
     <PackageIconUrl>http://www.ontica.org/logo.ontica.png</PackageIconUrl>
     <PackageTags>
-      administración de las operaciones, requisiciones, proveeduría, suministro, inventarios, almacenes, contratos,
-      administración publica, gobierno electrónico, activo fijo, gastos, Banca de desarrollo, México
+      proveeduría, suministro, inventarios, almacenes, contratos, activo fijo, gastos, México
     </PackageTags>
     <RepositoryUrl>https://github.com/Ontica/Empiria.Operations.Management</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
