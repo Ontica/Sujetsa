@@ -23,6 +23,7 @@ namespace Empiria.Sujetsa.WebApi {
     [Route("v8/order-management/inventory-orders/{orderUID}/items/export-report")]
     public SingleObjectModel ExportInventoryItemsReport([FromUri] string orderUID) {
 
+      Assertion.RequireFail("Funcionalidad en proceso de desarrollo.");
 
       using (var usecases = InventoryEntryUseCases.UseCaseInteractor()) {
 
