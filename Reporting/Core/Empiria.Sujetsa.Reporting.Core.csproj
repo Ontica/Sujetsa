@@ -3,8 +3,8 @@
     <Company>Ontica</Company>
     <Product>Empiria Operations Management Reporting Module</Product>
     <Description>
-      This module is part of the Operations Management System, and provides
-      services used to generate operations management reports.
+      This module is part of the trade System, and provides
+      services used to generate trade reports.
     </Description>
     <Copyright>(c) 2021-2026. La Vía Óntica SC, Ontica LLC y de los autores. Todos los derechos reservados.</Copyright>
     <Version>8.0.0</Version>
@@ -12,21 +12,21 @@
     <FileVersion>8.0.0.0</FileVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageLicenseUrl>https://github.com/Ontica/Empiria.Operations.Management/blob/master/Reporting/Core/LICENSE.txt</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/Ontica/Empiria.Operations.Management/tree/master/Reporting</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/Ontica/Sujetsa/blob/master/Reporting/Core/LICENSE.txt</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Ontica/Sujetsa/tree/master/Reporting</PackageProjectUrl>
     <PackageIconUrl>http://www.ontica.org/logo.ontica.png</PackageIconUrl>
     <PackageTags>
       proveeduría, suministro, inventarios, almacenes, contratos, activo fijo, gastos, México
     </PackageTags>
-    <RepositoryUrl>https://github.com/Ontica/Empiria.Operations.Management</RepositoryUrl>
+    <RepositoryUrl>https://github.com/Ontica/Sujetsa/tree/master/Reporting/Core</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <Authors>Ontica</Authors>
     <TargetFramework>net48</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <NeutralLanguage></NeutralLanguage>
     <Configurations>Debug;Release;Multisolutions</Configurations>
-    <AssemblyName>Empiria.Operations.Reporting.Core</AssemblyName>
-    <RootNamespace>Empiria.Operations.Reporting</RootNamespace>
+    <AssemblyName>Empiria.Sujetsa.Reporting.Core</AssemblyName>
+    <RootNamespace>Empiria.Sujetsa.Reporting.Core</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' Or '$(Configuration)|$(Platform)'=='Multisolutions|AnyCPU' ">
     <OutputPath>bin\</OutputPath>
@@ -69,5 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\operations.management\Inventory\Core\Empiria.Inventory.Core.csproj" />
+    <ProjectReference Include="..\..\..\trade\Core\Empiria.Trade.Core.csproj" />
+    <ProjectReference Include="..\..\..\trade\Procurement\Empiria.Trade.Procurement.csproj" />
   </ItemGroup>
 </Project>
