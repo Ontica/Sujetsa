@@ -68,9 +68,9 @@ namespace Empiria.Sujetsa.Reporting {
 
       var orderSetTable = new OrdersFillOutExcelExporter();
 
-      switch (_templateConfig.Name) {
+      switch (_templateConfig.UID) {
 
-        case "PurchaseOrder":
+        case "OrdersReportingService.PurchaseOrder":
 
           PurchaseOrderDto dto = (PurchaseOrderDto) orderDto;
 

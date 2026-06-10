@@ -30,13 +30,20 @@ namespace Empiria.Sujetsa.Reporting {
 
     public void FillOutPurchaseOrder(ExcelFile _excelFile, PurchaseOrderDto order) {
 
-      _excelFile.SetCell($"B2", order.OrderNumber);
-      _excelFile.SetCell($"D2", order.Supplier.Name);
-      _excelFile.SetCell($"B3", order.ShippingMethod.ToString());
-      _excelFile.SetCell($"D3", order.PaymentConditions.ToString());
-      _excelFile.SetCell($"B4", order.Notes);
-      _excelFile.SetCell($"D4", order.ScheduledTime);
-      _excelFile.SetCell($"D4", order.PostingTime);
+      var ShippingMethod = order.ShippingMethod.ToString() != "None" ?
+                              order.ShippingMethod.ToString() : "";
+
+      var paymentConditions = order.PaymentConditions.ToString() != "None" ?
+                              order.PaymentConditions.ToString() : "";
+
+      _excelFile.SetCell($"B4", order.OrderNumber);
+      _excelFile.SetCell($"C4", $"Proveedor: {order.Supplier.Name}");
+      _excelFile.SetCell($"B5", ShippingMethod);
+      _excelFile.SetCell($"C5", $"Condiciones de pago: {paymentConditions}");
+      //_excelFile.SetCell($"A6", order.ScheduledTime);
+      _excelFile.SetCell($"C6", $"Observaciones: {order.Notes}");
+      
+      //_excelFile.SetCell($"E6", order.PostingTime);
 
       FillOutPurchaseOrderItems(_excelFile, order);
     }
@@ -48,7 +55,7 @@ namespace Empiria.Sujetsa.Reporting {
     private void FillOutPurchaseOrderItems(ExcelFile _excelFile, PurchaseOrderDto order) {
 
       var items = order.Items.Select(x => x);
-      int i = 7;
+      int i = 8;
       foreach (var item in items) {
 
         _excelFile.SetCell($"A{i}", item.ProductCode);
@@ -63,7 +70,7 @@ namespace Empiria.Sujetsa.Reporting {
 
       _excelFile.SetCell($"A{i}", order.Totals.ItemsCount);
       _excelFile.SetCell($"F{i}", order.Totals.ItemsTotal);
-      _excelFile.SetRowBold(i, 5);
+      _excelFile.SetRowBold(i, 6);
       //_excelFile.RemoveColumn("K");
     }
 

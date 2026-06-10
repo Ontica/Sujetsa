@@ -11,6 +11,8 @@ using Empiria.Inventory.Adapters;
 using Empiria.Office;
 using Empiria.Services;
 using Empiria.Storage;
+using Empiria.Trade.Core;
+using Empiria.Trade.Procurement.Adapters;
 
 namespace Empiria.Sujetsa.Reporting {
 
@@ -19,27 +21,25 @@ namespace Empiria.Sujetsa.Reporting {
 
     #region Constructors and parsers
 
-    private OrdersReportingService() {
-      // no-op
+    public OrdersReportingService() {
     }
-
-    static public OrdersReportingService ServiceInteractor() {
-      return Service.CreateInstance<OrdersReportingService>();
-    }
+    //static public OrdersReportingService ServiceInteractor() {
+    //  return Service.CreateInstance<OrdersReportingService>();
+    //}
 
     #endregion Constructors and parsers
 
 
     #region Services
 
-    public FileDto Export(FixedList<InventoryEntryReportDto> entries) {
+    public FileDto Export(IOrderDto entries) {
       Assertion.Require(entries, nameof(entries));
 
       var templateUID = $"{this.GetType().Name}.PurchaseOrder";
 
       var templateConfig = FileTemplateConfig.Parse(templateUID);
 
-      var exporter = new InventoryEntryToExcelBuilder(templateConfig);
+      var exporter = new OrdersExcelExporter(templateConfig);
 
       ExcelFile excelFile = exporter.CreateExcelFile(entries);
 

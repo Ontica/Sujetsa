@@ -12,6 +12,8 @@ using Empiria.Inventory.Adapters;
 using Empiria.Inventory.UseCases;
 using Empiria.Storage;
 using Empiria.Sujetsa.Reporting;
+using Empiria.Trade.Core;
+using Empiria.Trade.Procurement.UseCases;
 using Empiria.WebApi;
 
 namespace Empiria.Sujetsa.WebApi {
@@ -34,6 +36,23 @@ namespace Empiria.Sujetsa.WebApi {
         using (var reporting = InventoryEntryReportingService.ServiceInteractor()) {
           report = reporting.ExportInventoryEntryReportToExcel(reportentries);
         }
+
+        return new SingleObjectModel(this.Request, report);
+      }
+    }
+
+
+    [HttpGet]
+    [Route("v4/trade/procurement/purchase-orders/{purchaseOrderUID:guid}/export")]
+    public SingleObjectModel ExportOrderToExcel([FromUri] string purchaseOrderUID) {
+
+      using (var usecases = PurchaseOrderUseCases.UseCaseInteractor()) {
+
+        IOrderDto reportentries = usecases.GetPurchaseOrderDto(purchaseOrderUID);
+
+        var exporter = new OrdersReportingService();
+
+        FileDto report = exporter.Export(reportentries);
 
         return new SingleObjectModel(this.Request, report);
       }
