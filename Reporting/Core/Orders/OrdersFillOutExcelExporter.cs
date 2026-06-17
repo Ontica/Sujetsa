@@ -22,6 +22,9 @@ namespace Empiria.Sujetsa.Reporting {
   /// <summary>Fill out table info for a Microsoft Excel file with order and item entries information.</summary>
   internal class OrdersFillOutExcelExporter {
 
+
+    private readonly System.Drawing.Color ROW_COLOR = System.Drawing.Color.FromArgb(235, 235, 235);
+
     internal OrdersFillOutExcelExporter() {
 
     }
@@ -31,10 +34,10 @@ namespace Empiria.Sujetsa.Reporting {
     public void FillOutPurchaseOrder(ExcelFile _excelFile, PurchaseOrderDto order) {
 
       var ShippingMethod = order.ShippingMethod.ToString() != "None" ?
-                              order.ShippingMethod.ToString() : "";
+                              order.ShippingMethod.ToString() : "-";
 
       var paymentConditions = order.PaymentConditions.ToString() != "None" ?
-                              order.PaymentConditions.ToString() : "";
+                              order.PaymentConditions.ToString() : "-";
 
       _excelFile.SetCell($"B4", order.OrderNumber);
       _excelFile.SetCell($"C4", $"Proveedor: {order.Supplier.Name}");
@@ -60,17 +63,19 @@ namespace Empiria.Sujetsa.Reporting {
 
         _excelFile.SetCell($"A{i}", item.ProductCode);
         _excelFile.SetCell($"B{i}", item.PresentationName);
-        _excelFile.SetCell($"C{i}", item.Notes);
-        _excelFile.SetCell($"D{i}", item.Quantity);
-        _excelFile.SetCell($"E{i}", item.Price);
-        _excelFile.SetCell($"F{i}", item.Total);
+        _excelFile.SetCell($"C{i}", item.Description);
+        _excelFile.SetCell($"D{i}", item.TotalUnits);
+        _excelFile.SetCell($"E{i}", item.Quantity);
+        _excelFile.SetCell($"F{i}", item.Price);
+        _excelFile.SetCell($"G{i}", item.Total);
 
         i++;
       }
 
       _excelFile.SetCell($"A{i}", order.Totals.ItemsCount);
-      _excelFile.SetCell($"F{i}", order.Totals.ItemsTotal);
-      _excelFile.SetRowBold(i, 6);
+      _excelFile.SetCell($"G{i}", order.Totals.ItemsTotal);
+      _excelFile.SetRowBold(i, 7);
+      _excelFile.SetRowBackgroundStyle(i, 7, ROW_COLOR);
       //_excelFile.RemoveColumn("K");
     }
 
