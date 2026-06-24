@@ -12,8 +12,7 @@ using System;
 
 using Empiria.Office;
 using Empiria.Storage;
-
-using Empiria.Inventory.Adapters;
+using Empiria.Trade.Inventory.Adapters;
 
 namespace Empiria.Sujetsa.Reporting {
 

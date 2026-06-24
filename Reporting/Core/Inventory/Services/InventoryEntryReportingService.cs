@@ -8,11 +8,11 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Inventory.Adapters;
-
 using Empiria.Office;
 using Empiria.Services;
 using Empiria.Storage;
+
+using Empiria.Trade.Inventory.Adapters;
 
 namespace Empiria.Sujetsa.Reporting {
 

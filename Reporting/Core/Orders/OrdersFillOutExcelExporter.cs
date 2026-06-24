@@ -62,7 +62,7 @@ namespace Empiria.Sujetsa.Reporting {
       foreach (var item in items) {
 
         _excelFile.SetCell($"A{i}", item.ProductCode);
-        _excelFile.SetCell($"B{i}", item.PresentationName);
+        _excelFile.SetCell($"B{i}", $"{item.PackingSmallBag} - {item.PresentationName}");
         _excelFile.SetCell($"C{i}", item.Description);
         _excelFile.SetCell($"D{i}", item.TotalUnits);
         _excelFile.SetCell($"E{i}", item.Quantity);

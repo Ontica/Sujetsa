@@ -8,12 +8,15 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System.Web.Http;
-using Empiria.Inventory.Adapters;
-using Empiria.Inventory.UseCases;
+
 using Empiria.Storage;
+
 using Empiria.Sujetsa.Reporting;
 using Empiria.Trade.Core;
+using Empiria.Trade.Inventory.Adapters;
+using Empiria.Trade.Inventory.UseCases;
 using Empiria.Trade.Procurement.UseCases;
+
 using Empiria.WebApi;
 
 namespace Empiria.Sujetsa.WebApi {
@@ -25,11 +28,11 @@ namespace Empiria.Sujetsa.WebApi {
     [Route("v8/order-management/inventory-orders/{orderUID}/items/export-report")]
     public SingleObjectModel ExportInventoryItemsReport([FromUri] string orderUID) {
 
-      Assertion.RequireFail("Funcionalidad en proceso de desarrollo.");
-
       using (var usecases = InventoryEntryUseCases.UseCaseInteractor()) {
+        
+        InventoryOrder inventoryOrder = InventoryOrder.Parse(orderUID);
 
-        FixedList<InventoryEntryReportDto> reportentries = usecases.GetInventoryEntryReport(orderUID);
+        FixedList<InventoryEntryReportDto> reportentries = usecases.GetInventoryEntryReport(inventoryOrder.Id);
 
         FileDto report;
 

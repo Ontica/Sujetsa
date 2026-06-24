@@ -32,24 +32,6 @@ namespace Empiria.Sujetsa.WebApi {
       return new SingleObjectModel(this.Request, message);
     }
 
-    [HttpPost]
-    [Route("v4/trade-sujetsa/inventory/orders/{inventoryOrderUID:guid}/close")]
-    public SingleObjectModel CloseInventoryOrder([FromUri] string inventoryOrderUID) {
-
-      using (var usecases = InventoryOrderUseCases.UseCaseInteractor()) {
-
-        InventoryHolderDto inventoryOrder = usecases.CloseInventoryOrder(inventoryOrderUID);
-
-        var etlService = new ETLService();
-
-        Task.Run(() => etlService.ExecuteReverseETL(inventoryOrder.Order.OrderNo))
-            .ConfigureAwait(false)
-            .GetAwaiter();
-
-        return new SingleObjectModel(this.Request, inventoryOrder);
-      }
-    }
-
 
     [HttpPost]
     [Route("v4/trade-sujetsa/inventory/orders/search")]
