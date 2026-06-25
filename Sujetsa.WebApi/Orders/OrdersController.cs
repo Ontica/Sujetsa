@@ -9,8 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System.Threading.Tasks;
 using System.Web.Http;
-using Empiria.Inventory.Adapters;
-using Empiria.Inventory.UseCases;
+
 using Empiria.Trade.Integration.ETL;
 using Empiria.WebApi;
 
@@ -30,21 +29,6 @@ namespace Empiria.Sujetsa.WebApi {
       var message = "Esto es una prueba";
 
       return new SingleObjectModel(this.Request, message);
-    }
-
-
-    [HttpPost]
-    [Route("v4/trade-sujetsa/inventory/orders/search")]
-    public SingleObjectModel SearchInventoryOrderList([FromBody] InventoryOrderQuery query) {
-
-      ETLServiceInvoker.Start();
-
-      using (var usecases = InventoryOrderUseCases.UseCaseInteractor()) {
-
-        InventoryOrderDataDto inventoryOrderDto = usecases.SearchInventoryOrder(query);
-
-        return new SingleObjectModel(this.Request, inventoryOrderDto);
-      }
     }
 
 
