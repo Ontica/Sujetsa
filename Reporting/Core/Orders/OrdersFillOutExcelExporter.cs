@@ -63,7 +63,7 @@ namespace Empiria.Sujetsa.Reporting {
 
         _excelFile.SetCell($"A{i}", item.ProductCode);
         _excelFile.SetCell($"B{i}", $"{item.PackingSmallBag} - {item.PresentationName}");
-        _excelFile.SetCell($"C{i}", item.Description);
+        _excelFile.SetCell($"C{i}", $"{item.Description}, {item.ProductAttrs}");
         _excelFile.SetCell($"D{i}", item.TotalUnits);
         _excelFile.SetCell($"E{i}", item.Quantity);
         _excelFile.SetCell($"F{i}", item.Price);
@@ -76,7 +76,6 @@ namespace Empiria.Sujetsa.Reporting {
       _excelFile.SetCell($"G{i}", order.Totals.ItemsTotal);
       _excelFile.SetRowBold(i, 7);
       _excelFile.SetRowBackgroundStyle(i, 7, ROW_COLOR);
-      //_excelFile.RemoveColumn("K");
     }
 
     #endregion Private methods

@@ -21,11 +21,9 @@ namespace Empiria.Sujetsa.Reporting {
     #region Constructors and parsers
 
     public OrdersReportingService() {
-    }
-    //static public OrdersReportingService ServiceInteractor() {
-    //  return Service.CreateInstance<OrdersReportingService>();
-    //}
 
+    }
+    
     #endregion Constructors and parsers
 
 
