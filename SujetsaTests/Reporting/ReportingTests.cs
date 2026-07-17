@@ -27,7 +27,7 @@ namespace Empiria.Trade.Tests.Reporting {
 
       using (var usecases = PurchaseOrderUseCases.UseCaseInteractor()) {
 
-        string orderUID = "858aeae2-8989-4401-9780-783aab9c9744";
+        string orderUID = "62322440-38c3-46d4-9593-b31c98455389";
 
         IOrderDto reportentries = usecases.GetPurchaseOrderDto(orderUID);
 
