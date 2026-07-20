@@ -50,9 +50,12 @@ namespace Empiria.Sujetsa.Reporting {
 
     private void FillOutPurchaseOrderItems(ExcelFile _excelFile, PurchaseOrderDto order) {
 
+      var currencyCode = Currency.Parse(order.Currency.UID).ISOCode;
       var items = order.Items.Select(x => x);
+      
+      _excelFile.SetCell($"F7", $"{currencyCode}/Mpcs");
+      
       int i = 8;
-
       foreach (var item in items) {
 
         var totalUnits = item.Quantity * item.PackagingSize;
@@ -74,7 +77,7 @@ namespace Empiria.Sujetsa.Reporting {
 
       _excelFile.SetCell($"A{i}", order.Totals.ItemsCount);
       _excelFile.SetCell($"E{i}", "Total Amount:");
-      _excelFile.SetCell($"F{i}", Currency.Parse(order.Currency.UID).ISOCode);
+      _excelFile.SetCell($"F{i}", currencyCode);
       _excelFile.SetCell($"G{i}", items.Sum(x => x.Total));
       _excelFile.SetRowBold(i, 7);
       _excelFile.SetRowBackgroundStyle(i, 7, TOTAL_ROW_COLOR);
