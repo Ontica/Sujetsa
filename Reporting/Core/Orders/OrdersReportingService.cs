@@ -43,6 +43,21 @@ namespace Empiria.Sujetsa.Reporting {
       return excelFile.ToFileDto();
     }
 
+
+    public FileDto PrintLabels(IOrderDto entries) {
+      Assertion.Require(entries, nameof(entries));
+
+      var templateUID = $"{this.GetType().Name}.PurchaseOrderLabels";
+
+      var templateConfig = FileTemplateConfig.Parse(templateUID);
+
+      var exporter = new OrdersExcelExporter(templateConfig);
+
+      ExcelFile excelFile = exporter.CreateExcelFile(entries);
+
+      return excelFile.ToFileDto();
+    }
+
     #endregion Services
 
   } // class OrdersReportingService

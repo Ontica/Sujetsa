@@ -77,6 +77,13 @@ namespace Empiria.Sujetsa.Reporting {
           orderSetTable.FillOutPurchaseOrder(_excelFile, dto);
           return;
 
+        case "OrdersReportingService.PurchaseOrderLabels":
+
+          PurchaseOrderDto dtoLabels = (PurchaseOrderDto) orderDto;
+
+          orderSetTable.FillOutPurchaseOrderLabels(_excelFile, dtoLabels);
+          return;
+
         default:
           throw Assertion.EnsureNoReachThisCode();
       }

@@ -24,9 +24,17 @@ namespace Empiria.Sujetsa.Reporting {
   /// <summary>Fill out table info for a Microsoft Excel file with order and item entries information.</summary>
   internal class OrdersFillOutExcelExporter {
 
-
     private readonly System.Drawing.Color DESCRIPCTION_ROW_COLOR = System.Drawing.Color.FromArgb(235, 235, 235);
     private readonly System.Drawing.Color TOTAL_ROW_COLOR = System.Drawing.Color.FromArgb(155, 194, 230);
+
+    private readonly string vendor = "VATRE FASTENERS";
+    private readonly string labelFooter = "IMPORTADO POR VATRE FASTENERS S.A. DE C.V. " +
+      "AV. SIGLO XXI 7801-B/POB. LOS NEGRITOS C.P.20310 " +
+      "AGUASCALIENTES, AGUASCALIENTES. MÉXICO " +
+      "HECHO EN CHINA / MADE IN CHINA " +
+      "TEL. 449 976 24 97 & 449 976 24 07 / WWW.SUJETSA.COM.MX";
+    private readonly string date = $"{DateTime.Now.ToString("dd.MM.yyyy")}";
+    private readonly string mail = "GERENCIA.VENTAS@SUJETSA.COM.MX";
 
     internal OrdersFillOutExcelExporter() {
 
@@ -44,6 +52,33 @@ namespace Empiria.Sujetsa.Reporting {
       FillOutPurchaseOrderItems(_excelFile, order);
     }
 
+
+    public void FillOutPurchaseOrderLabels(ExcelFile _excelFile, PurchaseOrderDto order) {
+
+      var items = order.Items.Select(x => x);
+      var lote = $"{order.OrderNumber}";
+
+      int i = 4;
+      foreach (var item in items) {
+
+        _excelFile.SetCell($"B{i}", vendor);
+        i++;
+        _excelFile.SetCell($"B{i}", $"CÓDIGO: {item.ProductCode}");
+        i++;
+        _excelFile.SetCell($"A{i}", $"{item.BaseProductName}");
+        _excelFile.SetCell($"B{i}", $"CONT. {item.PackagingSize} {item.PresentationName.ToUpper()}");
+        i++;
+        _excelFile.SetCell($"B{i}", $"{item.ProductCode}");
+        i++;
+        _excelFile.SetCell($"B{i}", labelFooter);
+        i++;
+        _excelFile.SetCell($"A{i}", lote);
+        _excelFile.SetCell($"B{i}", $"{date}    {mail}");
+
+      }
+
+    }
+
     #endregion Public methods
 
     #region Private methods
@@ -52,9 +87,9 @@ namespace Empiria.Sujetsa.Reporting {
 
       var currencyCode = Currency.Parse(order.Currency.UID).ISOCode;
       var items = order.Items.Select(x => x);
-      
+
       _excelFile.SetCell($"F7", $"{currencyCode}/Mpcs");
-      
+
       int i = 8;
       foreach (var item in items) {
 
