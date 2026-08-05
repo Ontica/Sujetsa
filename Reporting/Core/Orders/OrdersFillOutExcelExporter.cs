@@ -56,27 +56,57 @@ namespace Empiria.Sujetsa.Reporting {
     public void FillOutPurchaseOrderLabels(ExcelFile _excelFile, PurchaseOrderDto order) {
 
       var items = order.Items.Select(x => x);
-      var lote = $"{order.OrderNumber}";
+      
+      SetBoxLabelCells(items, order.OrderNumber, _excelFile);
+      
+      SetPackingLabelCells(items, order.OrderNumber, _excelFile);
+    }
 
+
+    private void SetBoxLabelCells(IEnumerable<PurchaseOrderItemDto> items,
+                                  string orderNumber,
+                                  ExcelFile _excelFile) {
       int i = 4;
       foreach (var item in items) {
-
         _excelFile.SetCell($"B{i}", vendor);
+        _excelFile.SetRowBackgroundStyle(i, 2, DESCRIPCTION_ROW_COLOR);
         i++;
-        _excelFile.SetCell($"B{i}", $"CÓDIGO: {item.ProductCode}");
+        _excelFile.SetCell($"B{i}", $"CÓDIGO: {item.ProductCode}-{item.PackagingSize}");
         i++;
         _excelFile.SetCell($"A{i}", $"{item.BaseProductName}");
-        _excelFile.SetCell($"B{i}", $"CONT. {item.PackagingSize} {item.PresentationName.ToUpper()}");
+        _excelFile.SetCell($"B{i}", $"CONT. {item.PackagingSize} {item.PresentationName.ToUpper()}(S)");
         i++;
         _excelFile.SetCell($"B{i}", $"{item.ProductCode}");
         i++;
         _excelFile.SetCell($"B{i}", labelFooter);
         i++;
-        _excelFile.SetCell($"A{i}", lote);
-        _excelFile.SetCell($"B{i}", $"{date}    {mail}");
-
+        _excelFile.SetCell($"A{i}", $"LOTE: {orderNumber}");
+        _excelFile.SetCell($"B{i}", $"{date}  -  {mail}");
+        i += 2;
       }
+    }
 
+
+    private void SetPackingLabelCells(IEnumerable<PurchaseOrderItemDto> items, string orderNumber,
+                                      ExcelFile _excelFile) {
+      int i = 4;
+      foreach (var item in items) {
+        _excelFile.SetCell($"F{i}", vendor);
+        _excelFile.SetRowBackgroundStyle(i, 6, DESCRIPCTION_ROW_COLOR);
+        i++;
+        _excelFile.SetCell($"F{i}", $"CÓDIGO: {item.ProductCode}-{item.PackingSmallBag}");
+        i++;
+        _excelFile.SetCell($"E{i}", $"{item.BaseProductName}");
+        _excelFile.SetCell($"F{i}", $"CONT. {item.PackingSmallBag} {item.PresentationName.ToUpper()}(S)");
+        i++;
+        _excelFile.SetCell($"F{i}", $"{item.ProductCode}");
+        i++;
+        _excelFile.SetCell($"F{i}", labelFooter);
+        i++;
+        _excelFile.SetCell($"E{i}", $"LOTE: {orderNumber}");
+        _excelFile.SetCell($"F{i}", $"{date}  -  {mail}");
+        i += 2;
+      }
     }
 
     #endregion Public methods
