@@ -118,25 +118,36 @@ namespace Empiria.Sujetsa.Reporting {
       var currencyCode = Currency.Parse(order.Currency.UID).ISOCode;
       var items = order.Items.Select(x => x);
 
+      var itemsByDescription = items.Select(x => x.Description).Distinct();
+
       _excelFile.SetCell($"F7", $"{currencyCode}/Mpcs");
 
       int i = 8;
-      foreach (var item in items) {
 
-        var totalUnits = item.Quantity * item.PackagingSize;
-        var totalMpcs = item.Total / (totalUnits / 1000);
-
-        _excelFile.SetCell($"C{i}", $"{item.Description}, {item.ProductAttrs}");
+      foreach (var desc in itemsByDescription) {
+        
+        _excelFile.SetCell($"B{i}", $"{desc}");
         _excelFile.SetRowBackgroundStyle(i, 7, DESCRIPCTION_ROW_COLOR);
         i++;
-        _excelFile.SetCell($"A{i}", item.ProductCode);
-        _excelFile.SetCell($"B{i}", $"{item.ProductAttrsShort}");
-        _excelFile.SetCell($"C{i}", item.Quantity);
-        _excelFile.SetCell($"D{i}", item.PackingSmallBag);
-        _excelFile.SetCell($"E{i}", totalUnits);
-        _excelFile.SetCell($"F{i}", Math.Round(totalMpcs, 2, MidpointRounding.AwayFromZero));
-        _excelFile.SetCell($"G{i}", Math.Round(item.Total, 2, MidpointRounding.AwayFromZero));
+        i++;
 
+        var itemsByDesc = items.Where(x => x.Description == desc).ToFixedList();
+
+        foreach (var item in itemsByDesc) {
+
+          var totalUnits = item.Quantity * item.PackagingSize;
+          var totalMpcs = item.Total / (totalUnits / 1000);
+
+          _excelFile.SetCell($"A{i}", $"{item.ProductCode}-{item.PackingSmallBag}");
+          _excelFile.SetCell($"B{i}", $"{item.ProductAttrsShort}");
+          _excelFile.SetCell($"C{i}", item.Quantity);
+          _excelFile.SetCell($"D{i}", item.PackingSmallBag);
+          _excelFile.SetCell($"E{i}", totalUnits);
+          _excelFile.SetCell($"F{i}", Math.Round(totalMpcs, 2, MidpointRounding.AwayFromZero));
+          _excelFile.SetCell($"G{i}", Math.Round(item.Total, 2, MidpointRounding.AwayFromZero));
+
+          i++;
+        }
         i++;
       }
 

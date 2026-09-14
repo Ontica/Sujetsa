@@ -23,11 +23,11 @@ namespace Empiria.Trade.Tests.Reporting {
     #region Facts
 
     [Fact]
-    public void ExportSaldosEncerradosTest() {
+    public void ExportPurchaseOrderItemsTest() {
 
       using (var usecases = PurchaseOrderUseCases.UseCaseInteractor()) {
 
-        string orderUID = "62322440-38c3-46d4-9593-b31c98455389";
+        string orderUID = "3aefae94-50bd-4a54-a58a-128b9a479945";
 
         IOrderDto reportentries = usecases.GetPurchaseOrderDto(orderUID);
 
